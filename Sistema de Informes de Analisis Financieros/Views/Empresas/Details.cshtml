@@ -1,0 +1,111 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.Models.Empresa
+
+@{
+    ViewData["Title"] = "Empresa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Html.DisplayFor(model => model.Nomempresa)</h1>
+<hr />
+<div class="container">
+    <div class="row rounded pt-4" style="background:rgba(255, 255, 255, 0.79);">
+        <div class="col-4">
+            <img class="rounded mx-auto d-block" src="~/enterprise.png" style="width:90%; height:80%;" />
+        </div>
+        <div class="col-8  text-left" style="font-size:large">
+            <dl class="row">
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.Descempresa)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Descempresa)
+                </dd>
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.Razonsocial)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Razonsocial)
+                </dd>
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.IdsectorNavigation)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.IdsectorNavigation.Nomsector)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div>
+    </div>
+
+    <div id='ModalBalance' class='modal hide fade in' data-url='@Url.Action("SubirBalance")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <form enctype="multipart/form-data" asp-action="GuardarBalance">
+            <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
+            <div id="ModalBalanceContainer">
+            </div>
+        </form>
+    </div>
+    <button id='showModalBalance'>Subir Archivo de Balance General</button>
+
+
+    <a asp-action="Edit" asp-route-id="@Model.Idempresa">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).on('click', '#btnupload', function () {
+            var fileExtension = ['xls', 'xlsx'];
+            var filename = $('#fileupload').val();
+            if (filename.length == 0) {
+                alert("Porfavor seleccione un archivo.");
+                return false;
+            }
+            else {
+                var extension = filename.replace(/^.*\./, '');
+                if ($.inArray(extension, fileExtension) == -1) {
+                    alert("Solo se admiten archivos de Excel. ¡Porfavor escoja un archivo válido!");
+                    return false;
+                }
+            }
+        });      
+    </script>
+    <script type="text/javascript">
+        // add row
+        $(document).on('click', '#addRow', function () {
+            var count = $("div[class*='inputFormRow']").length;
+            if (count == 1) { alert("No se pueden ingresar más de dos años"); }
+            else {
+                var html = '';
+                html += '<div class="inputFormRow"><div class="row">';
+                html += '<div class="col"><div class="input-group mb-3"><div class="input-group-prepend">';
+                html += '<label for="anio" class="input-group-text">Año ' + (count + 2) + ':</label></div>';
+                html += '<input asp-for="anios" name="anios[1].anio" class="form-control m-input" placeholder="Año de los valores del balance ej.: 2019"></div>';
+                html += '</div><div class="col"><div class="input-group mb-3"><div class="input-group-prepend">'
+                html += '<label for="celdaAnio" class="input-group-text">Celda de valores:</label></div>';
+                html += '<input asp-for="anios" name="anios[1].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1">';
+                html += '<div class="input-group-append">';
+                html += '<button id="removeRow" type="button" class="btn btn-danger">Eliminar</button></div></div>';
+                html += '</div>';
+                html += '</div>';
+                $('#newRow').append(html);
+            }
+        });
+        // remove row
+        $(document).on('click', '#removeRow', function () {
+            $(this).closest('.inputFormRow').remove();
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#showModalBalance').click(function () {
+                var url = $('#ModalBalance').data('url');
+
+                $.get(url, function (data) {
+                    $('#ModalBalanceContainer').html(data);
+
+                    $('#ModalBalance').modal('show');
+                });
+            });
+        });
+    </script>
+}

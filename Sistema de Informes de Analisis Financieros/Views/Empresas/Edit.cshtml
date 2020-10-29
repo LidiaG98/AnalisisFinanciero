@@ -1,0 +1,91 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.Models.Empresa
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Empresa</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Idempresa" />
+            <div class="form-group">
+                <label asp-for="Idsector" class="control-label"></label>
+                <select asp-for="Idsector" class="form-control" asp-items="ViewBag.Idsector"></select>
+                <span asp-validation-for="Idsector" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nomempresa" class="control-label"></label>
+                <input asp-for="Nomempresa" class="form-control" />
+                <span asp-validation-for="Nomempresa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descempresa" class="control-label"></label>
+                <input asp-for="Descempresa" class="form-control" />
+                <span asp-validation-for="Descempresa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Razonsocial" class="control-label"></label>
+                <input asp-for="Razonsocial" class="form-control" />
+                <span asp-validation-for="Razonsocial" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<form enctype="multipart/form-data" asp-action="GuardarCuentas">
+    <div class="form-group row">
+        <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
+        <label for="celdaCod" class="col-sm-2 col-form-label">Celda de código</label>
+        <div class="col-sm-10">
+            <input class="form-control" id="celdaCod" name="celdaCod" placeholder="Número de celda, ej.: A1">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="celdaNom" class="col-sm-2 col-form-label">Celda de Nombre</label>
+        <div class="col-sm-10">
+            <input class="form-control" id="celdaNom" name="celdaNom" placeholder="Número de celda, ej.: B1">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <input type="file" id="fileupload" name="files" class="btn btn-success form-control" value="Subir Catálogo de Cuentas" />
+    </div>
+    <div class="col-md-3">
+        <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary" />
+    </div>
+
+</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <!--Script para verificar que se escogio un archivo de excel-->
+    <script type="text/javascript">
+        $(function () {
+            $('#btnupload').on('click', function () {
+                var fileExtension = ['xls', 'xlsx'];
+                var filename = $('#fileupload').val();
+                if (filename.length == 0) {
+                    alert("Porfavor seleccione un archivo.");
+                    return false;
+                }
+                else {
+                    var extension = filename.replace(/^.*\./, '');
+                    if ($.inArray(extension, fileExtension) == -1) {
+                        alert("Solo se admiten archivos de Excel. ¡Porfavor escoja un archivo válido!");
+                        return false;
+                    }
+                }
+            });
+        });
+    </script>
+}

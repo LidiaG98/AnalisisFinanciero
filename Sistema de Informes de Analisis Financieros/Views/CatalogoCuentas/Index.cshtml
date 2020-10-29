@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Catalogodecuenta>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Codcuentacatalogo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdcuentaNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdempresaNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            @if (!(item.Codcuentacatalogo.Equals("0")))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Codcuentacatalogo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdcuentaNavigation.Nomcuenta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdempresaNavigation.Nomempresa)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            }
+        </tr>}
+    </tbody>
+</table>

@@ -1,0 +1,47 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.Models.Valoresdebalance
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Valoresdebalance</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Idbalance" />
+            <div class="form-group">
+                <label asp-for="Idempresa" class="control-label"></label>
+                <select asp-for="Idempresa" class="form-control" asp-items="ViewBag.Idempresa"></select>
+                <span asp-validation-for="Idempresa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Idcuenta" class="control-label"></label>
+                <select asp-for="Idcuenta" class="form-control" asp-items="ViewBag.Idcuenta"></select>
+                <span asp-validation-for="Idcuenta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Valorcuenta" class="control-label"></label>
+                <input asp-for="Valorcuenta" class="form-control" />
+                <span asp-validation-for="Valorcuenta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Anio" class="control-label"></label>
+                <input asp-for="Anio" class="form-control" />
+                <span asp-validation-for="Anio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

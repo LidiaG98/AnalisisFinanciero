@@ -92,7 +92,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idcuenta)
                     .HasColumnName("IDCUENTA")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Idtipocuenta).HasColumnName("IDTIPOCUENTA");
 
@@ -121,12 +121,12 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idempresa)
                     .HasColumnName("IDEMPRESA")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Descempresa)
                     .HasColumnName("DESCEMPRESA")
                     .HasMaxLength(350)
-                    .IsUnicode(false);
+                    .IsUnicode(false);                
 
                 entity.Property(e => e.Idsector).HasColumnName("IDSECTOR");
 
@@ -157,7 +157,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idratio)
                     .HasColumnName("IDRATIO")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Nombreratiob)
                     .IsRequired()
@@ -213,7 +213,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idratioempresa)
                     .HasColumnName("IDRATIOEMPRESA")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Idempresa).HasColumnName("IDEMPRESA");
 
@@ -243,7 +243,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idsector)
                     .HasColumnName("IDSECTOR")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Nomsector)
                     .IsRequired()
@@ -261,7 +261,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idtipocuenta)
                     .HasColumnName("IDTIPOCUENTA")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Nomtipocuenta)
                     .IsRequired()
@@ -282,7 +282,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idbalance)
                     .HasColumnName("IDBALANCE")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Anio).HasColumnName("ANIO");
 
@@ -311,7 +311,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 
                 entity.Property(e => e.Idvalore)
                     .HasColumnName("IDVALORE")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Anio).HasColumnName("ANIO");
 

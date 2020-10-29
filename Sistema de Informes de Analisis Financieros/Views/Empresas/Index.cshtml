@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Empresa>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nomempresa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descempresa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Razonsocial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdsectorNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nomempresa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descempresa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Razonsocial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdsectorNavigation.Nomsector)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Idempresa">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Idempresa">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Idempresa">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

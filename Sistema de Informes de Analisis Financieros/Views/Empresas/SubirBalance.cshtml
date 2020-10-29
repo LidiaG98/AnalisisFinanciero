@@ -1,0 +1,64 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.ViewModels.SubirBalance
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Subir Excel de Balance General</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group row">
+                <label for="celdaNom" class="col-sm-3 col-form-label">Celda de Cuentas:</label>
+                <div class="col-sm-9">
+                    <input asp-for="celdaCuenta" class="form-control" id="celdaNom" name="celdaCuenta" placeholder="Número de celda, ej.: B1">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="nomHoja" class="col-sm-3 col-form-label">Hoja:</label>
+                <div class="col-sm-9">
+                    <input asp-for="hoja" class="form-control" id="nomHoja" name="hoja" placeholder="Número de celda, ej.: A1">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label for="anio" class="input-group-text">Año 1:</label>
+                        </div>
+                        <input asp-for="anios" name="anios[0].anio" class="form-control m-input" placeholder="Año de los valores del balance ej.: 2019">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label for="celdaAnio" class="input-group-text">Celda de valores:</label>
+                        </div>
+                        <input asp-for="anios" name="anios[0].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1">
+                    </div>
+                </div>
+            </div>            
+            <div id="newRow"></div>
+            <button id="addRow" type="button" class="btn btn-info form-group row">Añadir Año</button>
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <input type="file" id="fileupload" name="files" class="btn btn-success form-control" value="Subir Balance General" />
+                </div>
+                <div class="col-md-8">
+                    <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+    </div>
+</div>
+
+
