@@ -35,7 +35,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public async Task<List<Cuenta>> AsignarTipo(List<CuentaViewModel> lstCuentasV)
         {
             List<Tipocuenta> tipos = await tipoCuenta.ConsultarTipoCuenta();
-            int AC = 0,ANC=0, PC = 0,PNC=0, Pat = 0, GA = 0,GF=0,OG=0, I = 0, O = 0, IMP=0;
+            int AC = 0, A = 0, ANC = 0, PC = 0, P = 0, PNC = 0, Pat = 0, G = 0, I = 0, O = 0;
 
             foreach (var tipo in tipos)
             {
@@ -43,26 +43,32 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 else if (tipo.Nomtipocuenta.Equals("ACTIVO NO CORRIENTE")) { ANC = tipo.Idtipocuenta; }
                 else if (tipo.Nomtipocuenta.Equals("PASIVO CORRIENTE")) { PC = tipo.Idtipocuenta; }
                 else if (tipo.Nomtipocuenta.Equals("PASIVO NO CORRIENTE")) { PNC = tipo.Idtipocuenta; }
-                else if (tipo.Nomtipocuenta.Equals("PATRIMONIO")) { Pat = tipo.Idtipocuenta; }
-                else if (tipo.Nomtipocuenta.Equals("GASTOS DE ADMINISTRACION")) { GA = tipo.Idtipocuenta; }
-                else if (tipo.Nomtipocuenta.Equals("GASTOS FINANCIEROS")) { GF = tipo.Idtipocuenta; }
-                else if (tipo.Nomtipocuenta.Equals("OTROS GASTOS")) { OG = tipo.Idtipocuenta; }
+                else if (tipo.Nomtipocuenta.Equals("PATRIMONIO")) { Pat = tipo.Idtipocuenta; }                
                 else if (tipo.Nomtipocuenta.Equals("INGRESOS")) { I = tipo.Idtipocuenta; }
-                else if (tipo.Nomtipocuenta.Equals("OTROS")) { O = tipo.Idtipocuenta; }
-                else if (tipo.Nomtipocuenta.Equals("IMPUESTOS")) { IMP = tipo.Idtipocuenta; }
+                else if (tipo.Nomtipocuenta.Equals("OTROS")) { O = tipo.Idtipocuenta; }                
+                else if (tipo.Nomtipocuenta.Equals("ACTIVO")) { A = tipo.Idtipocuenta; }
+                else if (tipo.Nomtipocuenta.Equals("PASIVO")) { P = tipo.Idtipocuenta; }
+                else if (tipo.Nomtipocuenta.Equals("GASTOS")) { G = tipo.Idtipocuenta; }
             }
 
             List<Cuenta> lstCTipo = new List<Cuenta>();            
             foreach (var cuenta in lstCuentasV)
             {
-                string val = "";
+                string val = "";                
                 cuenta.codigo=cuenta.codigo.Replace(".", "");
 
-                if (cuenta.codigo.Length > 1) { cuenta.codigo.Substring(0, 2); }
+                if (cuenta.codigo.Length > 1) { val = cuenta.codigo.Substring(0, 2); }
                 else { val = cuenta.codigo.Substring(0, 1); }
 
                 switch (val)
                 {
+                    case "1":
+                        lstCTipo.Add(new Cuenta
+                        {
+                            Nomcuenta = cuenta.nombre,
+                            Idtipocuenta = A,
+                        });
+                        break;
                     case "11":
                         lstCTipo.Add(new Cuenta
                         {
@@ -75,6 +81,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                         {
                             Nomcuenta = cuenta.nombre,
                             Idtipocuenta = ANC,
+                        });
+                        break;
+                    case "2":
+                        lstCTipo.Add(new Cuenta
+                        {
+                            Nomcuenta = cuenta.nombre,
+                            Idtipocuenta = P,
                         });
                         break;
                     case "21":
@@ -98,41 +111,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                             Idtipocuenta = Pat,
                         });
                         break;
-                    case "41":
+                    case "4":
                         lstCTipo.Add(new Cuenta
                         {
                             Nomcuenta = cuenta.nombre,
-                            Idtipocuenta = GA,
+                            Idtipocuenta = G,
                         });
-                        break;
-                    case "42":
-                        lstCTipo.Add(new Cuenta
-                        {
-                            Nomcuenta = cuenta.nombre,
-                            Idtipocuenta = GF,
-                        });
-                        break;
-                    case "43":
-                        lstCTipo.Add(new Cuenta
-                        {
-                            Nomcuenta = cuenta.nombre,
-                            Idtipocuenta = OG,
-                        });
-                        break;
-                    case "44":
-                        lstCTipo.Add(new Cuenta
-                        {
-                            Nomcuenta = cuenta.nombre,
-                            Idtipocuenta = OG,
-                        });
-                        break;
-                    case "45":
-                        lstCTipo.Add(new Cuenta
-                        {
-                            Nomcuenta = cuenta.nombre,
-                            Idtipocuenta = IMP,
-                        });
-                        break;
+                        break;                    
                     case "5":
                         lstCTipo.Add(new Cuenta
                         {
@@ -141,11 +126,37 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                         });
                         break;
                     default:
-                        lstCTipo.Add(new Cuenta
+                        if (cuenta.codigo.StartsWith("3")) {
+                            lstCTipo.Add(new Cuenta
+                            {
+                                Nomcuenta = cuenta.nombre,
+                                Idtipocuenta = Pat,
+                            });
+                        }
+                        else if (cuenta.codigo.StartsWith("4"))
                         {
-                            Nomcuenta = cuenta.nombre,
-                            Idtipocuenta = O,
-                        });
+                            lstCTipo.Add(new Cuenta
+                            {
+                                Nomcuenta = cuenta.nombre,
+                                Idtipocuenta = G,
+                            });
+                        }
+                        else if (cuenta.codigo.StartsWith("5"))
+                        {
+                            lstCTipo.Add(new Cuenta
+                            {
+                                Nomcuenta = cuenta.nombre,
+                                Idtipocuenta = I,
+                            });
+                        }
+                        else
+                        {
+                            lstCTipo.Add(new Cuenta
+                            {
+                                Nomcuenta = cuenta.nombre,
+                                Idtipocuenta = O,
+                            });                            
+                        }
                         break;
                 }                
             }
@@ -198,12 +209,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     else if (tipo.Nomtipocuenta.Equals("PASIVO CORRIENTE")) { PC = tipo.Idtipocuenta; }
                     else if (tipo.Nomtipocuenta.Equals("PASIVO NO CORRIENTE")) { PNC = tipo.Idtipocuenta; }
                     else if (tipo.Nomtipocuenta.Equals("PATRIMONIO")) { Pat = tipo.Idtipocuenta; }
-                    else if (tipo.Nomtipocuenta.Equals("GASTOS DE ADMINISTRACION")) { GA = tipo.Idtipocuenta; }
-                    else if (tipo.Nomtipocuenta.Equals("GASTOS FINANCIEROS")) { GF = tipo.Idtipocuenta; }
-                    else if (tipo.Nomtipocuenta.Equals("OTROS GASTOS")) { OG = tipo.Idtipocuenta; }
                     else if (tipo.Nomtipocuenta.Equals("INGRESOS")) { I = tipo.Idtipocuenta; }
-                    else if (tipo.Nomtipocuenta.Equals("OTROS")) { O = tipo.Idtipocuenta; }
-                    else if (tipo.Nomtipocuenta.Equals("IMPUESTOS")) { IMP = tipo.Idtipocuenta; }
+                    else if (tipo.Nomtipocuenta.Equals("OTROS")) { O = tipo.Idtipocuenta; }                    
                     else if (tipo.Nomtipocuenta.Equals("ACTIVO")) { A = tipo.Idtipocuenta; }
                     else if (tipo.Nomtipocuenta.Equals("PASIVO")) { P = tipo.Idtipocuenta; }
                     else if (tipo.Nomtipocuenta.Equals("GASTOS")) { G = tipo.Idtipocuenta; }
@@ -259,7 +266,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 });
                 _context.Cuenta.Add(new Cuenta
                 {
-                    Idtipocuenta = GA,
+                    Idtipocuenta = G,
                     Nomcuenta = "GASTOS ADMINISTRATIVOS"
                 });
                 _context.Cuenta.Add(new Cuenta
@@ -269,7 +276,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 });
                 _context.Cuenta.Add(new Cuenta
                 {
-                    Idtipocuenta = GF,
+                    Idtipocuenta = G,
                     Nomcuenta = "GASTOS FINANCIEROS"
                 });
                 _context.Cuenta.Add(new Cuenta
@@ -279,7 +286,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 });
                 _context.Cuenta.Add(new Cuenta
                 {
-                    Idtipocuenta = IMP,
+                    Idtipocuenta = G,
                     Nomcuenta = "IMPUESTOS"
                 });
                 _context.Cuenta.Add(new Cuenta

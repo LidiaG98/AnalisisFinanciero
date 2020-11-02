@@ -111,7 +111,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             List<Catalogodecuenta> catalogodecuentas = new List<Catalogodecuenta>();
             foreach (var cuentaV in lstCV)
             {
-                for (int i = 0; i < lstCV.Count; i++)
+                for (int i = 0; i < lstCB.Count; i++)
                 {
                     if (lstCB[i].Nomcuenta.Equals(cuentaV.nombre))
                     {

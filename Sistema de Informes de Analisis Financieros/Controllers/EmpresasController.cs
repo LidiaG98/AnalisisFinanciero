@@ -45,9 +45,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return PartialView();
         }
 
-        public async Task GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
+        public async Task<IActionResult> GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
         {
-            await valoresController.GuardarBalance(IdEmpresa, subirBalance, files);
+            ViewData["Mensaje"] = await valoresController.GuardarBalance(IdEmpresa, subirBalance, files);
+            return RedirectToAction("Index", "ValoresBalance");
         }
 
         // GET: Empresas/Details/5
