@@ -171,6 +171,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             bool bandera = true;
             foreach (var cuenta in lstCuentas)
             {
+                bandera = true;
                 for (int i = 0; i < lstCBase.Count; i++)
                 {
                     if (lstCBase[i].Nomcuenta.Equals(cuenta.Nomcuenta))
@@ -304,6 +305,15 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     Idtipocuenta = I,
                     Nomcuenta = "UTILIDADES RETENIDAS"
                 });
+                var v = _context.Cuenta.Count(s => s.Idtipocuenta == O && s.Nomcuenta.Equals("Default"));
+                if (v == 0)
+                {
+                    _context.Cuenta.Add(new Cuenta
+                    {
+                        Idtipocuenta = O,
+                        Nomcuenta = "Default"
+                    });
+                }
                 await _context.SaveChangesAsync();
             }
 

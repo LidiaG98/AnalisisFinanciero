@@ -3,10 +3,11 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string mensaje = ViewBag.Mensaje;
 }
 
 <h1>Index</h1>
-
+<h3 class="text-danger">@mensaje</h3>
 <p>
     <a asp-action="Create">Create New</a>
 </p>

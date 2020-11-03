@@ -130,6 +130,16 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     }
                 }
             }
+            int idDefault = _context.Cuenta.Where(d => d.Nomcuenta.Equals("Default")).FirstOrDefault().Idcuenta;
+            var cb = _context.Catalogodecuenta.Count(a => a.Idcuenta == idDefault && a.Idempresa == idEmpresa);
+            if (!(cb > 0))
+            {
+                catalogodecuentas.Add(new Catalogodecuenta { 
+                    Idcuenta = idDefault,
+                    Idempresa = idEmpresa,
+                    Codcuentacatalogo = "D"
+                });
+            }            
             catalogodecuentas = catalogodecuentas.Concat(InsertarCuentasDeTotalCatalogo(idEmpresa)).ToList();
             return catalogodecuentas;
         }
@@ -146,12 +156,26 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             || s.Nomcuenta.Equals("IMPUESTOS") || s.Nomcuenta.Equals("UTILIDAD NETA") || s.Nomcuenta.Equals("PAGO DE DIVIDENDOS") || s.Nomcuenta.Equals("UTILIDADES RETENIDAS"));
             foreach (var cuentaB in cuentasBase)
             {
-                Catalogodecuenta cc = new Catalogodecuenta
+                Catalogodecuenta cc;
+                if (cuentaB.Nomcuenta.Contains("TOTAL"))
                 {
-                    Idcuenta = cuentaB.Idcuenta,
-                    Idempresa = idEmpresa,
-                    Codcuentacatalogo = "0"//Para identificar las cuentas de totales el codcatalogo = 0
-                };
+                    cc = new Catalogodecuenta
+                    {
+                        Idcuenta = cuentaB.Idcuenta,
+                        Idempresa = idEmpresa,
+                        Codcuentacatalogo = "0"//Para identificar las cuentas de totales del balance el codcatalogo = 0
+                    };
+                }
+                else
+                {
+                    cc = new Catalogodecuenta
+                    {
+                        Idcuenta = cuentaB.Idcuenta,
+                        Idempresa = idEmpresa,
+                        Codcuentacatalogo = "E"//Para identificar las cuentas de totales  del Estado de resultado el codcatalogo = E
+                    };
+                }
+                
                 var catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
                 if (!(catalogoBase > 0))
                 {

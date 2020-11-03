@@ -321,9 +321,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: ValoresBalance
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string mensaje)
         {
             var proyAnfContext = _context.Valoresdebalance.Include(v => v.Id);
+            ViewBag.Mensaje = mensaje;
             return View(await proyAnfContext.ToListAsync());
         }
 

@@ -47,6 +47,15 @@
     </div>
     <button id='showModalBalance'>Subir Archivo de Balance General</button>
 
+    <div id='ModalEstado' class='modal hide fade in' data-url='@Url.Action("SubirEstado")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <form enctype="multipart/form-data" asp-action="GuardarEstado">
+            <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
+            <div id="ModalEstadoContainer">
+            </div>
+        </form>
+    </div>
+    <button id='showModalEstado'>Subir Archivo de Estado de Resultados</button>
+
 
     <a asp-action="Edit" asp-route-id="@Model.Idempresa">Edit</a> |
     <a asp-action="Index">Back to List</a>
@@ -104,6 +113,19 @@
                     $('#ModalBalanceContainer').html(data);
 
                     $('#ModalBalance').modal('show');
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#showModalEstado').click(function () {
+                var url = $('#ModalEstado').data('url');
+
+                $.get(url, function (data) {
+                    $('#ModalEstadoContainer').html(data);
+
+                    $('#ModalEstado').modal('show');
                 });
             });
         });

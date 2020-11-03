@@ -28,7 +28,7 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            @if (!(item.Codcuentacatalogo.Equals("0")))
+            @if (!(item.Codcuentacatalogo.Equals("0")) && !(item.Codcuentacatalogo.Equals("E")))
             {
                 <td>
                     @Html.DisplayFor(modelItem => item.Codcuentacatalogo)

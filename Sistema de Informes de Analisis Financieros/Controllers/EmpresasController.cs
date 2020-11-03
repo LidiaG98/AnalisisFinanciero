@@ -17,12 +17,14 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         private readonly ProyAnfContext _context;
         private CatalogoCuentasController catalogo;
         private ValoresBalanceController valoresController;
+        private EstadoRController estadoController;
 
         public EmpresasController(ProyAnfContext context)
         {
             _context = context;
             catalogo = new CatalogoCuentasController(context);
             valoresController = new ValoresBalanceController(context);
+            estadoController = new EstadoRController(context);
         }
 
         // GET: Empresas
@@ -44,11 +46,21 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         {
             return PartialView();
         }
+        public IActionResult SubirEstado()
+        {
+            return PartialView();
+        }
 
         public async Task<IActionResult> GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
         {
-            ViewData["Mensaje"] = await valoresController.GuardarBalance(IdEmpresa, subirBalance, files);
-            return RedirectToAction("Index", "ValoresBalance");
+            string mensaje = await valoresController.GuardarBalance(IdEmpresa, subirBalance, files);
+            return RedirectToAction("Index", "ValoresBalance", new { mensaje = mensaje });
+        }
+
+        public async Task<IActionResult> GuardarEstado(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
+        {
+            string msje = await estadoController.GuardarEstado(IdEmpresa, subirBalance, files);
+            return RedirectToAction("Index", "EstadoR", new { mensaje = msje });
         }
 
         // GET: Empresas/Details/5
