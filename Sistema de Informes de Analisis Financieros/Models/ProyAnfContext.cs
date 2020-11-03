@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 {
-    public partial class ProyAnfContext : IdentityDbContext
+    public partial class ProyAnfContext : IdentityDbContext<Usuario>
     {
         public ProyAnfContext()
         {
@@ -26,7 +27,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
         public virtual DbSet<Sector> Sector { get; set; }
         public virtual DbSet<Tipocuenta> Tipocuenta { get; set; }
         public virtual DbSet<Valoresdebalance> Valoresdebalance { get; set; }
-        public virtual DbSet<Valoresestado> Valoresestado { get; set; }
+        public virtual DbSet<Valoresestado> Valoresestado { get; set; }       
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -339,5 +340,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    }
+
+    public class Usuario : IdentityUser
+    {
+        public virtual Empresa Idempresa { get; set; }
     }
 }

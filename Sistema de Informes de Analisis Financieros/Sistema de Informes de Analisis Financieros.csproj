@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201030220507_EmpresaUsuarios.cs" />
+    <Compile Remove="Migrations\20201030220507_EmpresaUsuarios.Designer.cs" />
+    <Compile Remove="Migrations\20201030220855_EmpresaUsuarios.cs" />
+    <Compile Remove="Migrations\20201030220855_EmpresaUsuarios.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="5.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
