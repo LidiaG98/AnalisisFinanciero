@@ -11,6 +11,8 @@
     <Compile Remove="Migrations\20201030220507_EmpresaUsuarios.Designer.cs" />
     <Compile Remove="Migrations\20201030220855_EmpresaUsuarios.cs" />
     <Compile Remove="Migrations\20201030220855_EmpresaUsuarios.Designer.cs" />
+    <Compile Remove="Migrations\20201109031812_RazonesFormulas.cs" />
+    <Compile Remove="Migrations\20201109031812_RazonesFormulas.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
