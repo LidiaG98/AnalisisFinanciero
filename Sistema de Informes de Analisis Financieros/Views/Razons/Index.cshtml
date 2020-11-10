@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Razon>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.nombreRazon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.numerador)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.denominador)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombreRazon)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.numerador)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.denominador)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.idRazon">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.idRazon">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.idRazon">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

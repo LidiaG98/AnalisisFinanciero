@@ -39,7 +39,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ProyAnfContext context)
         {
             if (env.IsDevelopment())
             {
@@ -67,6 +67,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-        }
+            DbInit.Inicio(context);
+        }        
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
 {
     [DbContext(typeof(ProyAnfContext))]
-    partial class ProyAnfContextModelSnapshot : ModelSnapshot
+    [Migration("20201109032247_RazonesFormulas")]
+    partial class RazonesFormulas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,9 +173,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasMaxLength(150)
                         .IsUnicode(false);
 
-                    b.Property<int?>("nomCuentaEID")
-                        .HasColumnType("int");
-
                     b.HasKey("Idempresa", "Idcuenta")
                         .HasAnnotation("SqlServer:Clustered", false);
 
@@ -182,8 +181,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
 
                     b.HasIndex("Idempresa")
                         .HasName("RELATIONSHIP_5_FK");
-
-                    b.HasIndex("nomCuentaEID");
 
                     b.ToTable("CATALOGODECUENTA");
                 });
@@ -254,23 +251,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasName("RELATIONSHIP_1_FK");
 
                     b.ToTable("EMPRESA");
-                });
-
-            modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.NomCuentaE", b =>
-                {
-                    b.Property<int>("nomCuentaEID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("nomCuentaE")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("nomCuentaEID");
-
-                    b.ToTable("NomCuentaE");
                 });
 
             modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.Ratio", b =>
@@ -370,10 +350,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("numerador")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("tipo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -631,10 +607,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasForeignKey("Idempresa")
                         .HasConstraintName("FK_CATALOGO_RELATIONS_EMPRESA")
                         .IsRequired();
-
-                    b.HasOne("Sistema_de_Informes_de_Analisis_Financieros.Models.NomCuentaE", "nomCuentaE")
-                        .WithMany("Catalogodecuenta")
-                        .HasForeignKey("nomCuentaEID");
                 });
 
             modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.Cuenta", b =>
