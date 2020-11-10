@@ -1,0 +1,392 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.ViewModels.ListCViewModel
+
+@{
+    ViewData["Title"] = "ActualizarCatalogoCuenta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Especificar clasificación de cuentas</h1>
+<br>
+
+<div class="row">
+    <div class="col-md-auto">
+        <form asp-action="ActualizarCCuenta" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde a ACTIVOS CORRIENTES?<input asp-for="nombre" type="hidden" name="listCs[0].nombre" value="ACTIVOS CORRIENTES"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[0].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde a los PASIVOS CORRIENTES?<input asp-for="nombre" type="hidden" name="listCs[1].nombre" value="PASIVOS CORRIENTES"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[1].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde a los INGRESOS?<input asp-for="nombre" type="hidden" name="listCs[2].nombre" value="INGRESOS DE LAS VENTAS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[2].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde a VENTAS?<input asp-for="nombre" type="hidden" name="listCs[3].nombre" value="VENTAS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[3].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba sus cuentas de INVENTARIO?<input type="hidden" asp-for="nombre" name="listCs[4].nombre" value="INVENTARIO"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[4].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba sus cuentas de EFECTIVO + VALORES DE CORTO PLAZO?<input asp-for="nombre" type="hidden" name="listCs[5].nombre" value="EFECTIVO + VALORES DE CORTO PLAZO"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[5].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div id="newRow"></div>
+            <button id="addRow" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde al COSTO DE LAS VENTAS?<input asp-for="nombre" type="hidden" name="listCs[6].nombre" value="COSTO DE LAS VENTAS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[6].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde a las VENTAS NETAS?<input asp-for="nombre" type="hidden" name="listCs[7].nombre" value="VENTAS NETAS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[7].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba las CUENTAS POR COBRAR COMERCIALES?<input asp-for="nombre" type="hidden" name="listCs[8].nombre" value="CUENTAS POR COBRAR COMERCIALES"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[8].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div id="newRow1"></div>
+            <button id="addRow1" type="button" class="btn btn-info form-group row" asp-route-lista="@ViewBag.Idcuenta">Añadir otra cuenta</button>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde a las COMPRAS?<input asp-for="nombre" type="hidden" name="listCs[9].nombre" value="COMPRAS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[9].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba las CUENTAS POR PAGAR COMERCIALES?<input asp-for="nombre" type="hidden" name="listCs[10].nombre" value="CUENTAS POR PAGAR COMERCIALES"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[10].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div id="newRow2"></div>
+            <button id="addRow2" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba las cuentas de ACTIVO FIJO NETO?<input asp-for="nombre" type="hidden" name="listCs[11].nombre" value="ACTIVO FIJO NETO"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[11].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba las cuentas de GASTOS FINANCIEROS?<input asp-for="nombre" type="hidden" name="listCs[12].nombre" value="GASTOS FINANCIEROS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[12].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta corresponde a la INVERSION?<input asp-for="nombre" type="hidden" name="listCs[13].nombre" value="INVERSION"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[13].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div id="newRow3"></div>
+            <button id="addRow3" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba OTROS INGRESOS?<input asp-for="nombre" type="hidden" name="listCs[14].nombre" value="OTROS INGRESOS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[14].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div id="newRow4"></div>
+            <button id="addRow4" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba a las cuentas de IMPUESTOS?<input asp-for="nombre" type="hidden" name="listCs[15].nombre" value="IMPUESTOS"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[15].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div id="newRow5"></div>
+            <button id="addRow5" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
+            <div class="form-group">
+                <label class="control-label">¿Que cuenta engloba a las cuentas de INTERESES?<input asp-for="nombre" type="hidden" name="listCs[16].nombre" value="INTERESES"></label>
+                <select asp-for="codCuenta" class="form-control" name="listCs[16].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>
+            </div>
+            <div id="newRow6"></div>
+            <button id="addRow6" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
+            <div class="form-group">
+                <input type="submit" value="Actualizar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#addRow", function () {
+                var count = $("div[class*='inputFormRow']").length + 1;
+                if (count == 7) { alert("No se pueden ingresar más de 2 cuentas"); }
+                else {
+                    var html = '';
+                    html += '<div class="inputFormRow"><div class="row">';
+                    html += '<select id ="catalogo" asp-for="codCuenta" class="form-control" name="listCs[5].codCuenta[' + count + ']"></select>';
+                    html += '<div class="input-group-append">';
+                    html += '<button id="removeRow" type="button" class="btn btn-danger">Eliminar</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $('#newRow').append(html);
+                    $.ajax({
+                        url: "GetCC",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (result) {
+                            console.log(result);
+                            var cuentas = "";
+                            $(result).each(function (index, valor) {
+                                cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                            });
+                            var catalogoC = $("#catalogo");
+                            catalogoC.empty();
+                            catalogoC.append(cuentas);
+                        },
+                        error: function (data) {
+                            return "Error";
+                        }
+                    });
+                }
+              });   
+            // remove row
+            $(document).on('click', '#removeRow', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#addRow1", function () {
+                var count1 = $("div[class*='inputFormRow']").length + 1;
+                if (count1 == 7) { alert("No se pueden ingresar más de 2 cuentas"); }
+                else {
+                    var html = '';
+                    html += '<div class="inputFormRow"><div class="row">';
+                    html += '<select id ="catalogo1" asp-for="codCuenta" class="form-control" name="listCs[8].codCuenta[' + count + ']"></select>';
+                    html += '<div class="input-group-append">';
+                    html += '<button id="removeRow1" type="button" class="btn btn-danger">Eliminar</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $('#newRow1').append(html);
+                    $.ajax({
+                        url: "GetCC",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (result) {
+                            console.log(result);
+                            var cuentas = "";
+                            $(result).each(function (index, valor) {
+                                cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                            });
+                            var catalogoC = $("#catalogo1");
+                            catalogoC.empty();
+                            catalogoC.append(cuentas);
+                        },
+                        error: function (data) {
+                            return "Error";
+                        }
+                    });
+                }
+            });
+            // remove row
+            $(document).on('click', '#removeRow1', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#addRow2", function () {
+                var count2 = $("div[class*='inputFormRow']").length + 1;
+                if (count2 == 7) { alert("No se pueden ingresar más de 2 cuentas"); }
+                else {
+                    var html = '';
+                    html += '<div class="inputFormRow"><div class="row">';
+                    html += '<select id ="catalogo2" asp-for="codCuenta" class="form-control" name="listCs[10].codCuenta[' + count + ']"></select>';
+                    html += '<div class="input-group-append">';
+                    html += '<button id="removeRow2" type="button" class="btn btn-danger">Eliminar</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $('#newRow2').append(html);
+                    $.ajax({
+                        url: "GetCC",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (result) {
+                            console.log(result);
+                            var cuentas = "";
+                            $(result).each(function (index, valor) {
+                                cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                            });
+                            var catalogoC = $("#catalogo2");
+                            catalogoC.empty();
+                            catalogoC.append(cuentas);
+                        },
+                        error: function (data) {
+                            return "Error";
+                        }
+                    });
+                }
+            });
+            // remove row
+            $(document).on('click', '#removeRow2', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#addRow3", function () {
+                var count3 = $("div[class*='inputFormRow']").length + 1;
+                if (count3 == 7) { alert("No se pueden ingresar más de 2 cuentas"); }
+                else {
+                    var html = '';
+                    html += '<div class="inputFormRow"><div class="row">';
+                    html += '<select id ="catalogo3" asp-for="codCuenta" class="form-control" name="listCs[13].codCuenta[' + count + ']"></select>';
+                    html += '<div class="input-group-append">';
+                    html += '<button id="removeRow3" type="button" class="btn btn-danger">Eliminar</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $('#newRow3').append(html);
+                    $.ajax({
+                        url: "GetCC",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (result) {
+                            console.log(result);
+                            var cuentas = "";
+                            $(result).each(function (index, valor) {
+                                cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                            });
+                            var catalogoC = $("#catalogo3");
+                            catalogoC.empty();
+                            catalogoC.append(cuentas);
+                        },
+                        error: function (data) {
+                            return "Error";
+                        }
+                    });
+                }
+            });
+            // remove row
+            $(document).on('click', '#removeRow3', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#addRow4", function () {
+                var count4 = $("div[class*='inputFormRow']").length + 1;
+                if (count4 == 7) { alert("No se pueden ingresar más de 2 cuentas"); }
+                else {
+                    var html = '';
+                    html += '<div class="inputFormRow"><div class="row">';
+                    html += '<select id ="catalogo4" asp-for="codCuenta" class="form-control" name="listCs[14].codCuenta[' + count + ']"></select>';
+                    html += '<div class="input-group-append">';
+                    html += '<button id="removeRow4" type="button" class="btn btn-danger">Eliminar</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $('#newRow4').append(html);
+                    $.ajax({
+                        url: "GetCC",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (result) {
+                            console.log(result);
+                            var cuentas = "";
+                            $(result).each(function (index, valor) {
+                                cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                            });
+                            var catalogoC = $("#catalogo4");
+                            catalogoC.empty();
+                            catalogoC.append(cuentas);
+                        },
+                        error: function (data) {
+                            return "Error";
+                        }
+                    });
+                }
+            });
+            // remove row
+            $(document).on('click', '#removeRow4', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#addRow5", function () {
+                var count5 = $("div[class*='inputFormRow']").length + 1;
+                if (count5 == 7) { alert("No se pueden ingresar más de 2 cuentas"); }
+                else {
+                    var html = '';
+                    html += '<div class="inputFormRow"><div class="row">';
+                    html += '<select id ="catalogo5" asp-for="codCuenta" class="form-control" name="listCs[15].codCuenta[' + count + ']"></select>';
+                    html += '<div class="input-group-append">';
+                    html += '<button id="removeRow5" type="button" class="btn btn-danger">Eliminar</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $('#newRow5').append(html);
+                    $.ajax({
+                        url: "GetCC",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (result) {
+                            console.log(result);
+                            var cuentas = "";
+                            $(result).each(function (index, valor) {
+                                cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                            });
+                            var catalogoC = $("#catalogo5");
+                            catalogoC.empty();
+                            catalogoC.append(cuentas);
+                        },
+                        error: function (data) {
+                            return "Error";
+                        }
+                    });
+                }
+            });
+            // remove row
+            $(document).on('click', '#removeRow5', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#addRow6", function () {
+                var count6 = $("div[class*='inputFormRow']").length + 1;
+                if (count6 == 7) { alert("No se pueden ingresar más de 2 cuentas"); }
+                else {
+                    var html = '';
+                    html += '<div class="inputFormRow"><div class="row">';
+                    html += '<select id ="catalogo6" asp-for="codCuenta" class="form-control" name="listCs[16].codCuenta[' + count + ']"></select>';
+                    html += '<div class="input-group-append">';
+                    html += '<button id="removeRow6" type="button" class="btn btn-danger">Eliminar</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $('#newRow6').append(html);
+                    $.ajax({
+                        url: "GetCC",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (result) {
+                            console.log(result);
+                            var cuentas = "";
+                            $(result).each(function (index, valor) {
+                                cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                            });
+                            var catalogoC = $("#catalogo6");
+                            catalogoC.empty();
+                            catalogoC.append(cuentas);
+                        },
+                        error: function (data) {
+                            return "Error";
+                        }
+                    });
+                }
+            });
+            // remove row
+            $(document).on('click', '#removeRow6', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+  
+}

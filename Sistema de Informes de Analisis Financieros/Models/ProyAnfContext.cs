@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
+using Sistema_de_Informes_de_Analisis_Financieros.Models;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 {
@@ -340,6 +341,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<Sistema_de_Informes_de_Analisis_Financieros.Models.NomCuentaE> NomCuentaE { get; set; }
     }
 
     public class Usuario : IdentityUser
