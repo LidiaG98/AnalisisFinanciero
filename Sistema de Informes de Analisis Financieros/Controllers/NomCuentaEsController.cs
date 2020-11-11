@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +14,22 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 {
     public class NomCuentaEsController : Controller
     {
+        private readonly UserManager<Usuario> _userManager;
         private readonly ProyAnfContext _context;
 
-        public NomCuentaEsController(ProyAnfContext context)
+        public NomCuentaEsController(ProyAnfContext context, UserManager<Usuario> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: NomCuentaEs
         public IActionResult ActualizarCatalogoCuenta()
         {
+            var user = this.User;
+            List<Usuario> u = _context.Users.Include(e=>e.Idempresa).Where(e=>e.UserName == user.Identity.Name).ToList();
             List<Catalogodecuenta> cc = new List<Catalogodecuenta>();
-            cc = _context.Catalogodecuenta.Include(e=>e.IdcuentaNavigation).Where(e=>e.Codcuentacatalogo!="0").ToList();
+            cc = _context.Catalogodecuenta.Include(e=>e.IdcuentaNavigation).Where(e=>e.Codcuentacatalogo!="0" && e.Idempresa==u[0].Idempresa.Idempresa).ToList();
             List<SelectListItem> items = cc.ConvertAll(d =>
             {
                 return new SelectListItem()
@@ -40,6 +46,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         //POST
         public async Task<IActionResult> ActualizarCCuenta(List<ListCViewModel> listCs)
         {
+            var user = this.User;
+            List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
             List<NomCuentaE> nom;
             List<Catalogodecuenta> cc;
 
@@ -49,7 +57,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 {
                     listCs[i].codCuenta[x] = listCs[i].codCuenta[x].Replace(".", "");
                 }
-                cc = _context.Catalogodecuenta.ToList();
+                cc = _context.Catalogodecuenta.Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa).ToList();
                 nom = _context.NomCuentaE.Where(e => e.nomCuentaE == listCs[i].nombre).ToList();
 
                 for (int j = 0; j < cc.Count; j++)
@@ -395,9 +403,11 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public JsonResult GetCC()
+        public async Task<JsonResult> GetCC()
         {
-            var jsonData = _context.Catalogodecuenta.Include(e => e.IdcuentaNavigation).Where(e => e.Codcuentacatalogo != "0").ToList();
+            var user = this.User;
+            List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
+            var jsonData = _context.Catalogodecuenta.Include(e => e.IdcuentaNavigation).Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa).ToList();
             return Json(jsonData);
         }
 

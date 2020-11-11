@@ -171,9 +171,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasMaxLength(150)
                         .IsUnicode(false);
 
-                    b.Property<int?>("nomCuentaEID")
-                        .HasColumnType("int");
-
                     b.HasKey("Idempresa", "Idcuenta")
                         .HasAnnotation("SqlServer:Clustered", false);
 
@@ -182,8 +179,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
 
                     b.HasIndex("Idempresa")
                         .HasName("RELATIONSHIP_5_FK");
-
-                    b.HasIndex("nomCuentaEID");
 
                     b.ToTable("CATALOGODECUENTA");
                 });
@@ -254,23 +249,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasName("RELATIONSHIP_1_FK");
 
                     b.ToTable("EMPRESA");
-                });
-
-            modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.NomCuentaE", b =>
-                {
-                    b.Property<int>("nomCuentaEID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("nomCuentaE")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("nomCuentaEID");
-
-                    b.ToTable("NomCuentaE");
                 });
 
             modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.Ratio", b =>
@@ -631,10 +609,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasForeignKey("Idempresa")
                         .HasConstraintName("FK_CATALOGO_RELATIONS_EMPRESA")
                         .IsRequired();
-
-                    b.HasOne("Sistema_de_Informes_de_Analisis_Financieros.Models.NomCuentaE", "nomCuentaE")
-                        .WithMany("Catalogodecuenta")
-                        .HasForeignKey("nomCuentaEID");
                 });
 
             modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.Cuenta", b =>
