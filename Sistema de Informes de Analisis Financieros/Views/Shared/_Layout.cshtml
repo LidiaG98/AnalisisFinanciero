@@ -24,6 +24,7 @@
                     <a asp-area="" asp-controller="Home" asp-action="Index">
                         <i class="fa fa-home" aria-hidden="true"></i> Inicio
                     </a>
+
                 </li>
                 <li>
                     <a asp-area="" asp-controller="Empresas" asp-action="Index">
@@ -36,8 +37,19 @@
                     </a>
                 </li>
                 <li>
+                    <a asp-area="" asp-controller="Sector" asp-action="Index">
+                        <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Sector" asp-action="Index">
+                        <i class="fa fa-arrow-down" aria-hidden="true"></i> Analizis vertical
+                    </a>
+                </li>
+
+                <li>
                     <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
-                        <i class="fa fa-industry" aria-hidden="true"></i> Ratios Base por Sector
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
                     </a>
                 </li>
                 <li class="header">Another Menu</li>
@@ -109,4 +121,4 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
-        </html>
+</html>

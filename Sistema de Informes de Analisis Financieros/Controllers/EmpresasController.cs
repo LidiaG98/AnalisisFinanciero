@@ -39,7 +39,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             celdaCod = celdaCod.ToUpper();
             celdaNom = celdaNom.ToUpper();
             ViewData["Mensaje"] = await catalogo.GuardarCuentas(IdEmpresa,celdaCod,celdaNom,files);
-            return RedirectToAction("Index", "CatalogoCuentas");
+            return RedirectToAction("ActualizarCatalogoCuenta", "NomCuentaEs");
         }
 
         public IActionResult SubirBalance()

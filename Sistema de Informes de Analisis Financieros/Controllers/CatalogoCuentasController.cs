@@ -150,31 +150,15 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var cuentasBase = from s in _context.Cuenta select s;
             cuentasBase = cuentasBase.Where(s => s.Nomcuenta.Equals("TOTAL ACTIVOS CORRIENTES") || s.Nomcuenta.Equals("TOTAL ACTIVOS NO CORRIENTES") ||
             s.Nomcuenta.Equals("TOTAL PASIVOS CORRIENTES") || s.Nomcuenta.Equals("TOTAL PASIVOS NO CORRIENTES") || s.Nomcuenta.Equals("TOTAL PATRIMONIO")
-            || s.Nomcuenta.Equals("TOTAL ACTIVO") || s.Nomcuenta.Equals("TOTAL PASIVO MAS PATRIMONIO") || s.Nomcuenta.Equals("VENTAS NETAS")
-            || s.Nomcuenta.Equals("COSTO DE VENTAS") || s.Nomcuenta.Equals("UTILIDAD BRUTA") || s.Nomcuenta.Equals("GASTOS ADMINISTRATIVOS")
-            || s.Nomcuenta.Equals("UTILIDAD OPERATIVA") || s.Nomcuenta.Equals("GASTOS FINANCIEROS") || s.Nomcuenta.Equals("UTILIDAD ANTES DE IMPUESTOS")
-            || s.Nomcuenta.Equals("IMPUESTOS") || s.Nomcuenta.Equals("UTILIDAD NETA") || s.Nomcuenta.Equals("PAGO DE DIVIDENDOS") || s.Nomcuenta.Equals("UTILIDADES RETENIDAS"));
+            || s.Nomcuenta.Equals("TOTAL ACTIVO") || s.Nomcuenta.Equals("TOTAL PASIVO MAS PATRIMONIO"));
             foreach (var cuentaB in cuentasBase)
             {
-                Catalogodecuenta cc;
-                if (cuentaB.Nomcuenta.Contains("TOTAL"))
-                {
-                    cc = new Catalogodecuenta
+                Catalogodecuenta cc = new Catalogodecuenta
                     {
                         Idcuenta = cuentaB.Idcuenta,
                         Idempresa = idEmpresa,
                         Codcuentacatalogo = "0"//Para identificar las cuentas de totales del balance el codcatalogo = 0
                     };
-                }
-                else
-                {
-                    cc = new Catalogodecuenta
-                    {
-                        Idcuenta = cuentaB.Idcuenta,
-                        Idempresa = idEmpresa,
-                        Codcuentacatalogo = "E"//Para identificar las cuentas de totales  del Estado de resultado el codcatalogo = E
-                    };
-                }
                 
                 var catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
                 if (!(catalogoBase > 0))
