@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <h1>Index</h1>
 
 <p>
@@ -26,23 +27,47 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Valorratiob)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdratioNavigation.Nombreratiob)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdsectorNavigation.Nomsector)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Valorratiob)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdratioNavigation.Nombreratiob)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdsectorNavigation.Nomsector)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<div class="courses-container">
+    <div class="course">
+        <div class="course-preview">
+            <h6>Ratios</h6>
+            <h2>Prueba Acida</h2>
+            <a href="#">View all chapters <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="course-info">
+            <div class="progress-container">
+                <div class="progress"></div>
+                <span class="progress-text">
+                <h4>$ 20000</h4>   
+                </span>
+            </div>
+            <h6>Formula</h6>
+            <h2>Aquí va la formula</h2>
+            <button class="btnx">Detalles</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/Card.js" asp-append-version="true"></script>

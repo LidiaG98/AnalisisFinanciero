@@ -1,251 +1,11 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 40px;
-  background: #f7f7f7;
-}
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 40px;
-    text-align: center; /* Vertically center the text there */
-    background: #2574A9;
-    color: #e0e0e0;
-}
-
-
-.navbar {
-    padding: 2px 10px;
-    background: #788a9acc;
-    border: none;
-    border-radius: 0;
-    margin-bottom: 40px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-btn {
-    box-shadow: none;
-    outline: none !important;
-    border: none;
-}
-
-.line {
-    width: 100%;
-    height: 1px;
-    border-bottom: 1px dashed #ddd;
-    margin: 40px 0;
-}
-
-/* ---------------------------------------------------
-    SIDEBAR STYLE
------------------------------------------------------ */
-
-
-.wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;    
-}
-
-#sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    background: #1a1a1a;
-    color: #fff;
-    transition: all 0.3s;
-    position: sticky;
-}
-
-    #sidebar.active {
-        margin-left: -250px;
-    }
-
-.sidebar-logo {
-    padding: 15px;
-    font-size: 20px;
-    background-color: #2574A9;
-    text-align:center;
-}
-.sidebar-logo a{
-    color: #fff;
-}
-
-.sidebar-navigation {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-    position: relative;
-}
-
-    .sidebar-navigation li {
-        background-color: transparent;
-        position: relative;
-        display: inline-block;
-        width: 100%;
-        line-height: 20px;
-    }
-
-        .sidebar-navigation li a {
-            padding: 10px 15px 10px 30px;
-            display: block;
-            color: #fff;
-        }
-
-        .sidebar-navigation li .fa {
-            margin-right: 10px;
-        }
-
-        .sidebar-navigation li a:active,
-        .sidebar-navigation li a:hover,
-        .sidebar-navigation li a:focus {
-            text-decoration: none;
-            outline: none;
-        }
-
-        .sidebar-navigation li::before {
-            background-color: #2574A9;
-            position: absolute;
-            content: '';
-            height: 100%;
-            left: 0;
-            top: 0;
-            -webkit-transition: width 0.2s ease-in;
-            transition: width 0.2s ease-in;
-            width: 3px;
-            z-index: -1;
-        }
-
-        .sidebar-navigation li:hover::before {
-            width: 100%;
-        }
-
-    .sidebar-navigation .header {
-        font-size: 12px;
-        text-transform: uppercase;
-        background-color: #151515;
-        padding: 10px 15px 10px 30px;
-    }
-
-        .sidebar-navigation .header::before {
-            background-color: transparent;
-        }
-
-.dropdown-toggle::after {
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-}
-
-
-
-/* ---------------------------------------------------
-    CONTENT STYLE
------------------------------------------------------ */
-
-#content {
-    width: 100%;
-    
-    min-height: 100vh;
-    transition: all 0.3s;
-}
-
-/* ---------------------------------------------------
-    MEDIAQUERIES
------------------------------------------------------ */
-
-@media (max-width: 768px) {
-    #sidebar {
-        margin-left: -250px;
-    }
-
-        #sidebar.active {
-            margin-left: 0;
-        }
-
-    #sidebarCollapse span {
-        display: none;
-    }
-}
-@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+﻿@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
 
 * {
     box-sizing: border-box;
 }
 
 
-body {
-    background-image: linear-gradient(45deg, #7175da, #9790F2);
-    font-family: 'Muli', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    min-height: 100vh;
-    margin: 0;
-}
+
 
 .courses-container {
 }
@@ -267,8 +27,18 @@ body {
         letter-spacing: 1px;
         text-transform: uppercase;
     }
+    .tac {
+        
+        margin: 0;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
 
     .course h2 {
+        letter-spacing: 1px;
+        margin: 10px 0;
+    }
+    .course h4 {
         letter-spacing: 1px;
         margin: 10px 0;
     }
@@ -327,7 +97,7 @@ body {
     letter-spacing: 1px;
 }
 
-.btn {
+.btnx {
     background-color: #2A265F;
     border: 0;
     border-radius: 50px;
