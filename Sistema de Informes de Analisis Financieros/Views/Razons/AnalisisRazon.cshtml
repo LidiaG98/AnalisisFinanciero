@@ -1,0 +1,91 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.ViewModels.AnalisisRazonViewModel
+@{
+    ViewData["Title"] = "AnalisisRazon";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Model.nombreRazon - @Model.tipo</h1>
+<div class="row">
+    <div class="col-6">
+        <div class="card text-center">
+            <div class="card-header">
+                Formula
+            </div>
+            <div class="card-body">
+                <h6>
+                    @if (Model.numerador.Count == 1)
+                    {
+                        @Model.numerador[0]
+                    }
+                    else
+                    {
+                        @Model.numerador[0]
+                        
+                        @Model.signoNumerador
+                        
+                        @Model.numerador[1]
+                    }
+                </h6>                
+                <hr />
+                <h6>
+                    @if (Model.denominador.Count == 1)
+                    {
+                        @Model.denominador[0]
+                    }
+                    else
+                    {
+                        @Model.denominador[0]
+
+                        @Model.signoDenominador
+
+                        @Model.denominador[1]
+                    }
+                </h6>
+            </div>
+            <div class="card-footer">
+                Total
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card text-center">
+            <div class="card-header">
+                Formula
+            </div>
+            <div class="card-body">
+                <h6>
+                    @if (Model.numerador.Count == 1)
+                    {
+                        @Model.numerador[0]
+                    }
+                    else
+                    {
+                        @Model.numerador[0]
+
+                        @Model.signoNumerador
+
+                        @Model.numerador[1]
+                    }
+                </h6>
+                <hr />
+                <h6>
+                    @if (Model.denominador.Count == 1)
+                    {
+                        @Model.denominador[0]
+                    }
+                    else
+                    {
+                        @Model.denominador[0]
+
+                        @Model.signoDenominador
+
+                        @Model.denominador[1]
+                    }
+                </h6>
+            </div>
+            <div class="card-footer">
+                Total
+            </div>
+        </div>
+    </div>
+</div>

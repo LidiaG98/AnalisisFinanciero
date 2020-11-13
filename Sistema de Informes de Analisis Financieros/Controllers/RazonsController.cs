@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
+using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros
 {
@@ -245,5 +246,99 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
         {
             return _context.Razon.Any(e => e.idRazon == id);
         }
+
+        //Método general para las razones
+        [HttpGet]
+        public async Task<IActionResult> AnalisisRazon(int idRazon)
+        {
+            var razon = _context.Razon.Where(r => r.idRazon == idRazon).FirstOrDefault();
+            AnalisisRazonViewModel model = new AnalisisRazonViewModel()
+            {
+                nombreRazon = razon.nombreRazon,
+                tipo = razon.tipo,
+                signoDenominador = "",
+                signoNumerador = "",
+                numerador = new List<string>(),
+                denominador = new List<string>()
+            };
+            model.numerador.Add(razon.numerador);
+            model.denominador.Add(razon.denominador);
+
+            //numerador
+            if (razon.numerador.Split('+').Length > 1)
+            {
+                model.numerador = razon.numerador.Split('+').ToList();
+            }
+            if (razon.numerador.Split('-').Length > 1)
+            {
+                model.numerador = razon.numerador.Split('-').ToList();
+            }
+            if (razon.numerador.Split('*').Length > 1)
+            {
+                model.numerador = razon.numerador.Split('*').ToList();
+            }
+            if (razon.numerador.Split('/').Length > 1)
+            {
+                model.numerador = razon.numerador.Split('/').ToList();
+            }
+            //denominador
+            if (razon.denominador.Split('+').Length > 1)
+            {
+                model.denominador = razon.denominador.Split('+').ToList();
+            }
+            if (razon.denominador.Split('-').Length > 1)
+            {
+                model.denominador = razon.denominador.Split('-').ToList();
+            }
+            if (razon.denominador.Split('*').Length > 1)
+            {
+                model.denominador = razon.denominador.Split('*').ToList();
+            }
+            if (razon.denominador.Split('/').Length > 1)
+            {
+                model.denominador = razon.denominador.Split('/').ToList();
+            }           
+            //signo numerador
+            if(model.signoNumerador.Equals("") && razon.numerador.Contains('+'))
+            {
+                model.signoNumerador = " + ";
+            }
+            if (model.signoNumerador.Equals("") && razon.numerador.Contains('-'))
+            {
+                model.signoNumerador = " - ";
+            }
+            if (model.signoNumerador.Equals("") && razon.numerador.Contains('*'))
+            {
+                model.signoNumerador = " X ";
+            }
+            if (model.signoNumerador.Equals("") && razon.numerador.Contains('/'))
+            {
+                model.signoNumerador = " / ";
+            }
+            //signo denominador
+            if (model.signoDenominador.Equals("") && razon.denominador.Contains('+'))
+            {
+                model.signoDenominador = " + ";
+            }
+            if (model.signoDenominador.Equals("") && razon.denominador.Contains('-'))
+            {
+                model.signoDenominador = " - ";
+            }
+            if (model.signoDenominador.Equals("") && razon.denominador.Contains('*'))
+            {
+                model.signoDenominador = " X ";
+            }
+            if (model.signoDenominador.Equals("") && razon.denominador.Contains('/'))
+            {
+                model.signoDenominador = " / ";
+            }
+
+
+
+            return View(model);
+        }
+
+        
+
     }
 }
