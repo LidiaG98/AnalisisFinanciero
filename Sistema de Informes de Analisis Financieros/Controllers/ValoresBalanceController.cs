@@ -105,7 +105,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             int a1 = 0;
             double maxVal = balanceV.Max(x => x.valor);            
             //var totales = balanceV.Where(x => x.valor == maxVal);
-            bool resultado = false;
+            bool resultado = true;
             var cuentasCatalogo = (from cuenta in _context.Catalogodecuenta
                                    where cuenta.Idempresa == IdEmpresa
                                    select new
@@ -155,8 +155,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     }
                 }
             }
-            if (maxVal == tPmasPat && maxVal == tActivo)
-            {
+            //if (maxVal == tPmasPat && maxVal == tActivo)
+            //{
                 foreach (var filaBV in balanceV)
                 {
                     a1 = filaBV.anioFila;
@@ -259,7 +259,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 }
                 await _context.SaveChangesAsync();
                 resultado = true;
-            }
+            //}
             return resultado;
         }
 
