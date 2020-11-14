@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Valoresdebalance>
+
+@{
+    ViewData["Title"] = "AnalsisHorizontal";
+}
+<link rel="stylesheet" href="~/css/FormAH.css" />
+<h1>AnalsisHorizontal</h1>
+
+<form class="form-inline" asp-action="Index" method="get">
+    <input class="col-md-7 col-sm-12 mr-sm-2 mb-2" type="text" placeholder="ingresa una placa o marca" data-val="true" data-val-required="The nombre field is required." id="Buscar" name="Buscar" value="@ViewData["Filtro"]">
+    <input type="submit" class="col-md-2 col-sm-12 btn btn-block btn-primary rounded-pill mb-2" value="Buscar">
+    <div class="form-group">
+        <label class="control-label"></label>
+        <select id="chosen-s" asp-items="ViewBag.anios" ></select>
+    </div>
+    <label class="control-label"></label>
+    <select id="chosen-s" asp-items="ViewBag.anios"></select>
+    </div>
+    <a asp-action="Index">Todos los registros</a>
+</form>
+<div class="card-form">
+    <form asp-action="Create" class="signup">
+        <div class="form-title">Sign Up for our Newsletter!</div>
+        <div class="form-body">
+            <div class="row">
+
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select id="chosen-s" asp-items="ViewBag.anios"></select>
+
+
+                </div>
+                <div class="form-group">
+                    <label>
+                </div>
+
+            </div>
+            <div class="row">
+                <input type="text" placeholder="Email Address*">
+            </div>
+        </div>
+        <div class="rule"></div>
+        <div class="form-footer">
+            <a>Sign Me Up!<span class="fa fa-thumbs-o-up"></span></a>
+            <a>Not Now!<span class="fa fa-ban"></span></a>
+        </div>
+    </form>
+</div>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Valorcuenta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Anio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Valorcuenta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Anio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id.Codcuentacatalogo)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Idbalance">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Idbalance">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Idbalance">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

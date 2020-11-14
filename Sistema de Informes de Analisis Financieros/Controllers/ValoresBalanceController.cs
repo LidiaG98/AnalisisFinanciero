@@ -327,6 +327,19 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             ViewBag.Mensaje = mensaje;
             return View(await proyAnfContext.ToListAsync());
         }
+        public async Task<IActionResult> AnalsisHorizontal()
+        {
+            var proyAnfContext = _context.Valoresdebalance;
+           // ViewBag.Mensaje = mensaje;
+            return View(await proyAnfContext.ToListAsync());
+        }
+        public async Task<IActionResult> AnalsisVertical(string mensaje)
+        {   
+            var proyAnfContext = _context.Valoresdebalance.Include(v => v.Id);
+            ViewData["anios"] = new SelectList(_context.Valoresdebalance, "Anio", "Anio");
+            ViewBag.Mensaje = mensaje;
+            return View(await proyAnfContext.ToListAsync());
+        }
 
         // GET: ValoresBalance/Details/5
         public async Task<IActionResult> Details(int? id)
