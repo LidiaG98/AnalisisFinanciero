@@ -9,7 +9,7 @@
 
 
 @{ 
-    var hola = (double[]) ViewData["Resultado"];
+    var hola =  ViewData["Resultados"] as List<double>;
     int paco = 0;
 } 
 <link rel="stylesheet" href="~/css/Cards.css" />
@@ -39,6 +39,7 @@
                     </span>
                 </div>
                 <h6>Formula</h6>
+
                 <h4> @Html.DisplayFor(modelItem => item.numerador)</h4>
                 <h4> @Html.DisplayFor(modelItem => item.denominador)</h4>
                 

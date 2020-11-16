@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
         public async Task<string> GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
         {
+           
             List<BalanceViewModel> listFilasBalance = new List<BalanceViewModel>();
             List<BalanceViewModel> listFilasBalance2 = new List<BalanceViewModel>();
             string mensaje = "Archivo subido con éxito.";
@@ -324,20 +327,70 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public async Task<IActionResult> Index(string mensaje)
         {
             var proyAnfContext = _context.Valoresdebalance.Include(v => v.Id);
+           
             ViewBag.Mensaje = mensaje;
+            
             return View(await proyAnfContext.ToListAsync());
         }
         public async Task<IActionResult> AnalsisHorizontal()
         {
-            var proyAnfContext = _context.Valoresdebalance;
-           // ViewBag.Mensaje = mensaje;
+            var user = this.User;
+            List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
+            List<double> Vanios1 = new List<double>();
+            List<double> Vanios2 = new List<double>();
+            
+
+            var proyAnfContext = _context.Valoresdebalance.Where(x => x.Idempresa == u[0].Idempresa.Idempresa);
+            var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
+            var balance = from x in _context.Valoresdebalance select x;
+            catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa).Include(r => r.IdcuentaNavigation);
+            
+            double activoTotal = balance.Where(m => m.Idcuenta == c).FirstOrDefault().Valorcuenta;
+
+            int an = proyAnfContext.FirstOrDefault().Anio;
+            int an2 = an - 1;
+
+
+
+            var AH1 = proyAnfContext.Where(s => s.Anio == an);
+            foreach( var awa in AH1)
+            {
+                Vanios1.Add(awa.Valorcuenta);
+            }
+            var AH2 = proyAnfContext.Where(s => s.Anio == an2);
+            foreach (var aw in AH2)
+            {
+                Vanios2.Add(aw.Valorcuenta);
+            }
+            ViewData["anio1"] = Vanios1;
+            ViewBag.activo = activoTotal;
+
+            ViewData["anio2"] = Vanios2;
+            //años 
+            ViewData["ani1"] = an;
+            ViewData["ani1"] = an2;
             return View(await proyAnfContext.ToListAsync());
         }
         public async Task<IActionResult> AnalsisVertical(string mensaje)
-        {   
-            var proyAnfContext = _context.Valoresdebalance.Include(v => v.Id);
-            ViewData["anios"] = new SelectList(_context.Valoresdebalance, "Anio", "Anio");
-            ViewBag.Mensaje = mensaje;
+        {
+            var user = this.User;
+            List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
+            var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
+            var pmp = from x in _context.Cuenta select x;
+            List<Cuenta> cuentas = pmp.ToList();
+
+
+            var proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
+            
+            int an = proyAnfContext.FirstOrDefault().Anio;
+            proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa && y.Anio == an);
+            catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
+             var cuenta = catCuent.Where(x => x.IdcuentaNavigation.Nomcuenta == "TOTAL ACTIVO").FirstOrDefault();
+            double activoTotal = proyAnfContext.Where(x => x.Idcuenta == cuenta.Idcuenta).FirstOrDefault().Valorcuenta;
+
+            ViewBag.activo = activoTotal;
+            ViewBag.cuentas = cuentas;
+
             return View(await proyAnfContext.ToListAsync());
         }
 
@@ -462,6 +515,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var valoresdebalance = await _context.Valoresdebalance.FindAsync(id);
+            
             _context.Valoresdebalance.Remove(valoresdebalance);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -469,7 +523,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
         private bool ValoresdebalanceExists(int id)
         {
+            
             return _context.Valoresdebalance.Any(e => e.Idbalance == id);
         }
+     
     }
 }

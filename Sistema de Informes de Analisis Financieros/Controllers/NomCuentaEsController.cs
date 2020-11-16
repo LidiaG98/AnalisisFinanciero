@@ -406,7 +406,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public async Task<JsonResult> GetCC()
         {
             var user = this.User;
-            List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
+            List<Usuario> u =  _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
             var jsonData = _context.Catalogodecuenta.Include(e => e.IdcuentaNavigation).Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa).ToList();
             return Json(jsonData);
         }

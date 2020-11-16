@@ -2,50 +2,17 @@
 
 @{
     ViewData["Title"] = "AnalsisHorizontal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
-<link rel="stylesheet" href="~/css/FormAH.css" />
-<h1>AnalsisHorizontal</h1>
+<h1>Analasis   Horizontal</h1>
 
-<form class="form-inline" asp-action="Index" method="get">
-    <input class="col-md-7 col-sm-12 mr-sm-2 mb-2" type="text" placeholder="ingresa una placa o marca" data-val="true" data-val-required="The nombre field is required." id="Buscar" name="Buscar" value="@ViewData["Filtro"]">
-    <input type="submit" class="col-md-2 col-sm-12 btn btn-block btn-primary rounded-pill mb-2" value="Buscar">
-    <div class="form-group">
-        <label class="control-label"></label>
-        <select id="chosen-s" asp-items="ViewBag.anios" ></select>
-    </div>
-    <label class="control-label"></label>
-    <select id="chosen-s" asp-items="ViewBag.anios"></select>
-    </div>
-    <a asp-action="Index">Todos los registros</a>
-</form>
-<div class="card-form">
-    <form asp-action="Create" class="signup">
-        <div class="form-title">Sign Up for our Newsletter!</div>
-        <div class="form-body">
-            <div class="row">
+@{
+    var a1 = ViewData["anio1"] as List<double>;
+    var a2 = ViewData["anio2"] as List<double>;
+    
 
-                <div class="form-group">
-                    <label class="control-label"></label>
-                    <select id="chosen-s" asp-items="ViewBag.anios"></select>
-
-
-                </div>
-                <div class="form-group">
-                    <label>
-                </div>
-
-            </div>
-            <div class="row">
-                <input type="text" placeholder="Email Address*">
-            </div>
-        </div>
-        <div class="rule"></div>
-        <div class="form-footer">
-            <a>Sign Me Up!<span class="fa fa-thumbs-o-up"></span></a>
-            <a>Not Now!<span class="fa fa-ban"></span></a>
-        </div>
-    </form>
-</div>
+ }
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -53,36 +20,49 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Valorcuenta)
+                @ViewData["ani1"]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Anio)
+                @ViewData["ani2"]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+               Diferencia
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @for(int i=0;i<a1.Count();i++)
         {
-            <tr>
+            double paco = 0;
+        <tr>
+            <td>
+
+                $  @a1[i]
+            </td>
+            @if(a2.Any())
+            {
                 <td>
-                    @Html.DisplayFor(modelItem => item.Valorcuenta)
+
+                    $  @a2[i]
                 </td>
+                
+                    paco = a2[i] - a1[i];
+                
                 <td>
-                    @Html.DisplayFor(modelItem => item.Anio)
+                    $ @paco
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id.Codcuentacatalogo)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Idbalance">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Idbalance">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Idbalance">Delete</a>
-                </td>
-            </tr>
+                    }else
+                    {
+                        <td>
+                            Necesita tener el balance de más de un año para poder analizar su empresa con este método
+                        </td>
+                    }
+
+
+
+        </tr>
+         
         }
     </tbody>
 </table>

@@ -3,20 +3,43 @@
 @{
     ViewData["Title"] = "AnalsisVertical";
 }
-
+@{ 
+    double a3 = ViewBag.activo;
+    List<Cuenta> a4 = ViewBag.cuentas;
+    string n = "";
+}
 <h1>AnalsisVertical</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#">Home</a></li>
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            Menu 1
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="#">Submenu 1-1</a></li>
+            <li><a href="#">Submenu 1-2</a></li>
+            <li><a href="#">Submenu 1-3</a></li>
+        </ul>
+    </li>
+    <li><a href="#">Menu 2</a></li>
+    <li><a href="#">Menu 3</a></li>
+</ul>
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Id.IdcuentaNavigation.Nomcuenta)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Valorcuenta)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Anio)
+                Horizontal
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Id)
@@ -28,19 +51,26 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Valorcuenta)
+               @{ 
+                   n = a4.Where(x=> x.Idcuenta == item.Idcuenta).FirstOrDefault().Nomcuenta;
+
+
+               }
+                @n
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Anio)
+               $ @Html.DisplayFor(modelItem => item.Valorcuenta)
+            </td>
+            <td>
+                @{
+                    double AV = (item.Valorcuenta/a3) *100;
+                }  
+                  @AV %
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Id.Codcuentacatalogo)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Idbalance">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Idbalance">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Idbalance">Delete</a>
-            </td>
+            
         </tr>
 }
     </tbody>

@@ -16,5 +16,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
         public int Anio { get; set; }
 
         public virtual Catalogodecuenta Id { get; set; }
+
     }
 }

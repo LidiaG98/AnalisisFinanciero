@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Valoresdebalance>
+
+@{
+    ViewData["Title"] = "AnalisisVertical";
+}
+
+<h1>AnalisisVertical</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Valorcuenta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Anio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Valorcuenta)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Anio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id.Codcuentacatalogo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Idbalance">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Idbalance">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Idbalance">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
