@@ -2,47 +2,50 @@
 
 @{
     ViewData["Title"] = "Index";
+
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+
+
+@{ 
+    var hola = (double[]) ViewData["Resultado"];
+    int paco = 0;
+} 
+<link rel="stylesheet" href="~/css/Cards.css" />
+
+<h1>Ratios</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btnx" asp-action="Create">Agregar Ratio</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.nombreRazon)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.numerador)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.denominador)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-controller="Razons" asp-action="AnalisisRazon" asp-route-idRazon="@item.idRazon">@Html.DisplayFor(modelItem => item.nombreRazon)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.numerador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.denominador)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.idRazon">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.idRazon">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.idRazon">Delete</a>
-            </td>
-        </tr>
+
+
+@foreach (var item in Model)
+{ 
+    <div class="courses-container">
+        <div class="course">
+            <div class="course-preview">
+                <h6>Ratio:</h6>
+                <h4> @Html.DisplayFor(modelItem => item.nombreRazon)</h4>
+                <h6>Tipo:</h6>
+                <h6 class="tac"> @Html.DisplayFor(modelItem => item.tipo)</h6>
+            </div>
+            <div class="course-info">
+                <div class="progress-container">
+                    <div class="progress"></div>
+                    <span class="progress-text">
+                        <h4>@hola[paco]</h4>
+                    </span>
+                </div>
+                <h6>Formula</h6>
+                <h4> @Html.DisplayFor(modelItem => item.numerador)</h4>
+                <h4> @Html.DisplayFor(modelItem => item.denominador)</h4>
+                
+                <a  asp-action="AnalisisRazon" asp-route-id="@item.idRazon" class="btnx">Detalles</a>
+            </div>
+        </div>
+    </div>
+    paco = paco + 1;
 }
-    </tbody>
-</table>
+    <script src="~/js/Card.js" asp-append-version="true"></script>
