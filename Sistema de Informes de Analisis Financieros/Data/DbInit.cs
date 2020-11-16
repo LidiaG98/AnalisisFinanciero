@@ -35,7 +35,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Data
                     },
                     new Razon{
                         nombreRazon = "RAZON DE EFECTIVO",
-                        numerador = "EFECTIVO+VALORES DE CORTO PLAZO",
+                        numerador = "EFECTIVO + VALORES DE CORTO PLAZO",
                         denominador = "PASIVOS CORRIENTES",
                         tipo = "FINANCIERA"
                     },
@@ -90,13 +90,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Data
                     new Razon{
                         nombreRazon = "INDICE DE MARGEN BRUTO",
                         numerador = "UTILIDAD BRUTA",
-                        denominador = "VENTAS",
+                        denominador = "VENTAS NETAS",
                         tipo = "EFICIENCIA O ACTIVIDAD"
                     },
                     new Razon{
                         nombreRazon = "INDICE DE MARGEN OPERATIVO",
                         numerador = "UTILIDAD OPERATIVA",
-                        denominador = "VENTAS",
+                        denominador = "VENTAS NETAS",
                         tipo = "EFICIENCIA O ACTIVIDAD"
                     },
                     new Razon{
@@ -144,7 +144,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Data
                     new Razon{
                         nombreRazon = "RENTABILIDAD SOBRE VENTAS",
                         numerador = "UTILIDAD NETA",
-                        denominador = "VENTAS",
+                        denominador = "VENTAS NETAS",
                         tipo = "RENTABILIDAD"
                     },
                     new Razon{
@@ -157,9 +157,112 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Data
                 foreach (Razon r in razon)
                 {
                     context.Add(r);
-                }
-                context.SaveChanges();
+                }                
             }
+            if (!context.Ratio.Any())
+            {
+                var ratio = new Ratio[]
+                {
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE CIRCULANTE"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RENTABILIDAD DEL ACTIVO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RENTABILIDAD POR ACCION"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RENTABILIDAD NETA DEL PATRIMONIO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE COBERTURA DE GASTOS FINANCIEROS"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE ENDEUDAMIENTO PATRIMONIAL"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "GRADO DE PROPIEDAD"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "GRADO DE ENDEUDAMIENTO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "INDICE DE MARGEN OPERATIVO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "INDICE DE MARGEN BRUTO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RENTABILIDAD SOBRE VENTAS"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "INDICE DE ROTACION DE ACTIVOS FIJOS"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "PERIODO MEDIO DE PAGO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE ROTACION DE CUENTAS POR PAGAR"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE PERIODO MEDIO DE COBRANZA"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE ROTACION DE CUENTAS POR COBRAR"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE DIAS DE INVENTARIO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE ROTACION DE INVENTARIO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE EFECTIVO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RAZON DE CAPITAL DE TRABAJO"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "PRUEBA ACIDA"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "INDICE DE ROTACION DE ACTIVOS TOTALES"
+                        },
+                        new Ratio
+                        {
+                            Nombreratiob = "RENTABILIDAD SOBRE INVERSION"
+                        },
+                };
+                foreach (Ratio r in ratio)
+                {
+                    context.Add(r);
+                }
+            }
+
+            context.SaveChanges();
         }
     }
 }

@@ -13,6 +13,14 @@
     <Compile Remove="Migrations\20201030220855_EmpresaUsuarios.Designer.cs" />
     <Compile Remove="Migrations\20201109031812_RazonesFormulas.cs" />
     <Compile Remove="Migrations\20201109031812_RazonesFormulas.Designer.cs" />
+    <Compile Remove="Migrations\20201115204214_MensajesRatios.cs" />
+    <Compile Remove="Migrations\20201115204214_MensajesRatios.Designer.cs" />
+    <Compile Remove="Migrations\20201116001158_CorreccionRatioSector.cs" />
+    <Compile Remove="Migrations\20201116001158_CorreccionRatioSector.Designer.cs" />
+    <Compile Remove="Migrations\20201116002247_CorreccionRatioSector.cs" />
+    <Compile Remove="Migrations\20201116002247_CorreccionRatioSector.Designer.cs" />
+    <Compile Remove="Migrations\20201116004036_CorreccionRatioSector.cs" />
+    <Compile Remove="Migrations\20201116004036_CorreccionRatioSector.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

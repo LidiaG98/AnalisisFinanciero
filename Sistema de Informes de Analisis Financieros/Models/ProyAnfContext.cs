@@ -30,7 +30,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Models
         public virtual DbSet<Valoresdebalance> Valoresdebalance { get; set; }
         public virtual DbSet<Valoresestado> Valoresestado { get; set; }
         public virtual DbSet<Razon> Razon { get; set; }
-
+        public virtual DbSet<MensajesAnalisis> MensajesAnalisis { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

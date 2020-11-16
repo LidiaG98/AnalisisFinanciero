@@ -1,0 +1,61 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.Models.MensajesAnalisis
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>MensajesAnalisis</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.mensajeMayorBase)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.mensajeMayorBase)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.mensajeMenorBase)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.mensajeMenorBase)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.mensajeMayorEmp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.mensajeMayorEmp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.mensajeMenorEmp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.mensajeMenorEmp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.mensajeIgualBase)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.mensajeIgualBase)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.mensajeIgualEmp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.mensajeIgualEmp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.idRatio)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.idRatio)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.idMensaje">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
