@@ -1321,40 +1321,51 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             double menos5 = valorSector - valorSector * 0.05;
             double mas5 = valorSector + valorSector * 0.05;
 
-            //ver cual año es mayor
-            double valorMasActual;
-            if(model.anio1 > model.anio2)
-            {
-                valorMasActual = model.resA1;
-            }
-            else if (model.anio2 > model.anio1)
-            {
-                valorMasActual = model.resA2;
-            }
-            else
-            {
-                valorMasActual = model.resA1;
-            }
+            ////ver cual año es mayor
+            //double valorMasActual;
+            //if(model.anio1 > model.anio2)
+            //{
+            //    valorMasActual = model.resA1;
+            //}
+            //else if (model.anio2 > model.anio1)
+            //{
+            //    valorMasActual = model.resA2;
+            //}
+            //else
+            //{
+            //    valorMasActual = model.resA1;
+            //}
 
             //Guardando el valor de la razón de la empresa en la base
-            Ratioempresa nuevo = new Ratioempresa
+            Ratioempresa nuevo1 = new Ratioempresa
             {
                 Idempresa = empresa.Idempresa,
                 Idratio = razonAnalizada.Idratio,
-                Valorratioempresa = valorMasActual
+                Valorratioempresa = model.resA1,
+                anio = model.anio1
+            }; 
+            Ratioempresa nuevo2 = new Ratioempresa
+            {
+                Idempresa = empresa.Idempresa,
+                Idratio = razonAnalizada.Idratio,
+                Valorratioempresa = model.resA2,
+                anio = model.anio2
             };
             var valorEmpresa = _context.Ratioempresa
                                 .Where(l => l.Idempresa == empresa.Idempresa)
                                 .Where(l => l.Idratio == razonAnalizada.Idratio)
-                                .FirstOrDefault();
-            if (valorEmpresa == null)
+                                .ToArray();
+            if (valorEmpresa.Length == 0)
             {
-                _context.Add(nuevo);
+                _context.Add(nuevo1);
+                _context.Add(nuevo2);
             }
             else
             {
-                valorEmpresa.Valorratioempresa = valorMasActual;
-                _context.Update(valorEmpresa);
+                valorEmpresa[0].Valorratioempresa = model.resA1;
+                valorEmpresa[1].Valorratioempresa = model.resA2;
+                _context.Update(valorEmpresa[0]);
+                _context.Update(valorEmpresa[1]);
             }
             _context.SaveChanges();
 
@@ -1450,27 +1461,35 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             var empresasSector = _context.Empresa.Where(l => l.Idsector == empresa.Idsector).ToList();
             List<Ratioempresa> ratioempresas = new List<Ratioempresa>();
             foreach(var empresaSector in empresasSector)
-            {                
+            {
                 var ratioempresa = _context.Ratioempresa
                     .Where(l => l.Idempresa == empresaSector.Idempresa)
                     .Where(l => l.Idratio == razonAnalizada.Idratio)
-                    .FirstOrDefault();
+                    .ToList();
 
-                if (ratioempresa != null)
+                foreach(var ratio in ratioempresa)
                 {
-                    ratioempresas.Add(ratioempresa);
+                    ratioempresas.Add(ratio);
                 }
             }
 
-            double totalEmpresas = 0;
-            int numeroEmpresas = ratioempresas.Count;
+            double totalEmpresas1 = 0, totalEmpresas2 = 0;
+            int numeroEmpresas = empresasSector.Count;
             foreach(var ratio in ratioempresas)
             {
-                totalEmpresas += ratio.Valorratioempresa;
+                if(ratio.anio == model.anio1)
+                {
+                    totalEmpresas1 += ratio.Valorratioempresa;
+                }                
+                else
+                {
+                    totalEmpresas2 += ratio.Valorratioempresa;
+                }
             }
-            model.valorEmpresa = totalEmpresas / numeroEmpresas;
-            menos5 = model.valorEmpresa - model.valorEmpresa * 0.05;
-            mas5 = model.valorEmpresa + model.valorEmpresa * 0.05;
+            model.valorEmpresa1 = totalEmpresas1 / numeroEmpresas;
+            model.valorEmpresa2 = totalEmpresas2 / numeroEmpresas;
+            menos5 = model.valorEmpresa1 - model.valorEmpresa1 * 0.05;
+            mas5 = model.valorEmpresa1 + model.valorEmpresa1 * 0.05;
             //enviando mensajes
             if (model.resA1 > menos5 && model.resA1 < mas5)
             {
@@ -1486,7 +1505,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                     model.mensajeEmp1 = mensaje.mensajeIgualEmp;
                 }
             }
-            else if (model.resA1 < model.valorEmpresa)
+            else if (model.resA1 < model.valorEmpresa1)
             {
                 var mensaje = _context.MensajesAnalisis
                     .Where(l => l.idRatio == razonAnalizada.Idratio)
@@ -1515,6 +1534,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 }
             }
             //Año 2
+            menos5 = model.valorEmpresa2 - model.valorEmpresa2 * 0.05;
+            mas5 = model.valorEmpresa2 + model.valorEmpresa2 * 0.05;
             if (model.resA2 > menos5 && model.resA2 < mas5)
             {
                 var mensaje = _context.MensajesAnalisis
@@ -1529,7 +1550,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                     model.mensajeEmp2 = mensaje.mensajeIgualEmp;
                 }
             }
-            else if (model.resA2 < model.valorEmpresa)
+            else if (model.resA2 < model.valorEmpresa2)
             {
                 var mensaje = _context.MensajesAnalisis
                     .Where(l => l.idRatio == razonAnalizada.Idratio)

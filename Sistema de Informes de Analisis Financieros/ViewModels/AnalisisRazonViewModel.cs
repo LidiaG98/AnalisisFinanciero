@@ -32,7 +32,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.ViewModels
         public double resA2 { get; set; }
         public double resProm { get; set; }
         public double valorSector { get; set; }
-        public double valorEmpresa { get; set; }
+        public double valorEmpresa1 { get; set; }
+        public double valorEmpresa2 { get; set; }
         //Mensajes resultados
         public string mensajeBase1 { get; set; }
         public string mensajeBase2 { get; set; }
