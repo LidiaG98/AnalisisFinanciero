@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.MensajesAnalisis>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.mensajeMayorBase)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mensajeMenorBase)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mensajeMayorEmp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mensajeMenorEmp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.idRatio)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.mensajeMayorBase)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mensajeMenorBase)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mensajeMayorEmp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mensajeMenorEmp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.idRatio)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.idMensaje">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.idMensaje">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.idMensaje">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

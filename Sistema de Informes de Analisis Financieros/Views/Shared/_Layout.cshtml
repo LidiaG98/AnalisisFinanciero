@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Analisis Financieros</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 <body>
@@ -24,6 +25,7 @@
                     <a asp-area="" asp-controller="Home" asp-action="Index">
                         <i class="fa fa-home" aria-hidden="true"></i> Inicio
                     </a>
+
                 </li>
                 <li>
                     <a asp-area="" asp-controller="Empresas" asp-action="Index">
@@ -36,8 +38,24 @@
                     </a>
                 </li>
                 <li>
+                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
+                        <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisVertical">
+                        <i class="fa fa-arrow-down" aria-hidden="true"></i> Analizis vertical
+                    </a>
+                </li>
+
+                <li>
                     <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
-                        <i class="fa fa-industry" aria-hidden="true"></i> Ratios Base por Sector
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Razons" asp-action="Index">
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios
                     </a>
                 </li>
                 <li class="header">Another Menu</li>
@@ -107,6 +125,7 @@
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
+   
     @RenderSection("Scripts", required: false)
 </body>
 </html>

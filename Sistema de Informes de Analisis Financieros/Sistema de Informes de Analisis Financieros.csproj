@@ -13,10 +13,19 @@
     <Compile Remove="Migrations\20201030220855_EmpresaUsuarios.Designer.cs" />
     <Compile Remove="Migrations\20201109031812_RazonesFormulas.cs" />
     <Compile Remove="Migrations\20201109031812_RazonesFormulas.Designer.cs" />
+    <Compile Remove="Migrations\20201115204214_MensajesRatios.cs" />
+    <Compile Remove="Migrations\20201115204214_MensajesRatios.Designer.cs" />
+    <Compile Remove="Migrations\20201116001158_CorreccionRatioSector.cs" />
+    <Compile Remove="Migrations\20201116001158_CorreccionRatioSector.Designer.cs" />
+    <Compile Remove="Migrations\20201116002247_CorreccionRatioSector.cs" />
+    <Compile Remove="Migrations\20201116002247_CorreccionRatioSector.Designer.cs" />
+    <Compile Remove="Migrations\20201116004036_CorreccionRatioSector.cs" />
+    <Compile Remove="Migrations\20201116004036_CorreccionRatioSector.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="5.4.0" />
+    <PackageReference Include="MathosParser" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.9" />
@@ -28,6 +37,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Analisis HV\" />
   </ItemGroup>
 
 </Project>

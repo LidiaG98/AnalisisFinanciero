@@ -1,0 +1,279 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.ViewModels.AnalisisRazonViewModel
+@{
+    ViewData["Title"] = "AnalisisRazon";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">@Model.nombreRazon - @Model.tipo</h1>
+<br />
+<div class="row">
+    <div class="col-4">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                Formula
+            </div>
+            <div class="card-body">
+                <h6>
+                    @if (Model.numerador.Count == 1)
+                    {
+                        @Model.numerador[0]
+                    }
+                    else
+                    {
+                        @Model.numerador[0]
+
+                        @Model.signoNumerador
+
+                        @Model.numerador[1]
+                    }
+                </h6>
+                <hr style="border: 1px solid black;" />
+                <h6>
+                    @if (Model.denominador.Count == 1)
+                    {
+                        @Model.denominador[0]
+                    }
+                    else
+                    {
+                        @Model.denominador[0]
+
+                        @Model.signoDenominador
+
+                        @Model.denominador[1]
+                    }
+                </h6>
+            </div>
+            <div class="card-footer bg-primary text-white">
+                Total
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                @Model.anio1
+            </div>
+            <div class="card-body">
+                <h6>
+                    @if (Model.numerador.Count == 1)
+                    {
+                        if (Model.promNum1 > -1)
+                        {
+                            @Model.promNum1
+                        }
+                        else
+                        {
+                            @Model.valorNumA1
+                        }
+                    }
+                    else
+                    {
+                        if (Model.promNum1 > -1)
+                        {
+                            @Model.promNum1
+                        }
+                        else
+                        {
+                            @Model.valorNumA1
+                        }
+
+                        @Model.signoNumerador
+
+                        @if (Model.promNum2 > -1)
+                        {
+                            @Model.promNum2
+                        }
+                        else
+                        {
+                            @Model.valorNum2A1
+                        }
+                    }
+                </h6>
+                <hr style="border: 1px solid black;"/>
+                <h6>
+                    @if (Model.denominador.Count == 1)
+                    {
+                        if (Model.promDen1 > -1)
+                        {
+                            @Model.promDen1
+                        }
+                        else
+                        {
+                            @Model.valorDenA1
+                        }
+                    }
+                    else
+                    {
+                        if (Model.promDen1 > -1)
+                        {
+                            @Model.promDen1
+                        }
+                        else
+                        {
+                            @Model.valorDenA1
+                        }
+
+                        @Model.signoDenominador
+
+                        @if (Model.promDen2 > -1)
+                        {
+                            @Model.promDen2
+                        }
+                        else
+                        {
+                            @Model.valorDen2A1
+                        }
+                    }
+                </h6>
+            </div>
+            <div class="card-footer bg-primary text-white">
+                Total = @Model.resA1
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                @Model.anio2
+            </div>
+            <div class="card-body">
+                <h6>
+                    @if (Model.numerador.Count == 1)
+                    {
+                        if (Model.promNum1 > -1)
+                        {
+                            @Model.promNum1
+                        }
+                        else
+                        {
+                            @Model.valorNumA2
+                        }
+                    }
+                    else
+                    {
+                        if (Model.promNum1 > -1)
+                        {
+                            @Model.promNum1
+                        }
+                        else
+                        {
+                            @Model.valorNumA2
+                        }
+
+                        @Model.signoNumerador
+
+                        @if (Model.promNum2 > -1)
+                        {
+                            @Model.promNum2
+                        }
+                        else
+                        {
+                            @Model.valorNum2A2
+                        }
+                    }
+                </h6>
+                <hr style="border: 1px solid black;"/>
+                <h6>
+                    @if (Model.denominador.Count == 1)
+                    {
+                        if (Model.promDen1 > -1)
+                        {
+                            @Model.promDen1
+                        }
+                        else
+                        {
+                            @Model.valorDenA2
+                        }
+                    }
+                    else
+                    {
+                        if (Model.promDen1 > -1)
+                        {
+                            @Model.promDen1
+                        }
+                        else
+                        {
+                            @Model.valorDenA2
+                        }
+
+                        @Model.signoDenominador
+
+                        @if (Model.promDen2 > -1)
+                        {
+                            @Model.promDen2
+                        }
+                        else
+                        {
+                            @Model.valorDen2A2
+                        }
+                    }
+                </h6>
+            </div>
+            <div class="card-footer bg-primary text-white">
+                Total = @Model.resA2
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<h2 class="text-center">Análisis Basado en Sector</h2>
+<br />
+<div class="row">
+    <div class="col-6">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                Sector: @Model.valorSector
+            </div>
+            <div class="card-body">
+                @Model.mensajeBase1
+            </div>
+            <div class="card-footer bg-primary text-white">
+                Empresa - @Model.anio1: @Model.resA1
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                Sector: @Model.valorSector
+            </div>
+            <div class="card-body">
+                @Model.mensajeBase2
+            </div>
+            <div class="card-footer bg-primary text-white">
+                Empresa - @Model.anio2: @Model.resA2
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<h2 class="text-center">Análisis Basado en Empresas</h2>
+<br />
+<div class="row">
+    <div class="col-6">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                Promedio Empresas: @Model.valorEmpresa
+            </div>
+            <div class="card-body">
+                @Model.mensajeEmp1
+            </div>
+            <div class="card-footer bg-primary text-white">
+                Empresa - @Model.anio1: @Model.resA1
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                Promedio Empresas: @Model.valorEmpresa
+            </div>
+            <div class="card-body">
+                @Model.mensajeEmp2
+            </div>
+            <div class="card-footer bg-primary text-white">
+                Empresa - @Model.anio2: @Model.resA2
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Valoresdebalance>
+
+@{
+    ViewData["Title"] = "AnalsisHorizontal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<h1>Analasis   Horizontal</h1>
+
+@{
+    var a1 = ViewData["anio1"] as List<double>;
+    var a2 = ViewData["anio2"] as List<double>;
+    
+
+ }
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @ViewData["ani1"]
+            </th>
+            <th>
+                @ViewData["ani2"]
+            </th>
+            <th>
+               Diferencia
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(int i=0;i<a1.Count();i++)
+        {
+            double paco = 0;
+        <tr>
+            <td>
+
+                $  @a1[i]
+            </td>
+            @if(a2.Any())
+            {
+                <td>
+
+                    $  @a2[i]
+                </td>
+                
+                    paco = a2[i] - a1[i];
+                
+                <td>
+                    $ @paco
+                </td>
+                    }else
+                    {
+                        <td>
+                            Necesita tener el balance de más de un año para poder analizar su empresa con este método
+                        </td>
+                    }
+
+
+
+        </tr>
+         
+        }
+    </tbody>
+</table>

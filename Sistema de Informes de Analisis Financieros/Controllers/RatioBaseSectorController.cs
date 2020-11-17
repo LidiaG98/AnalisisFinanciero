@@ -62,8 +62,14 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         {
             if (ModelState.IsValid)
             {
+                _context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[RATIOBASESECTOR] ON");
+                //_context.Database.ExecuteSqlCommand("INSERT INTO RATIOBASESECTOR (Idratio, Idsector, Valorratiob) VALUES (" 
+                //    + ratiobasesector.Idratio + ", "
+                //    + ratiobasesector.Idsector + ", "
+                //    + ratiobasesector.Valorratiob + ");");
                 _context.Add(ratiobasesector);
                 await _context.SaveChangesAsync();
+                _context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[RATIOBASESECTOR] OFF");
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Idratio"] = new SelectList(_context.Ratio, "Idratio", "Nombreratiob", ratiobasesector.Idratio);

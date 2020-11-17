@@ -60,7 +60,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     //Verificando si existe año 2 y obteniendo sus datos
                     if (subirBalance.anios.Count == 2)
                     {
-                        if (!(_context.Valoresdebalance.Any(a => a.Anio == subirBalance.anios[1].anio)))
+                        if (!(_context.Valoresestado.Any(a => a.Anio == subirBalance.anios[1].anio)))
                         {
                             lstFilasEstado2 = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, subirBalance.anios[1].celdaAnio, subirBalance.anios[1].anio);
                             await VerificarYSubirEstado(IdEmpresa, lstFilasEstado2);

@@ -7,24 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
 
-namespace Sistema_de_Informes_de_Analisis_Financieros
+namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 {
-    public class RazonsController : Controller
+    public class MensajesAnalisisController : Controller
     {
         private readonly ProyAnfContext _context;
 
-        public RazonsController(ProyAnfContext context)
+        public MensajesAnalisisController(ProyAnfContext context)
         {
             _context = context;
         }
 
-        // GET: Razons
+        // GET: MensajesAnalisis
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Razon.ToListAsync());
+            return View(await _context.MensajesAnalisis.ToListAsync());
         }
 
-        // GET: Razons/Details/5
+        // GET: MensajesAnalisis/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +32,41 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 return NotFound();
             }
 
-            var razon = await _context.Razon
-                .FirstOrDefaultAsync(m => m.idRazon == id);
-            if (razon == null)
+            var mensajesAnalisis = await _context.MensajesAnalisis
+                .FirstOrDefaultAsync(m => m.idMensaje == id);
+            if (mensajesAnalisis == null)
             {
                 return NotFound();
             }
 
-            return View(razon);
+            return View(mensajesAnalisis);
         }
 
-        // GET: Razons/Create
+        // GET: MensajesAnalisis/Create
         public IActionResult Create()
-        {
+        {            
+            SelectList listRatios = new SelectList(_context.Ratio.ToList(), "Idratio", "Nombreratiob");
+            ViewBag.listRatios = listRatios;
             return View();
         }
 
-        // POST: Razons/Create
+        // POST: MensajesAnalisis/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("idRazon,nombreRazon,numerador,denominador")] Razon razon)
+        public async Task<IActionResult> Create([Bind("idMensaje,mensajeMayorBase,mensajeMenorBase,mensajeMayorEmp,mensajeMenorEmp,mensajeIgualBase,mensajeIgualEmp,idRatio")] MensajesAnalisis mensajesAnalisis)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(razon);
+                _context.Add(mensajesAnalisis);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(razon);
+            return View(mensajesAnalisis);
         }
 
-        // GET: Razons/Edit/5
+        // GET: MensajesAnalisis/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +74,24 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 return NotFound();
             }
 
-            var razon = await _context.Razon.FindAsync(id);
-            if (razon == null)
+            var mensajesAnalisis = await _context.MensajesAnalisis.FindAsync(id);
+            if (mensajesAnalisis == null)
             {
                 return NotFound();
             }
-            return View(razon);
+            SelectList listRatios = new SelectList(_context.Ratio.ToList(), "Idratio", "Nombreratiob");
+            ViewBag.listRatios = listRatios;
+            return View(mensajesAnalisis);
         }
 
-        // POST: Razons/Edit/5
+        // POST: MensajesAnalisis/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("idRazon,nombreRazon,numerador,denominador")] Razon razon)
+        public async Task<IActionResult> Edit(int id, [Bind("idMensaje,mensajeMayorBase,mensajeMenorBase,mensajeMayorEmp,mensajeMenorEmp,mensajeIgualBase,mensajeIgualEmp,idRatio")] MensajesAnalisis mensajesAnalisis)
         {
-            if (id != razon.idRazon)
+            if (id != mensajesAnalisis.idMensaje)
             {
                 return NotFound();
             }
@@ -96,12 +100,12 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             {
                 try
                 {
-                    _context.Update(razon);
+                    _context.Update(mensajesAnalisis);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RazonExists(razon.idRazon))
+                    if (!MensajesAnalisisExists(mensajesAnalisis.idMensaje))
                     {
                         return NotFound();
                     }
@@ -112,10 +116,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(razon);
+            return View(mensajesAnalisis);
         }
 
-        // GET: Razons/Delete/5
+        // GET: MensajesAnalisis/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,30 +127,30 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 return NotFound();
             }
 
-            var razon = await _context.Razon
-                .FirstOrDefaultAsync(m => m.idRazon == id);
-            if (razon == null)
+            var mensajesAnalisis = await _context.MensajesAnalisis
+                .FirstOrDefaultAsync(m => m.idMensaje == id);
+            if (mensajesAnalisis == null)
             {
                 return NotFound();
             }
 
-            return View(razon);
+            return View(mensajesAnalisis);
         }
 
-        // POST: Razons/Delete/5
+        // POST: MensajesAnalisis/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var razon = await _context.Razon.FindAsync(id);
-            _context.Razon.Remove(razon);
+            var mensajesAnalisis = await _context.MensajesAnalisis.FindAsync(id);
+            _context.MensajesAnalisis.Remove(mensajesAnalisis);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RazonExists(int id)
+        private bool MensajesAnalisisExists(int id)
         {
-            return _context.Razon.Any(e => e.idRazon == id);
+            return _context.MensajesAnalisis.Any(e => e.idMensaje == id);
         }
     }
 }

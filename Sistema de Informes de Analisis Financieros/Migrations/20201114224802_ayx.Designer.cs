@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
 {
     [DbContext(typeof(ProyAnfContext))]
-    partial class ProyAnfContextModelSnapshot : ModelSnapshot
+    [Migration("20201114224802_ayx")]
+    partial class ayx
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,44 +256,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasName("RELATIONSHIP_1_FK");
 
                     b.ToTable("EMPRESA");
-                });
-
-            modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.MensajesAnalisis", b =>
-                {
-                    b.Property<int>("idMensaje")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("RatioIdratio")
-                        .HasColumnType("int");
-
-                    b.Property<int>("idRatio")
-                        .HasColumnType("int");
-
-                    b.Property<string>("mensajeIgualBase")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("mensajeIgualEmp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("mensajeMayorBase")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("mensajeMayorEmp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("mensajeMenorBase")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("mensajeMenorEmp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("idMensaje");
-
-                    b.HasIndex("RatioIdratio");
-
-                    b.ToTable("MensajesAnalisis");
                 });
 
             modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.NomCuentaE", b =>
@@ -691,13 +655,6 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
                         .HasForeignKey("Idsector")
                         .HasConstraintName("FK_EMPRESA_RELATIONS_SECTOR")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.MensajesAnalisis", b =>
-                {
-                    b.HasOne("Sistema_de_Informes_de_Analisis_Financieros.Models.Ratio", "Ratio")
-                        .WithMany()
-                        .HasForeignKey("RatioIdratio");
                 });
 
             modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.Ratiobasesector", b =>
