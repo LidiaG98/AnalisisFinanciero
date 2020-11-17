@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "ActualizarCatalogoCuenta";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int count0 = 0;
     int count = 0;
     int count1 = 0;
     int count2 = 0;
@@ -17,7 +18,7 @@
 
 <div class="row">
     <div class="d-flex justify-content-center" style="text-align: center;width: 100%; height: 100%">
-        <form asp-action="ActualizarCCuenta" method="post" style="width: 60%; padding: 3%; background-color:lavender">
+        <form asp-action="ActualizarCCuenta" method="post" style="width: 60%; padding: 3%; background-color:lavender; border-radius:8px">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group" style="background-color:steelblue">
                 <label class="control-label" style="color: white">¿Que cuenta corresponde a ACTIVOS CORRIENTES?<input asp-for="nombre" type="hidden" name="listCs[0].nombre" value="ACTIVOS CORRIENTES"></label>
@@ -44,11 +45,14 @@
                                  new { @class = "search form-control" })
             </div>
             <div class="form-group" style="background-color:steelblue">
+                <input type="hidden" name="listCs[4].codCuenta.Index" value="cc(@count0)" class="border-0"/>
                 <label class="control-label" style="color: white">¿Que cuenta engloba sus cuentas de INVENTARIO?<input type="hidden" asp-for="nombre" name="listCs[4].nombre" value="INVENTARIO"></label>
-                @*<select asp-for="codCuenta" class="form-control" name="listCs[4].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>*@
-                @Html.DropDownList("listCs[4].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
-                                 new { @class = "search form-control" })
+                <select class="search form-control" name="listCs[4].codCuenta[cc(@count0)]" asp-items="ViewBag.Idcuenta"></select>
+                @*@Html.DropDownList("listCs[4].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
+                                 new { @class = "search form-control" })*@
             </div>
+            <div id="newRow0" class="form-group"></div>
+            <button id="addRow0" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
             <div class="form-group" style="background-color:steelblue">
                 <input type="hidden" name="listCs[5].codCuenta.Index" value="cc(@count)" class="border-0" />
                 <label class="control-label" style="color: white">¿Que cuenta engloba sus cuentas de EFECTIVO + VALORES DE CORTO PLAZO?<input asp-for="nombre" type="hidden" name="listCs[5].nombre" value="EFECTIVO + VALORES DE CORTO PLAZO"></label>
@@ -90,7 +94,7 @@
                 <label class="control-label" style="color: white">¿Que cuenta engloba las CUENTAS POR PAGAR COMERCIALES?<input asp-for="nombre" type="hidden" name="listCs[10].nombre" value="CUENTAS POR PAGAR COMERCIALES"></label>
                 <select class="search form-control" name="listCs[10].codCuenta[cc(@count2)]" asp-items="ViewBag.Idcuenta"></select>
                 @*@Html.DropDownList("listCs[10].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
-                                 new { @class = "search form-control" })*@
+            new { @class = "search form-control" })*@
             </div>
             <div id="newRow2"></div>
             <button id="addRow2" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
@@ -111,7 +115,7 @@
                 <label class="control-label" style="color: white">¿Que cuenta corresponde a la INVERSION?<input asp-for="nombre" type="hidden" name="listCs[13].nombre" value="INVERSION"></label>
                 <select class="search form-control" name="listCs[13].codCuenta[cc(@count3)]" asp-items="ViewBag.Idcuenta"></select>
                 @*@Html.DropDownList("listCs[13].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
-                                 new { @class = "search form-control" })*@
+            new { @class = "search form-control" })*@
             </div>
             <div id="newRow3"></div>
             <button id="addRow3" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
@@ -120,7 +124,7 @@
                 <label class="control-label" style="color: white">¿Que cuenta engloba OTROS INGRESOS?<input asp-for="nombre" type="hidden" name="listCs[14].nombre" value="OTROS INGRESOS"></label>
                 <select class="search form-control" name="listCs[14].codCuenta[cc(@count4)]" asp-items="ViewBag.Idcuenta"></select>
                 @*@Html.DropDownList("listCs[14].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
-                                 new { @class = "search form-control" })*@
+            new { @class = "search form-control" })*@
             </div>
             <div id="newRow4"></div>
             <button id="addRow4" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
@@ -129,7 +133,7 @@
                 <label class="control-label" style="color: white">¿Que cuenta engloba a las cuentas de IMPUESTOS?<input asp-for="nombre" type="hidden" name="listCs[15].nombre" value="IMPUESTOS"></label>
                 <select class="search form-control" name="listCs[15].codCuenta[cc(@count5)]" asp-items="ViewBag.Idcuenta"></select>
                 @*@Html.DropDownList("listCs[15].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
-                                 new { @class = "search form-control" })*@
+            new { @class = "search form-control" })*@
             </div>
             <div id="newRow5"></div>
             <button id="addRow5" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
@@ -138,7 +142,7 @@
                 <label class="control-label" style="color: white">¿Que cuenta engloba a las cuentas de INTERESES?<input asp-for="nombre" type="hidden" name="listCs[16].nombre" value="INTERESES"></label>
                 <select class="search form-control" name="listCs[16].codCuenta[cc(@count6)]" asp-items="ViewBag.Idcuenta"></select>
                 @*@Html.DropDownList("listCs[16].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
-                                 new { @class = "search form-control" })*@
+            new { @class = "search form-control" })*@
             </div>
             <div id="newRow6"></div>
             <button id="addRow6" type="button" class="btn btn-info form-group row">Añadir otra cuenta</button>
@@ -165,14 +169,55 @@
     </script>
     <script>
         $(document).ready(function () {
+            $(document).on("click", "#addRow0", function () {
+                var count0 = $("div[id*='fila0']").length + 1;
+                var html = '';
+                var id = "#catalogo0" + count0;
+                html += '<div id="fila0" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
+                html += '<input type="hidden" name="listCs[4].codCuenta.Index" value="cc(' + count0 + ')" />';
+                html += '<select id ="catalogo0' + count0 + '" class="search form-control" name="listCs[4].codCuenta[cc(' + count0 + ')]"></select>';
+                html += '<div class="input-group-append" style="padding-top:1%">';
+                html += '<button id="removeRow0" type="button" class="btn btn-danger">Eliminar</button></div>';
+                html += '</div>';
+                html += '</div>';
+                $('#newRow0').append(html);
+                $('.search').select2({ width: '100%' });
+                $.ajax({
+                    url: "GetCC",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+                        console.log(result);
+                        var cuentas = "";
+                        $(result).each(function (index, valor) {
+                            cuentas = cuentas + '<option value="' + valor.codcuentacatalogo + '">' + valor.idcuentaNavigation.nomcuenta + '</option>'
+                        });
+                        var catalogoC = $(id);
+                        catalogoC.empty();
+                        catalogoC.append(cuentas);
+                    },
+                    error: function (data) {
+                        return "Error";
+                    }
+                });
+            });
+            // remove row
+            $(document).on('click', '#removeRow0', function () {
+                $(this).closest('.inputFormRow').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
             $(document).on("click", "#addRow", function () {
                 var count = $("div[id*='fila1']").length + 1;
                 var html = '';
                 var id = "#catalogo" + count;
-                html += '<div id="fila1" class="inputFormRow"><div class="row">';
+                html += '<div id="fila1" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
                 html += '<input type="hidden" name="listCs[5].codCuenta.Index" value="cc(' + count + ')" />';
                 html += '<select id ="catalogo' + count + '" class="search form-control" name="listCs[5].codCuenta[cc(' + count + ')]"></select>';
-                html += '<div class="input-group-append">';
+                html += '<div class="input-group-append" style="padding-top:1%">';
                 html += '<button id="removeRow" type="button" class="btn btn-danger">Eliminar</button></div>';
                 html += '</div>';
                 html += '</div>';
@@ -209,10 +254,10 @@
             $(document).on("click", "#addRow1", function () {
                 var count1 = $("div[id*='fila2']").length + 1;
                 var html = '';
-                html += '<div id="fila2" class="inputFormRow"><div class="row">';
+                html += '<div id="fila2" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
                 html += '<input type="hidden" name="listCs[8].codCuenta.Index" value="cc(' + count1 + ')" />';
                 html += '<select id ="catalogo1' + count1 + '" class="search form-control" name="listCs[8].codCuenta[cc(' + count1 + ')]"></select>';
-                html += '<div class="input-group-append">';
+                html += '<div class="input-group-append" style="padding-top:1%">';
                 html += '<button id="removeRow1" type="button" class="btn btn-danger">Eliminar</button></div>';
                 html += '</div>';
                 html += '</div>';
@@ -249,10 +294,10 @@
             $(document).on("click", "#addRow2", function () {
                 var count2 = $("div[id*='fila3']").length + 1;
                 var html = '';
-                html += '<div id="fila3" class="inputFormRow"><div class="row">';
+                html += '<div id="fila3" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
                 html += '<input type="hidden" name="listCs[10].codCuenta.Index" value="cc(' + count2 + ')" />';
                 html += '<select id ="catalogo2' + count2 + '" class="search form-control" name="listCs[10].codCuenta[cc(' + count2 + ')]"></select>';
-                html += '<div class="input-group-append">';
+                html += '<div class="input-group-append" style="padding-top:1%">';
                 html += '<button id="removeRow2" type="button" class="btn btn-danger">Eliminar</button></div>';
                 html += '</div>';
                 html += '</div>';
@@ -289,10 +334,10 @@
             $(document).on("click", "#addRow3", function () {
                 var count3 = $("div[id*='fila4']").length + 1;
                 var html = '';
-                html += '<div id="fila4" class="inputFormRow"><div class="row">';
+                html += '<div id="fila4" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
                 html += '<input type="hidden" name="listCs[13].codCuenta.Index" value="cc(' + count3 + ')" />';
                 html += '<select id ="catalogo3' + count3 + '" class="search form-control" name="listCs[13].codCuenta[cc(' + count3 + ')]"></select>';
-                html += '<div class="input-group-append">';
+                html += '<div class="input-group-append" style="padding-top:1%">';
                 html += '<button id="removeRow3" type="button" class="btn btn-danger">Eliminar</button></div>';
                 html += '</div>';
                 html += '</div>';
@@ -329,10 +374,10 @@
             $(document).on("click", "#addRow4", function () {
                 var count4 = $("div[id*='fila5']").length + 1;
                 var html = '';
-                html += '<div id="fila5" class="inputFormRow"><div class="row">';
+                html += '<div id="fila5" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
                 html += '<input type="hidden" name="listCs[14].codCuenta.Index" value="cc(' + count4 + ')" />';
                 html += '<select id ="catalogo4' + count4 + '" class="search form-control" name="listCs[14].codCuenta[cc(' + count4 + ')]"></select>';
-                html += '<div class="input-group-append">';
+                html += '<div class="input-group-append" style="padding-top:1%">';
                 html += '<button id="removeRow4" type="button" class="btn btn-danger">Eliminar</button></div>';
                 html += '</div>';
                 html += '</div>';
@@ -369,10 +414,10 @@
             $(document).on("click", "#addRow5", function () {
                 var count5 = $("div[id*='fila6']").length + 1;
                 var html = '';
-                html += '<div id="fila6" class="inputFormRow"><div class="row">';
+                html += '<div id="fila6" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
                 html += '<input type="hidden" name="listCs[15].codCuenta.Index" value="cc(' + count5 + ')" />';
                 html += '<select id ="catalogo5' + count5 + '" class="search form-control" name="listCs[15].codCuenta[cc(' + count5 + ')]"></select>';
-                html += '<div class="input-group-append">';
+                html += '<div class="input-group-append" style="padding-top:1%">';
                 html += '<button id="removeRow5" type="button" class="btn btn-danger">Eliminar</button></div>';
                 html += '</div>';
                 html += '</div>';
@@ -409,10 +454,10 @@
             $(document).on("click", "#addRow6", function () {
                 var count6 = $("div[id*='fila7']").length + 1;
                 var html = '';
-                html += '<div id="fila7" class="inputFormRow"><div class="row">';
+                html += '<div id="fila7" class="inputFormRow" style="padding-right: 2.5%; padding-left: 2.5%; padding-top:1.5%"><div class="row">';
                 html += '<input type="hidden" name="listCs[16].codCuenta.Index" value="cc(' + count6 + ')" />';
                 html += '<select id ="catalogo6' + count6 + '" class="search form-control" name="listCs[16].codCuenta[cc(' + count6 + ')]"></select>';
-                html += '<div class="input-group-append">';
+                html += '<div class="input-group-append" style="padding-top:1%">';
                 html += '<button id="removeRow6" type="button" class="btn btn-danger">Eliminar</button></div>';
                 html += '</div>';
                 html += '</div>';
