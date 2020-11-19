@@ -345,7 +345,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var balance = from x in _context.Valoresdebalance select x;
             catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa).Include(r => r.IdcuentaNavigation);
             
-            double activoTotal =0 /*balance.Where(m => m.Idcuenta == c).FirstOrDefault().Valorcuenta*/;
+            //double activoTotal = balance.Where(m => m.Idcuenta == c).FirstOrDefault().Valorcuenta;
 
             int an = proyAnfContext.FirstOrDefault().Anio;
             int an2 = an - 1;
@@ -363,7 +363,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 Vanios2.Add(aw.Valorcuenta);
             }
             ViewData["anio1"] = Vanios1;
-            ViewBag.activo = activoTotal;
+            //ViewBag.activo = activoTotal;
 
             ViewData["anio2"] = Vanios2;
             //años 
