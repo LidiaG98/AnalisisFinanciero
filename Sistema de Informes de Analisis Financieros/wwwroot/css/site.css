@@ -67,7 +67,7 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     line-height: 40px;
     text-align: center; /* Vertically center the text there */
     background: #2574A9;
@@ -285,4 +285,26 @@ body {
     .showcase .showcase-text {
         padding: 7rem;
     }
+}
+
+input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+.custom-file-upload {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #106BA0;
+    display: inline-block;
+    transition: all .5s;
+    cursor: pointer;
+    padding: 15px 40px !important;
+    text-transform: uppercase;
+    width: fit-content;
+    text-align: center;
 }

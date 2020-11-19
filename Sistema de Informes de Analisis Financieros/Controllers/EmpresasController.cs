@@ -42,10 +42,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return RedirectToAction("ActualizarCatalogoCuenta", "NomCuentaEs");
         }
 
+        [HttpGet]
         public IActionResult SubirBalance()
         {
             return PartialView();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SubirBalance(int IdEmpresa,SubirBalance subirBalance, IFormFile files)
+        {
+            if (ModelState.IsValid)
+            {
+                string mensaje = await valoresController.GuardarBalance(IdEmpresa, subirBalance, files);
+                return RedirectToAction("Index", "ValoresBalance", new { mensaje = mensaje });
+            }
+            return PartialView("SubirBalance", subirBalance);
+        }
+
         public IActionResult SubirEstado()
         {
             return PartialView();
@@ -53,8 +66,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
         public async Task<IActionResult> GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
         {
-            string mensaje = await valoresController.GuardarBalance(IdEmpresa, subirBalance, files);
-            return RedirectToAction("Index", "ValoresBalance", new { mensaje = mensaje });
+            if (ModelState.IsValid)
+            {
+                string mensaje = await valoresController.GuardarBalance(IdEmpresa, subirBalance, files);
+                return RedirectToAction("Index", "ValoresBalance", new { mensaje = mensaje });
+            }
+            return PartialView("SubirBalance",subirBalance);
+            
         }
 
         public async Task<IActionResult> GuardarEstado(int IdEmpresa, SubirBalance subirBalance, IFormFile files)

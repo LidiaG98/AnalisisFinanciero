@@ -1,71 +1,95 @@
 ﻿@model Sistema_de_Informes_de_Analisis_Financieros.Models.Empresa
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Empresa</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Idempresa" />
-            <div class="form-group">
-                <label asp-for="Idsector" class="control-label"></label>
-                <select asp-for="Idsector" class="form-control" asp-items="ViewBag.Idsector"></select>
-                <span asp-validation-for="Idsector" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nomempresa" class="control-label"></label>
-                <input asp-for="Nomempresa" class="form-control" />
-                <span asp-validation-for="Nomempresa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descempresa" class="control-label"></label>
-                <input asp-for="Descempresa" class="form-control" />
-                <span asp-validation-for="Descempresa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Razonsocial" class="control-label"></label>
-                <input asp-for="Razonsocial" class="form-control" />
-                <span asp-validation-for="Razonsocial" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-<h5>Subir Catalogo de cuentas</h5>
-<form enctype="multipart/form-data" asp-action="GuardarCuentas">
-    <div class="form-group row">
-        <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
-        <label for="celdaCod" class="col-sm-2 col-form-label">Celda de código</label>
-        <div class="col-sm-10">
-            <input class="form-control" id="celdaCod" name="celdaCod" placeholder="Número de celda, ej.: A1">
+<h1>Actualizar información de la Empresa</h1>
+<section>
+    <div class="card bg-dark text-light mt-4 rounded-0">
+        <div class="card-header">
+            <h4>@Html.DisplayFor(model => model.Nomempresa)</h4>
+        </div>
+        <div class="card-body" style="font-size:large;">
+            <form asp-action="Edit">
+                <div class="form-row">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Idempresa" />
+                    <div class="form-group col-md-6">
+                        <label asp-for="Idsector" class="control-label"></label>
+                        <select asp-for="Idsector" class="form-control" asp-items="ViewBag.Idsector"></select>
+                        <span asp-validation-for="Idsector" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Nomempresa" class="control-label"></label>
+                        <input asp-for="Nomempresa" class="form-control" />
+                        <span asp-validation-for="Nomempresa" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Descempresa" class="control-label"></label>
+                    <textarea asp-for="Descempresa" class="form-control"></textarea>
+                    <span asp-validation-for="Descempresa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Razonsocial" class="control-label"></label>
+                    <textarea asp-for="Razonsocial" class="form-control"></textarea>
+                    <span asp-validation-for="Razonsocial" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Actualizar Información" class="btn btn-primary rounded-0" />
+                </div>
+            </form>
         </div>
     </div>
-    <div class="form-group row">
-        <label for="celdaNom" class="col-sm-2 col-form-label">Celda de Nombre</label>
-        <div class="col-sm-10">
-            <input class="form-control" id="celdaNom" name="celdaNom" placeholder="Número de celda, ej.: B1">
+</section>
+
+<section class="mt-4 rounded-0">
+    <div class="card border-secondary">
+        <div class="card-header text-center">
+            <h5>Subir Catalogo de cuentas</h5>
+        </div>
+        <div class="card-body">
+            <p>
+                Suba su catálogo de cuentas para poder utilizar la herrmienta. El catálogo debe de ser un <b>archivo de excel (.xlsx) sin encabezado, además
+                debe de estar en la primera hoja del archivo.</b><b>Los códigos de las cuentas deben estar en fila con su respectiva cuenta y en una misma columna,</b> de la misma manera
+                con los nombres de las cuentas. <b class="text-danger">Si algún nombre esta fuera de la columna establecida en el siguiente formulario, puede llevar
+                a futuros problemas con el análisis.</b>
+            </p>
+            <p>Proporcione la siguiente información:</p>
+            <form enctype="multipart/form-data" asp-action="GuardarCuentas">
+                <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label for="celdaCod" class="input-group-text">Celda de código</label>
+                            </div>
+                            <input data-toggle="tooltip" data-placement="bottom" title="El número de celda donde comienza su lista de códigos"
+                                   class="form-control" id="celdaCod" name="celdaCod" placeholder="Número de celda, ej.: A1">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label for="celdaNom" class="input-group-text">Celda de Nombre</label>
+                            </div>
+                            <input class="form-control" id="celdaNom" name="celdaNom" placeholder="Número de celda, ej.: B1">
+                        </div>
+                    </div>
+                </div>
+                <label class="custom-file-upload" for="fileupload">
+                    Elegir Archivo
+                </label>
+                <input type="file" id="fileupload" name="files" class="btn btn-success form-control" value="Subir Catálogo de Cuentas" />
+            </form>
+        </div>
+        <div class="card-footer text-muted">
+            <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary rounded-0" />
         </div>
     </div>
-    <div class="col-md-4">
-        <input type="file" id="fileupload" name="files" class="btn btn-success form-control" value="Subir Catálogo de Cuentas" />
-    </div>
-    <div class="col-md-3">
-        <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary" />
-    </div>
-
-</form>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -87,6 +111,20 @@
                     }
                 }
             });
+        });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        $(document).ready(function () {
+            var el = document.getElementById("fileupload")
+            if (el) {
+                el.addEventListener("change", function (e) {
+                    document.querySelector("[for=" + e.target.id + "]")
+                        .innerHTML = e.target.files[0].name;
+                })
+            }
         });
     </script>
 }
