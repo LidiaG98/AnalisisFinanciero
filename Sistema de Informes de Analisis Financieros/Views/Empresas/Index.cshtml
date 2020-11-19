@@ -1,28 +1,19 @@
 ﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Empresa>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Empresas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    
-        @if (User.IsInRole("Administrator"))
-        {
-            <h1>Empresas</h1>
-        }
-        else
-        {               
-            <h1>Tu Empresa</h1>
-        }    
+<h1>Empresas Registradas</h1>
 
-<p>
-    @if (User.IsInRole("Administrator"))
-    {
-        <a asp-action="Create" class="btn btn-primary">Crear Nueva Empresa</a>
-    }
-</p>
-<table class="table">
-    <thead>
+<div class="mb-4 mt-4">
+    <a class="btn rounded-0 text-light" style="background-color: #409bd8;" asp-action="Create">
+        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbspCrear Nueva Empresa
+    </a>
+</div>
+<table class="table table-responsive">
+    <thead class="thead-dark text-center">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Nomempresa)
@@ -36,10 +27,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdsectorNavigation)
             </th>
-            <th></th>
+            <th>
+                Acciones
+            </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-center">
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -55,12 +48,15 @@
                 @Html.DisplayFor(modelItem => item.IdsectorNavigation.Nomsector)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Idempresa" class="btn btn-info">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Idempresa" class="btn btn-warning">Detalles</a> |
-                @if (User.IsInRole("Administrator"))
-                {
-                    <a asp-action="Delete" asp-route-id="@item.Idempresa" class="btn btn-danger">Eliminar</a>
-                }
+                <a class="btn btn-warning px-2 py-1 rounded-circle" asp-action="Edit" asp-route-id="@item.Idempresa">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                <a class="btn btn-info px-2 py-1 rounded-circle text-dark" asp-action="Details" asp-route-id="@item.Idempresa">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>
+                <a class="btn btn-danger px-2 py-1 rounded-circle rounded text-dark" asp-action="Delete" asp-route-id="@item.Idempresa">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
 }

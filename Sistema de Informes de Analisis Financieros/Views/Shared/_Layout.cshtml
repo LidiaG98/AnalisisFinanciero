@@ -1,7 +1,5 @@
-﻿@inject SignInManager<Usuario> signInManager;
-@inject UserManager<Usuario> UserManager
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="es-sv">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,98 +11,55 @@
 </head>
 <body>
     <div class="wrapper">
-        @if (signInManager.IsSignedIn(User))
-        {
-            <!-- Sidebar  -->
-            <nav id="sidebar">
-                <div class="sidebar-logo">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                        <img src="~/favicon.ico" style="height:20%;width:20%" />
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-logo">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/favicon.ico" style="height:20%;width:20%" />
+                </a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Análisis Financieros</a>
+            </div>
+            <ul class="sidebar-navigation">
+                <li class="header">Navegación</li>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fa fa-home" aria-hidden="true"></i> Inicio
                     </a>
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Análisis Financieros</a>
-                </div>
-                <ul class="sidebar-navigation">
-                    <li class="header">Navegación</li>
-                    <li>
-                        <a asp-area="" asp-controller="Home" asp-action="Index">
-                            <i class="fa fa-home" aria-hidden="true"></i> Inicio
-                        </a>
 
-                    </li>
-                    @if (User.IsInRole("Administrator"))
-                    {                        
-                        <li>
-                            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">
-                                <i class="fa fa-line-chart" aria-hidden="true"></i> Agregar Usuario
-                            </a>
-                        </li>                       
-                        <li>
-                            <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
-                                <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="MensajesAnalisis" asp-action="Index">
-                                <i class="fa fa-line-chart" aria-hidden="true"></i> Mensajes de Análisis
-                            </a>
-                        </li>
-
-                        <li>
-                            <a asp-area="" asp-controller="Sector" asp-action="Index">
-                                <i class="fa fa-industry" aria-hidden="true"></i> Sectores
-                            </a>
-                        </li>
-                    }
-                    <li>
-                        <a asp-area="" asp-controller="Empresas" asp-action="Index">
-                            <i class="fa fa-briefcase" aria-hidden="true"></i> Empresas
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
-                            <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisVertical">
-                            <i class="fa fa-arrow-down" aria-hidden="true"></i> Análisis vertical
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Razons" asp-action="Index">
-                            <i class="fa fa-line-chart" aria-hidden="true"></i> Razones
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="CatalogoCuentas" asp-action="Index">
-                            <i class="fa fa-line-chart" aria-hidden="true"></i> Catálogo
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="EstadoR" asp-action="Index">
-                            <i class="fa fa-line-chart" aria-hidden="true"></i> Estado de Resultado
-                        </a>
-                    </li>
-                    @*<li class="header">Another Menu</li>
-        <li>
-            <a href="#">
-                <i class="fa fa-users" aria-hidden="true"></i> Friends
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa fa-cog" aria-hidden="true"></i> Settings
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fa fa-info-circle" aria-hidden="true"></i> Information
-            </a>
-        </li>*@
-                </ul>
-            </nav>
-        }
-
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Empresas" asp-action="Index">
+                        <i class="fa fa-briefcase" aria-hidden="true"></i> Empresa
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Sector" asp-action="Index">
+                        <i class="fa fa-industry" aria-hidden="true"></i> Sectores
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
+                    </a>
+                </li>
+                <li class="header">Herramientas</li>
+                <li>
+                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
+                        <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisVertical">
+                        <i class="fa fa-arrow-down" aria-hidden="true"></i> Analizis vertical
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Razons" asp-action="Index">
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
         <!-- Page Content  -->
         <div id="content">
@@ -134,13 +89,15 @@
         </div>
     </div>
     <footer class="footer">
-        <small class="container">
+        <small class="container-fluid">
             &copy; 2020 - Sistema de Informes de Analisis Financieros - Universidad de El Salvador ANF115 G08
         </small>
     </footer>
 
     <!--jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--Poppins CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.3/umd/popper.min.js" integrity="sha512-53CQcu9ciJDlqhK7UD8dZZ+TF2PFGZrOngEYM/8qucuQba+a+BXOIRsp9PoMNJI3ZeLMVNIxIfZLbG/CdHI5PA==" crossorigin="anonymous"></script>
     <!--Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
