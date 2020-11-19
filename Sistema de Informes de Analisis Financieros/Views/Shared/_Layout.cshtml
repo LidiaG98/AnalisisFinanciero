@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es-sv">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Analisis Financieros</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 <body>
@@ -38,6 +38,12 @@
                     </a>
                 </li>
                 <li>
+                    <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
+                    </a>
+                </li>
+                <li class="header">Herramientas</li>
+                <li>
                     <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
                         <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
                     </a>
@@ -47,31 +53,9 @@
                         <i class="fa fa-arrow-down" aria-hidden="true"></i> Analizis vertical
                     </a>
                 </li>
-
-                <li>
-                    <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
-                    </a>
-                </li>
                 <li>
                     <a asp-area="" asp-controller="Razons" asp-action="Index">
                         <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios
-                    </a>
-                </li>
-                <li class="header">Another Menu</li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-users" aria-hidden="true"></i> Friends
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-cog" aria-hidden="true"></i> Settings
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i> Information
                     </a>
                 </li>
             </ul>
@@ -105,13 +89,15 @@
         </div>
     </div>
     <footer class="footer">
-        <small class="container">
+        <small class="container-fluid">
             &copy; 2020 - Sistema de Informes de Analisis Financieros - Universidad de El Salvador ANF115 G08
         </small>
     </footer>
 
     <!--jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--Poppins CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.3/umd/popper.min.js" integrity="sha512-53CQcu9ciJDlqhK7UD8dZZ+TF2PFGZrOngEYM/8qucuQba+a+BXOIRsp9PoMNJI3ZeLMVNIxIfZLbG/CdHI5PA==" crossorigin="anonymous"></script>
     <!--Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
@@ -125,7 +111,7 @@
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
-   
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

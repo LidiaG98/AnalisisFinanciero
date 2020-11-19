@@ -7,60 +7,81 @@
 
 <h1>@Html.DisplayFor(model => model.Nomempresa)</h1>
 <hr />
-<div class="container">
-    <div class="row rounded pt-4" style="background:rgba(255, 255, 255, 0.79);">
-        <div class="col-4">
-            <img class="rounded mx-auto d-block" src="~/enterprise.png" style="width:90%; height:80%;" />
-        </div>
-        <div class="col-8  text-left" style="font-size:large">
-            <dl class="row">
-                <dt class="col-sm-4 text-right">
+
+<section class="mb-3">
+    <div class="container text-light" style="background:#212529;">
+        <div class="row">
+            <div class="p-0 col-md-6 col-sm-12">
+                <img class="img-fluid w-100 img-fluid" src="~/img/empresa.jpg" />
+            </div>
+            <div class="col-md-6 col-sm-12 p-5" style="font-size:large">
+                <label class="font-weight-bolder">
                     @Html.DisplayNameFor(model => model.Descempresa)
-                </dt>
-                <dd class="col-sm-8">
+                </label>
+                <p class="mb-4">
                     @Html.DisplayFor(model => model.Descempresa)
-                </dd>
-                <dt class="col-sm-4 text-right">
+                </p>
+                <label class="font-weight-bold">
                     @Html.DisplayNameFor(model => model.Razonsocial)
-                </dt>
-                <dd class="col-sm-8">
+                </label>
+                <p class="mb-4">
                     @Html.DisplayFor(model => model.Razonsocial)
-                </dd>
-                <dt class="col-sm-4 text-right">
+                </p>
+                <label class="font-weight-bold">
                     @Html.DisplayNameFor(model => model.IdsectorNavigation)
-                </dt>
-                <dd class="col-sm-8">
+                </label>
+                <p class="mb-4">
                     @Html.DisplayFor(model => model.IdsectorNavigation.Nomsector)
-                </dd>
-            </dl>
+                </p>
+            </div>
         </div>
     </div>
-    <div>
-    </div>
-
-    <div id='ModalBalance' class='modal hide fade in' data-url='@Url.Action("SubirBalance")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <form enctype="multipart/form-data" asp-action="GuardarBalance">
-            <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
-            <div id="ModalBalanceContainer">
+</section>
+<section>
+    <h3>Archivos</h3>
+    <div class="container">
+        <div class="row lead"></div>
+        <p class="text-justify">Para poder realizar los análisis es necesario subir los archivos de excel de el balance general de la empresa,
+        el estado de resultados y su catálogo de cuenta. El tipo de archivo solo se admite excel (.xlsx) y los valores deben 
+        estar contenidos en una sola columna o <strong>de lo contrario no serán detectados</strong></p>
+        <div id='ModalBalance' class='modal hide fade in' data-url='@Url.Action("SubirBalance")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <form id="frmBalance" enctype="multipart/form-data" asp-action="SubirBalance" data-ajax="true" data-ajax-method="POST"
+                  data-ajax-mode="replace" data-ajax-update="cambio">
+                <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
+                <div id="ModalBalanceContainer">
+                </div>
+            </form>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <button class="btn btn-primary btn-block rounded-0" id='showModalBalance' data-url="@Url.Action("SubirBalance")">Subir Archivo de Balance General</button>
             </div>
-        </form>
+            <div class="col-6">
+                <button id='showModalEstado' class="btn btn-block btn-primary rounded-0">Subir Archivo de Estado de Resultados</button>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <p>
+                    <strong class="text-danger">Es requisito tener un catálogo de cuenta regristrado antes de subir cualquiera de estos archivos.</strong>
+                    <br />Si no ha subido aún su catálogo de cuentas puede hacerlo desde de aquí:<a class="btn-outline-primary rounded-0 ml-2" asp-action="Edit" asp-route-id="@Model.Idempresa">Ir a edición de empresa</a>
+                </p>
+            </div>            
+        </div>
+
+        <div id='ModalEstado' class='modal hide fade in' data-url='@Url.Action("SubirEstado")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <form enctype="multipart/form-data" asp-action="GuardarEstado">
+                <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
+                <div id="ModalEstadoContainer">
+
+                </div>
+            </form>
+        </div>
     </div>
-    <button id='showModalBalance'>Subir Archivo de Balance General</button>
+</section>
 
-    <div id='ModalEstado' class='modal hide fade in' data-url='@Url.Action("SubirEstado")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <form enctype="multipart/form-data" asp-action="GuardarEstado">
-            <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
-            <div id="ModalEstadoContainer">
-            </div>
-        </form>
-    </div>
-    <button id='showModalEstado'>Subir Archivo de Estado de Resultados</button>
-
-
-    <a asp-action="Edit" asp-route-id="@Model.Idempresa">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
         $(document).on('click', '#btnupload', function () {
             var fileExtension = ['xls', 'xlsx'];
@@ -76,7 +97,7 @@
                     return false;
                 }
             }
-        });      
+        });
     </script>
     <script type="text/javascript">
         // add row
@@ -88,7 +109,7 @@
                 html += '<div class="inputFormRow"><div class="row">';
                 html += '<div class="col"><div class="input-group mb-3"><div class="input-group-prepend">';
                 html += '<label for="anio" class="input-group-text">Año ' + (count + 2) + ':</label></div>';
-                html += '<input asp-for="anios" name="anios[1].anio" class="form-control m-input" placeholder="Año de los valores del balance ej.: 2019"></div>';
+                html += '<input asp-for="anios" name="anios[1].anio" class="form-control m-input" placeholder="Año a evaluar ej.: 2019"></div>';
                 html += '</div><div class="col"><div class="input-group mb-3"><div class="input-group-prepend">'
                 html += '<label for="celdaAnio" class="input-group-text">Celda de valores:</label></div>';
                 html += '<input asp-for="anios" name="anios[1].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1">';
@@ -129,5 +150,9 @@
                 });
             });
         });
+
+        function cambio(data) {
+            $('#ModalBalanceContainer').html(data);
+        }
     </script>
 }
