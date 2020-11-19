@@ -54,7 +54,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         [HttpPost]
         /*GuardarCuentas: obtiene las cuentas provinientes del archivo de excel, les asigna su tipo 
         de cuenta y arma el catalogo de la empresa en el sistema*/
-        public async Task<string> GuardarCuentas(int IdEmpresa, string celdaCod, string celdaNom, IFormFile files)
+        public async Task<string> GuardarCuentas(int IdEmpresa, string celdaCod, string celdaNom, string hoja, IFormFile files)
         {
             int contador = int.Parse(celdaCod.Substring(1, 1));
             if (files == null || files.Length <= 0)
@@ -74,7 +74,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
                 using (var package = new ExcelPackage(stream))
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[hoja];
                     var rowCount = worksheet.Dimension.Rows;
 
                     for (int row = 1; row <= rowCount; row++)
