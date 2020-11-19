@@ -33,7 +33,7 @@
                                  new { @class = "search form-control" })
             </div>
             <div class="form-group" style="background-color:steelblue">
-                <label class="control-label" style="color: white">¿Que cuenta corresponde a los INGRESOS?<input asp-for="nombre" type="hidden" name="listCs[2].nombre" value="INGRESOS DE LAS VENTAS"></label>
+                <label class="control-label" style="color: white">¿Que cuenta corresponde a los INGRESOS?<input asp-for="nombre" type="hidden" name="listCs[2].nombre" value="INGRESOS"></label>
                 @*<select asp-for="codCuenta" class="form-control" name="listCs[2].codCuenta[0]" asp-items="ViewBag.Idcuenta"></select>*@
                 @Html.DropDownList("listCs[2].codCuenta[0]", new SelectList(ViewBag.Idcuenta, "Value", "Text"),
                                  new { @class = "search form-control" })
