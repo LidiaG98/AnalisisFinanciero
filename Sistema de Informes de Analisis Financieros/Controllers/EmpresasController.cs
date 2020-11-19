@@ -240,5 +240,28 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             ViewBag.listRatios = listRatios;
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CrearUsuario([Bind("email,Password,ConfirmPassword,idEmpresa")] CrearUsuarioModel usuario)
+        {
+            SelectList listRatios = new SelectList(_context.Empresa.ToList(), "Idempresa", "Nomempresa");
+            ViewBag.listRatios = listRatios;
+            if (ModelState.IsValid)
+            {
+                Empresa empresa = _context.Empresa.Where(l => l.Idempresa == usuario.idEmpresa).FirstOrDefault();
+                Usuario u = new Usuario()
+                {
+                    UserName = usuario.email,
+                    Email = usuario.email,
+                    EmailConfirmed = true,
+                    Idempresa = empresa
+                };                                
+                string pass = usuario.Password;
+                var result = await _userManager.CreateAsync(u, pass);                
+                return View();
+            }            
+            return View(usuario);
+        }
     }
 }

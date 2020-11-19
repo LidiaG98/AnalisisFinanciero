@@ -354,8 +354,14 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
 
         //Método general para las razones
         [HttpGet]
-        public async Task<IActionResult> AnalisisRazon(int idRazon)
+        public async Task<IActionResult> AnalisisRazon(int idRazon, int anio1, int anio2)
         {
+            int anio1Analisis = anio1, anio2Analisis = anio2;
+            //if (anio1 != 0 && anio2 != 0)
+            //{
+            //    anio1Analisis = anio1;
+            //    anio2Analisis = anio2;
+            //}               
             var usuario = this.User;
             Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
             var razon = _context.Razon.Where(r => r.idRazon == idRazon).FirstOrDefault();
@@ -477,7 +483,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             idNum1 = num1.Idcuenta;
                             num1CuentasCatalogo = _context.Catalogodecuenta
                                 .Where(l => l.Idcuenta == idNum1)
-                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)                                
                                 .ToList();
                         }                        
                     }
@@ -517,11 +523,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         {
                             if (cuenta.Codcuentacatalogo.StartsWith(codigobase))
                             {
+                                List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                var valoresBalance = _context.Valoresdebalance
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresBalance = _context.Valoresdebalance
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)                                    
+                                    .ToList();
+                                }
+                                else
+                                {
+                                    valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
                                     .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresBalance.Count; j++)
                                 {
@@ -536,11 +554,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                         model.valorNumA2 += valoresBalance[j].Valorcuenta;
                                     }
                                 }
-                                //obtener valores si están en el estado de resultados
-                                var valoresEstado = _context.Valoresestado
+                                List<Valoresestado> valoresEstado;
+                                //obtener valores si están en el estado R
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresEstado = _context.Valoresestado
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)                                    
+                                    .ToList();
+                                }
+                                else
+                                {
+                                    valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
                                     .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresEstado.Count; j++)
                                 {
@@ -565,19 +595,41 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             model.valorNumA1 = int.Parse(model.numerador[i]);
                             model.valorNumA2 = int.Parse(model.numerador[i]);
                         }
+                        List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        var valoresEstado = _context.Valoresestado
-                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
-                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
-                            .ToList();
-                        if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                        if (anio1Analisis == 0 || anio2Analisis == 0)
                         {
                             valoresEstado = _context.Valoresestado
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
-                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
+                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)                            
                             .ToList();
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)                                
+                                .ToList();
+                            }
                         }
+                        else
+                        {
+                            valoresEstado = _context.Valoresestado
+                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
+                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                            .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                            .ToList();
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                .ToList();
+                            }
+                        }                        
+                        
                         //Sumar valores al total
                         for (int j = 0; j < valoresEstado.Count; j++)
                         {
@@ -667,11 +719,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         {
                             if (cuenta.Codcuentacatalogo.StartsWith(codigobase))
                             {
+                                List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                var valoresBalance = _context.Valoresdebalance
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                     .ToList();
+                                }
+                                else
+                                {
+                                    valoresBalance = _context.Valoresdebalance
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                    .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresBalance.Count; j++)
                                 {
@@ -686,11 +750,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                         model.valorNum2A2 += valoresBalance[j].Valorcuenta;
                                     }
                                 }
-                                //obtener valores si están en el estado de resultados
-                                var valoresEstado = _context.Valoresestado
+                                List<Valoresestado> valoresEstado;
+                                //obtener valores si están en el estado R
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                     .ToList();
+                                }
+                                else
+                                {
+                                    valoresEstado = _context.Valoresestado
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                    .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresEstado.Count; j++)
                                 {
@@ -715,18 +791,39 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             model.valorNum2A1 = int.Parse(model.numerador[i]);
                             model.valorNum2A2 = int.Parse(model.numerador[i]);
                         }
+                        List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        var valoresEstado = _context.Valoresestado
+                        if (anio1Analisis == 0 || anio2Analisis == 0)
+                        {
+                            valoresEstado = _context.Valoresestado
                             .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
                             .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                             .ToList();
-                        if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .ToList();
+                            }
+                        }
+                        else
                         {
                             valoresEstado = _context.Valoresestado
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
                             .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                            .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
                             .ToList();
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                .ToList();
+                            }
                         }
                         //Sumar valores al total
                         for (int j = 0; j < valoresEstado.Count; j++)
@@ -825,11 +922,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         {
                             if (cuenta.Codcuentacatalogo.StartsWith(codigobase))
                             {
+                                List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                var valoresBalance = _context.Valoresdebalance
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                     .ToList();
+                                }
+                                else
+                                {
+                                    valoresBalance = _context.Valoresdebalance
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                    .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresBalance.Count; j++)
                                 {
@@ -844,11 +953,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                         model.valorDenA2 += valoresBalance[j].Valorcuenta;
                                     }
                                 }
-                                //obtener valores si están en el estado de resultados
-                                var valoresEstado = _context.Valoresestado
+                                List<Valoresestado> valoresEstado;
+                                //obtener valores si están en el estado R
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                     .ToList();
+                                }
+                                else
+                                {
+                                    valoresEstado = _context.Valoresestado
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                    .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresEstado.Count; j++)
                                 {
@@ -873,18 +994,39 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             model.valorDenA1 = int.Parse(model.denominador[i]);
                             model.valorDenA2 = int.Parse(model.denominador[i]);
                         }
+                        List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        var valoresEstado = _context.Valoresestado
-                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.denominador[i]))
-                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
-                            .ToList();
-                        if (model.denominador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                        if (anio1Analisis == 0 || anio2Analisis == 0)
                         {
                             valoresEstado = _context.Valoresestado
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
                             .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                             .ToList();
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .ToList();
+                            }
+                        }
+                        else
+                        {
+                            valoresEstado = _context.Valoresestado
+                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
+                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                            .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                            .ToList();
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                .ToList();
+                            }
                         }
                         //Sumar valores al total
                         for (int j = 0; j < valoresEstado.Count; j++)
@@ -975,11 +1117,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         {
                             if (cuenta.Codcuentacatalogo.StartsWith(codigobase))
                             {
+                                List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                var valoresBalance = _context.Valoresdebalance
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                     .ToList();
+                                }
+                                else
+                                {
+                                    valoresBalance = _context.Valoresdebalance
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                    .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresBalance.Count; j++)
                                 {
@@ -994,11 +1148,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                         model.valorDen2A2 += valoresBalance[j].Valorcuenta;
                                     }
                                 }
-                                //obtener valores si están en el estado de resultados
-                                var valoresEstado = _context.Valoresestado
+                                List<Valoresestado> valoresEstado;
+                                //obtener valores si están en el estado R
+                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                {
+                                    valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
                                     .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                     .ToList();
+                                }
+                                else
+                                {
+                                    valoresEstado = _context.Valoresestado
+                                    .Where(l => l.Idcuenta == cuenta.Idcuenta)
+                                    .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                    .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                    .ToList();
+                                }
                                 //Sumar valores al total
                                 for (int j = 0; j < valoresEstado.Count; j++)
                                 {
@@ -1023,18 +1189,39 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             model.valorDen2A1 = int.Parse(model.denominador[i]);
                             model.valorDen2A2 = int.Parse(model.denominador[i]);
                         }
+                        List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        var valoresEstado = _context.Valoresestado
-                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.denominador[i]))
-                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
-                            .ToList();
-                        if (model.denominador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                        if (anio1Analisis == 0 || anio2Analisis == 0)
                         {
                             valoresEstado = _context.Valoresestado
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
-                            .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
                             .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                             .ToList();
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .ToList();
+                            }
+                        }
+                        else
+                        {
+                            valoresEstado = _context.Valoresestado
+                            .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
+                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                            .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                            .ToList();
+                            if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
+                            {
+                                valoresEstado = _context.Valoresestado
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
+                                .ToList();
+                            }
                         }
                         //Sumar valores al total
                         for (int j = 0; j < valoresEstado.Count; j++)
@@ -1472,7 +1659,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             {
                 var ratioempresa = _context.Ratioempresa
                     .Where(l => l.Idempresa == empresaSector.Idempresa)
-                    .Where(l => l.Idratio == razonAnalizada.Idratio)
+                    .Where(l => l.Idratio == razonAnalizada.Idratio)                    
                     .ToList();
 
                 foreach(var ratio in ratioempresa)

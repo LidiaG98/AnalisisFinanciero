@@ -12,13 +12,7 @@
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button type="submit" class="nav-link btn btn-link text-dark">Cerrar Sesión</button>
                 </form>
-            </li>
-            @if (User.IsInRole("Administrator"))
-            {
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Registrarse</a>
-                </li>
-            }
+            </li>            
         }
         else
         {
