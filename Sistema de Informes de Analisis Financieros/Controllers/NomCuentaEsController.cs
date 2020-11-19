@@ -57,7 +57,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             {
                 for(int x=0; x < listCs[i].codCuenta.Count; x++)
                 {
-                    listCs[i].codCuenta[x] = listCs[i].codCuenta[x].Replace(".", "");
+                    if(listCs[i].codCuenta[x] != null)
+                    {
+                        listCs[i].codCuenta[x] = listCs[i].codCuenta[x].Replace(".", "");
+                    }
                 }
                 cc = _context.Catalogodecuenta.Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa).ToList();
                 nom = _context.NomCuentaE.Where(e => e.nomCuentaE == listCs[i].nombre).ToList();
@@ -278,7 +281,22 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                                     await _context.SaveChangesAsync();
                                 }
                             }
-                          break;
+                            break;
+                        case "NUMERO DE ACCIONES":
+                            foreach (string cod in listCs[i].codCuenta)
+                            {
+                                if(cod != null)
+                                {
+                                    if (cc[j].Codcuentacatalogo.StartsWith(cod))
+                                    {
+                                        cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
+                                        cc[j].nomCuentaEID = nom[0].nomCuentaEID;
+                                        _context.Update(cc[j]);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+                            }
+                            break;
                     }
 
                 }
