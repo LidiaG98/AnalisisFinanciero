@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,7 +12,8 @@ using Sistema_de_Informes_de_Analisis_Financieros.Models;
 using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
-{
+{    
+    [Authorize]
     public class EmpresasController : Controller
     {
         private readonly ProyAnfContext _context;
@@ -82,7 +84,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return View(empresa);
         }
 
-        // GET: Empresas/Create
+        // GET: Empresas/Create        
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["Idsector"] = new SelectList(_context.Sector, "Idsector", "Nomsector");
@@ -91,7 +94,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
         // POST: Empresas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.        
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Idempresa,Idsector,Nomempresa,Descempresa,Razonsocial")] Empresa empresa)
@@ -159,7 +163,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return View(empresa);
         }
 
-        // GET: Empresas/Delete/5
+        // GET: Empresas/Delete/5        
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -178,7 +183,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return View(empresa);
         }
 
-        // POST: Empresas/Delete/5
+        // POST: Empresas/Delete/5        
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

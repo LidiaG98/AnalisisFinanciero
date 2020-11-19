@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<Usuario> signInManager;
+@inject UserManager<Usuario> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,76 +8,98 @@
     <title>@ViewData["Title"] - Analisis Financieros</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 <body>
     <div class="wrapper">
-        <!-- Sidebar  -->
-        <nav id="sidebar">
-            <div class="sidebar-logo">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/favicon.ico" style="height:20%;width:20%" />
-                </a>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Análisis Financieros</a>
-            </div>
-            <ul class="sidebar-navigation">
-                <li class="header">Navegación</li>
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">
-                        <i class="fa fa-home" aria-hidden="true"></i> Inicio
+        @if (signInManager.IsSignedIn(User))
+        {
+            <!-- Sidebar  -->
+            <nav id="sidebar">
+                <div class="sidebar-logo">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/favicon.ico" style="height:20%;width:20%" />
                     </a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Análisis Financieros</a>
+                </div>
+                <ul class="sidebar-navigation">
+                    <li class="header">Navegación</li>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="Index">
+                            <i class="fa fa-home" aria-hidden="true"></i> Inicio
+                        </a>
 
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Empresas" asp-action="Index">
-                        <i class="fa fa-briefcase" aria-hidden="true"></i> Empresa
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Sector" asp-action="Index">
-                        <i class="fa fa-industry" aria-hidden="true"></i> Sectores
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
-                        <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisVertical">
-                        <i class="fa fa-arrow-down" aria-hidden="true"></i> Analizis vertical
-                    </a>
-                </li>
+                    </li>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
+                                <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="MensajesAnalisis" asp-action="Index">
+                                <i class="fa fa-line-chart" aria-hidden="true"></i> Mensajes de Análisis
+                            </a>
+                        </li>
 
-                <li>
-                    <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Razons" asp-action="Index">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios
-                    </a>
-                </li>
-                <li class="header">Another Menu</li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-users" aria-hidden="true"></i> Friends
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-cog" aria-hidden="true"></i> Settings
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i> Information
-                    </a>
-                </li>
-            </ul>
-        </nav>
+                        <li>
+                            <a asp-area="" asp-controller="Sector" asp-action="Index">
+                                <i class="fa fa-industry" aria-hidden="true"></i> Sectores
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <a asp-area="" asp-controller="Empresas" asp-action="Index">
+                            <i class="fa fa-briefcase" aria-hidden="true"></i> Empresas
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
+                            <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisVertical">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i> Análisis vertical
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Razons" asp-action="Index">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i> Razones
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="CatalogoCuentas" asp-action="Index">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i> Catálogo
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="EstadoR" asp-action="Index">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i> Estado de Resultado
+                        </a>
+                    </li>
+                    @*<li class="header">Another Menu</li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-users" aria-hidden="true"></i> Friends
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-cog" aria-hidden="true"></i> Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i> Information
+                            </a>
+                        </li>*@
+                </ul>
+            </nav>
+        }
+
 
         <!-- Page Content  -->
         <div id="content">
@@ -125,7 +149,7 @@
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
-   
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

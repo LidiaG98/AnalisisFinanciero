@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
-{
+{        
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

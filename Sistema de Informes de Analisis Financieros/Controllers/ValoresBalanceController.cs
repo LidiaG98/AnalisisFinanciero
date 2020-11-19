@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,6 +18,7 @@ using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 {
+    [Authorize]
     public class ValoresBalanceController : Controller
     {
         private readonly ProyAnfContext _context;

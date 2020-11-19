@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,8 @@ using Sistema_de_Informes_de_Analisis_Financieros.Models;
 using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros
-{
+{    
+    [Authorize]
     public class RazonsController : Controller
     {
         private readonly ProyAnfContext _context;
@@ -237,7 +239,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             return View(razon);
         }
 
-        // GET: Razons/Create
+        // GET: Razons/Create        
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
@@ -245,7 +248,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
 
         // POST: Razons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.        
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("idRazon,nombreRazon,numerador,denominador")] Razon razon)
@@ -259,7 +263,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             return View(razon);
         }
 
-        // GET: Razons/Edit/5
+        // GET: Razons/Edit/5        
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -277,7 +282,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
 
         // POST: Razons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.        
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("idRazon,nombreRazon,numerador,denominador")] Razon razon)
@@ -310,7 +316,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             return View(razon);
         }
 
-        // GET: Razons/Delete/5
+        // GET: Razons/Delete/5        
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -328,7 +335,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             return View(razon);
         }
 
-        // POST: Razons/Delete/5
+        // POST: Razons/Delete/5        
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
