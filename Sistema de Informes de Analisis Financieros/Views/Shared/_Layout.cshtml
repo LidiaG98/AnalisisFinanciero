@@ -32,7 +32,12 @@
 
                     </li>
                     @if (User.IsInRole("Administrator"))
-                    {
+                    {                        
+                        <li>
+                            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">
+                                <i class="fa fa-line-chart" aria-hidden="true"></i> Agregar Usuario
+                            </a>
+                        </li>                       
                         <li>
                             <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
                                 <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
@@ -81,21 +86,21 @@
                         </a>
                     </li>
                     @*<li class="header">Another Menu</li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-users" aria-hidden="true"></i> Friends
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-cog" aria-hidden="true"></i> Settings
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-info-circle" aria-hidden="true"></i> Information
-                            </a>
-                        </li>*@
+        <li>
+            <a href="#">
+                <i class="fa fa-users" aria-hidden="true"></i> Friends
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-cog" aria-hidden="true"></i> Settings
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-info-circle" aria-hidden="true"></i> Information
+            </a>
+        </li>*@
                 </ul>
             </nav>
         }

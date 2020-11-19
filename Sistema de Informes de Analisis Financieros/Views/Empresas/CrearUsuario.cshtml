@@ -1,0 +1,19 @@
+﻿@model Sistema_de_Informes_de_Analisis_Financieros.Models.Usuario
+
+@{
+    ViewData["Title"] = "CrearUsuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>CrearUsuario</h1>
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Idempresa" class="control-label">Razón</label>
+        @Html.DropDownListFor(model => model.Idempresa, (SelectList)ViewBag.listRatios, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

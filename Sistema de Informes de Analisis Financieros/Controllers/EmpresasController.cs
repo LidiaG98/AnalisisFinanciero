@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -12,7 +13,7 @@ using Sistema_de_Informes_de_Analisis_Financieros.Models;
 using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
-{    
+{
     [Authorize]
     public class EmpresasController : Controller
     {
@@ -20,27 +21,39 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         private CatalogoCuentasController catalogo;
         private ValoresBalanceController valoresController;
         private EstadoRController estadoController;
+        private readonly UserManager<Usuario> _userManager;
 
-        public EmpresasController(ProyAnfContext context)
+        public EmpresasController(ProyAnfContext context, UserManager<Usuario> userManager)
         {
             _context = context;
             catalogo = new CatalogoCuentasController(context);
             valoresController = new ValoresBalanceController(context);
             estadoController = new EstadoRController(context);
+            _userManager = userManager;
         }
 
         // GET: Empresas
         public async Task<IActionResult> Index()
         {
-            var proyAnfContext = _context.Empresa.Include(e => e.IdsectorNavigation);
-            return View(await proyAnfContext.ToListAsync());
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            if (usuario.IsInRole("Administrator"))
+            {
+                var proyAnfContext = _context.Empresa.Include(e => e.IdsectorNavigation);
+                return View(await proyAnfContext.ToListAsync());
+            }
+            else
+            {
+                var proyAnfContext = _context.Empresa.Include(e => e.IdsectorNavigation).Where(l => l.Idempresa == u.Idempresa.Idempresa);
+                return View(await proyAnfContext.ToListAsync());
+            }
         }
 
-        public async Task<IActionResult> GuardarCuentas(int IdEmpresa,string celdaCod, string celdaNom, IFormFile files)
+        public async Task<IActionResult> GuardarCuentas(int IdEmpresa, string celdaCod, string celdaNom, IFormFile files)
         {
             celdaCod = celdaCod.ToUpper();
             celdaNom = celdaNom.ToUpper();
-            ViewData["Mensaje"] = await catalogo.GuardarCuentas(IdEmpresa,celdaCod,celdaNom,files);
+            ViewData["Mensaje"] = await catalogo.GuardarCuentas(IdEmpresa, celdaCod, celdaNom, files);
             return RedirectToAction("ActualizarCatalogoCuenta", "NomCuentaEs");
         }
 
@@ -198,6 +211,16 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         private bool EmpresaExists(int id)
         {
             return _context.Empresa.Any(e => e.Idempresa == id);
+        }
+
+
+        [Authorize(Roles = "Administrator")]
+        [HttpGet]
+        public async Task<IActionResult> CrearUsuario()
+        {
+            SelectList listRatios = new SelectList(_context.Empresa.ToList(), "Idempresa", "Nomempresa");
+            ViewBag.listRatios = listRatios;
+            return View();
         }
     }
 }
