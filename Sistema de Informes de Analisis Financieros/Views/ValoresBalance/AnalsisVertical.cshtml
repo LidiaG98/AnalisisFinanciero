@@ -2,76 +2,129 @@
 
 @{
     ViewData["Title"] = "AnalsisVertical";
-}
-@{ 
-    double a3 = ViewBag.activo;
-    List<Cuenta> a4 = ViewBag.cuentas;
-    string n = "";
-}
-<h1>AnalsisVertical</h1>
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<ul class="nav nav-tabs">
-    <li class="active"><a href="#">Home</a></li>
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            Menu 1
-            <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            <li><a href="#">Submenu 1-1</a></li>
-            <li><a href="#">Submenu 1-2</a></li>
-            <li><a href="#">Submenu 1-3</a></li>
-        </ul>
-    </li>
-    <li><a href="#">Menu 2</a></li>
-    <li><a href="#">Menu 3</a></li>
-</ul>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id.IdcuentaNavigation.Nomcuenta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Valorcuenta)
-            </th>
-            <th>
-                Horizontal
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-               @{ 
-                   n = a4.Where(x=> x.Idcuenta == item.Idcuenta).FirstOrDefault().Nomcuenta;
+}
+@if (ViewBag.existe)
+{
+    
+        List<Valoresdebalance> xc = ViewBag.cuentas;
+        int year = ViewBag.year;
+        double activo = ViewBag.activo;
+
+        string n = "";
+        int paco = 0;
+    
+
+    <h1>Análisis Vertical - @year</h1>
+    <div class="row">
+        <div class="card border-info mb-3 ">
+            <div class="card-header"></div>
+            <div class="card-body text-info">
+                <h5 class="card-title">Resumen</h5>
+                <p class="card-text">
+                    @ViewBag.mensajebueno
+
+                </p>
+            </div>
+        </div>
+
+    </div>
+  
+    <form class="form-inline" asp-action="AnalsisVertical" method="get">
+        <div class="row justify-content-end">
+            <div style="margin:10px;">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Año:</span>
+                    </div>
+                    <select class="form-control chosen-s" id="ana1" name="Anual" asp-items="ViewBag.Anios"></select>
+                </div>
+            </div>
+            <div>
+                <div class="input-group mb-3" style="margin:10px;">
+            <input type="submit" class="btn btn-info" value="Analizar">
+                    </div>
+                </div>
+            </div>
 
 
-               }
-                @n
-            </td>
-            <td>
-               $ @Html.DisplayFor(modelItem => item.Valorcuenta)
-            </td>
-            <td>
-                @{
-                    double AV = (item.Valorcuenta/a3) *100;
-                }  
-                  @AV %
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id.Codcuentacatalogo)
-            </td>
-            
-        </tr>
+
+    </form>
+    
+
+
+
+    <table class="table table-striped ">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id.IdcuentaNavigation.Nomcuenta)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Valorcuenta)
+                </th>
+                <th>
+                    Porcentaje
+                </th>
+
+                <!----   Html.DisplayNameFor(model => model.Id)-->
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in xc.OrderBy(r => r.Id.IdcuentaNavigation.Idtipocuenta))
+            {
+                <tr>
+                    @if (item.Valorcuenta == 0)
+                    {
+                        <td>
+                            <strong>@item.Id.IdcuentaNavigation.Nomcuenta</strong>
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+
+                    }
+                    else
+                    {
+                        <td>
+                            @item.Id.IdcuentaNavigation.Nomcuenta
+
+                        </td>
+                        <td>
+                            $ @item.Valorcuenta
+                        </td>
+                        <td>
+                            @{
+                                double AV = (item.Valorcuenta / activo) * 100;
+                            }
+                            @Math.Abs(Math.Round(AV, 2))%
+
+                        </td>
+                    }
+
+
+
+
+                </tr>
+                paco = paco + 1;
+            }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+else
+{
+    <h1>Oh, Oh, Parece que no has agregado un balance aún</h1>
+    <h3>Para poder realizar un analisis de esta empresea debe agregar un historial su balance</h3>
+    <h6>Ingrese aquí para agregar un nuevo balance:</h6>
+    <h6>
+        <a href="index"></a>
+    </h6>
+}
+
+
+

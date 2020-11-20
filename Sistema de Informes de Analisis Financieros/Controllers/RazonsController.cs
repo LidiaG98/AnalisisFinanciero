@@ -22,10 +22,19 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
         }
 
         // GET: Razons
-        public async Task<IActionResult> Index()
-        { // Convierte texto en funciones y puede mostrar el resultado
+        public async Task<IActionResult> Index(string Buscar)
+        {
+            var razonI = from s in _context.Razon select s;
+            ViewData["Filtro"] = Buscar;
+
+            if (!String.IsNullOrEmpty(Buscar))
+            {
+                razonI = razonI.Where(s => s.nombreRazon.Contains(Buscar) || s.denominador.Contains(Buscar) || s.numerador.Equals(Buscar) || s.tipo.Contains(Buscar));
+            }
+
+            // Convierte texto en funciones y puede mostrar el resultado
             Mathos.Parser.MathParser parse = new Mathos.Parser.MathParser();
-            
+            /*
             //contextos que creí necesarios para seguir v,:
             var cliente = from s in _context.Empresa select s;
             var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
@@ -65,7 +74,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                     Idtipocuenta = cuentax.Idtipocuenta
 
 
-                }) ;*/
+                }) ;
             foreach (Razon rakata in razon)
             {
                string[] razoncitanum= rakata.numerador.Split('+','-','*','/');
@@ -214,8 +223,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 Resultado.Add(pas);
                 
             }
-            ViewData["Resultados"] = Resultado;
-            var razonI = _context.Razon; 
+            ViewData["Resultados"] = Resultado; */
+           
             return View(await razonI.ToListAsync());
         }
 

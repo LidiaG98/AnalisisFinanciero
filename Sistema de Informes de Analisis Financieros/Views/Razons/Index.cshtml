@@ -15,10 +15,15 @@
 <link rel="stylesheet" href="~/css/Cards.css" />
 
 <h1>Ratios</h1>
+<form class="form-inline active-purple-3 active-purple-4" asp-action="index">
+    <i class="fas fa-search" aria-hidden="true"></i>
+    <input class="form-control form-control-sm ml-3 w-75" name="Buscar" value="@ViewData["Filtro"]" id="Buscar" type="text" placeholder="Buscar"
+           aria-label="Buscar" >
+    <div class="input-group mb-3" style="margin:10px;">
+        <input type="submit" class="btn btn-outline-info" value="Buscar">
+    </div>
+</form>
 
-<p>
-    <a class="btnx" asp-action="Create">Agregar Ratio</a>
-</p>
 
 
 @foreach (var item in Model)
@@ -35,13 +40,14 @@
                 <div class="progress-container">
                     <div class="progress"></div>
                     <span class="progress-text">
-                        <h4>@hola[paco]</h4>
+                       
                     </span>
                 </div>
                 <h6>Formula</h6>
 
-                <h4> @Html.DisplayFor(modelItem => item.numerador)</h4>
-                <h4> @Html.DisplayFor(modelItem => item.denominador)</h4>
+                <h5 > @Html.DisplayFor(modelItem => item.numerador)</h5>
+                <strong>______________________________________</strong>
+                <h5 > @Html.DisplayFor(modelItem => item.denominador)</h5>
                 
                 <a  asp-action="AnalisisRazon" asp-route-id="@item.idRazon" class="btnx">Detalles</a>
             </div>
