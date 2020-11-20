@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
 using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
@@ -355,19 +356,21 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
         //Método general para las razones
         [HttpGet]
         public async Task<IActionResult> AnalisisRazon(int idRazon, int anio1, int anio2)
-        {
-            int anio1Analisis = anio1, anio2Analisis = anio2;
-            //if (anio1 != 0 && anio2 != 0)
-            //{
-            //    anio1Analisis = anio1;
-            //    anio2Analisis = anio2;
-            //}               
+        {            
+            int anio1Analisis = anio1, anio2Analisis = anio2;            
             var usuario = this.User;
             Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
             var razon = _context.Razon.Where(r => r.idRazon == idRazon).FirstOrDefault();
+            List<int> selectListItems = _context.Valoresdebalance.Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                .Select(l => l.Anio)                
+                .Distinct()
+                .ToList();
+            ViewBag.Anio = new SelectList(selectListItems, "Anio", "Anio");
             AnalisisRazonViewModel model = new AnalisisRazonViewModel()
             {
+                idRazon = idRazon,
                 nombreRazon = razon.nombreRazon,
+                anio = selectListItems,
                 tipo = razon.tipo,
                 signoDenominador = "",
                 signoNumerador = "",
@@ -387,7 +390,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 mensajeBase1 = "",
                 mensajeBase2 = "",
                 mensajeEmp1 = "",
-                mensajeEmp2 = ""
+                mensajeEmp2 = "",
+                anio1 = 0,
+                anio2 = 0
             };
             model.numerador.Add(razon.numerador);
             model.denominador.Add(razon.denominador);
@@ -476,7 +481,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                     if(isTotal1 || model.numerador[i].Equals("PATRIMONIO"))
                     {                        
                         var num1 = _context.Cuenta
-                            .Where(n => n.Nomcuenta == model.numerador[i])
+                            .Where(n => n.Nomcuenta.ToLower() == model.numerador[i].ToLower())
                             .FirstOrDefault();
                         if(num1 != null)
                         {
@@ -525,7 +530,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             {
                                 List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -556,7 +561,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                 }
                                 List<Valoresestado> valoresEstado;
                                 //obtener valores si están en el estado R
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -597,7 +602,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         }
                         List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        if (anio1Analisis == 0 || anio2Analisis == 0)
+                        if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                         {
                             valoresEstado = _context.Valoresestado
                             .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
@@ -672,7 +677,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                     if (isTotal1 || model.numerador[i].Equals("PATRIMONIO"))
                     {
                         var num2 = _context.Cuenta
-                            .Where(n => n.Nomcuenta == model.numerador[i])
+                            .Where(n => n.Nomcuenta.ToLower() == model.numerador[i].ToLower())
                             .FirstOrDefault();
                         if (num2 != null)
                         {
@@ -721,7 +726,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             {
                                 List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -752,7 +757,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                 }
                                 List<Valoresestado> valoresEstado;
                                 //obtener valores si están en el estado R
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -793,7 +798,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         }
                         List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        if (anio1Analisis == 0 || anio2Analisis == 0)
+                        if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                         {
                             valoresEstado = _context.Valoresestado
                             .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
@@ -869,13 +874,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         model.denominador[i] = model.denominador[i].Replace("TOTAL", "").Trim();
                         model.denominador[i] = model.denominador[i].Replace("ES", "").Trim();
                         model.denominador[i] = model.denominador[i].Replace("S", "").Trim();
-                        model.numerador[i] = model.numerador[i].Replace("PAIVO", "PASIVO").Trim();
-                    }
+                        model.denominador[i] = model.denominador[i].Replace("PAIVO", "PASIVO").Trim();
+                    }   
                     List<Catalogodecuenta> num1CuentasCatalogo = null;
                     if (isTotal1 || model.denominador[i].Equals("PATRIMONIO"))
                     {
                         var num1 = _context.Cuenta
-                            .Where(n => n.Nomcuenta == model.denominador[i])
+                            .Where(n => n.Nomcuenta.ToLower() == model.denominador[i].ToLower())
                             .FirstOrDefault();
                         if (num1 != null)
                         {
@@ -924,7 +929,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             {
                                 List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -955,7 +960,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                 }
                                 List<Valoresestado> valoresEstado;
                                 //obtener valores si están en el estado R
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -996,7 +1001,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         }
                         List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        if (anio1Analisis == 0 || anio2Analisis == 0)
+                        if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                         {
                             valoresEstado = _context.Valoresestado
                             .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
@@ -1070,7 +1075,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                     if (isTotal1 || model.denominador[i].Equals("PATRIMONIO"))
                     {
                         var num1 = _context.Cuenta
-                            .Where(n => n.Nomcuenta == model.denominador[i])
+                            .Where(n => n.Nomcuenta.ToLower() == model.denominador[i].ToLower())
                             .FirstOrDefault();
                         if (num1 != null)
                         {
@@ -1119,7 +1124,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             {
                                 List<Valoresdebalance> valoresBalance;
                                 //obtener valores si están en el balance
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresBalance = _context.Valoresdebalance
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -1150,7 +1155,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                 }
                                 List<Valoresestado> valoresEstado;
                                 //obtener valores si están en el estado R
-                                if (anio1Analisis == 0 || anio2Analisis == 0)
+                                if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                                 {
                                     valoresEstado = _context.Valoresestado
                                     .Where(l => l.Idcuenta == cuenta.Idcuenta)
@@ -1191,7 +1196,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                         }
                         List<Valoresestado> valoresEstado;
                         //obtener valores si están en el estado de resultados
-                        if (anio1Analisis == 0 || anio2Analisis == 0)
+                        if (anio1Analisis == 0 || anio2Analisis == 0 || anio1 == anio2)
                         {
                             valoresEstado = _context.Valoresestado
                             .Where(l => l.Nombrevalore.ToUpper().Contains(model.numerador[i]))
@@ -1552,17 +1557,32 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                                 .ToArray();
             if (valorEmpresa.Length == 0)
             {
-                _context.Add(nuevo1);
-                _context.Add(nuevo2);
+                if (!(Double.IsNaN(nuevo1.Valorratioempresa) || Double.IsPositiveInfinity(nuevo1.Valorratioempresa) || Double.IsNegativeInfinity(nuevo1.Valorratioempresa)))
+                {
+                    _context.Add(nuevo1);
+                    _context.SaveChanges();
+                }
+                if (!(Double.IsNaN(nuevo2.Valorratioempresa) || Double.IsPositiveInfinity(nuevo2.Valorratioempresa) || Double.IsNegativeInfinity(nuevo2.Valorratioempresa)))
+                {
+                    _context.Add(nuevo2);
+                    _context.SaveChanges();
+                }                
             }
             else
             {
-                valorEmpresa[0].Valorratioempresa = model.resA1;
-                valorEmpresa[1].Valorratioempresa = model.resA2;
-                _context.Update(valorEmpresa[0]);
-                _context.Update(valorEmpresa[1]);
-            }
-            _context.SaveChanges();
+                if (!(Double.IsNaN(nuevo1.Valorratioempresa) || Double.IsPositiveInfinity(nuevo1.Valorratioempresa) || Double.IsNegativeInfinity(nuevo1.Valorratioempresa)))
+                {
+                    valorEmpresa[0].Valorratioempresa = model.resA1;
+                    _context.Update(valorEmpresa[0]);
+                    _context.SaveChanges();
+                }
+                if (!(Double.IsNaN(nuevo2.Valorratioempresa) || Double.IsPositiveInfinity(nuevo2.Valorratioempresa) || Double.IsNegativeInfinity(nuevo2.Valorratioempresa)))
+                {
+                    valorEmpresa[1].Valorratioempresa = model.resA2;
+                    _context.Update(valorEmpresa[1]);
+                    _context.SaveChanges();
+                }                                
+            }                       
 
             //Pasando mensajes
             //Año 1 Base
