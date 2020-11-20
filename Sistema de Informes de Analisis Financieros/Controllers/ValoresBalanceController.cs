@@ -306,66 +306,404 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
             return View(await proyAnfContext.ToListAsync());
         }
-        public async Task<IActionResult> AnalsisHorizontal()
+        public async Task<IActionResult> AnalsisHorizontal(int? ana1,int? ana2)
+            
         {
+          
             var user = this.User;
             List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-            List<double> Vanios1 = new List<double>();
-            List<double> Vanios2 = new List<double>();
-
-
-            var proyAnfContext = _context.Valoresdebalance.Where(x => x.Idempresa == u[0].Idempresa.Idempresa);
-            var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
-            var balance = from x in _context.Valoresdebalance select x;
-            catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa).Include(r => r.IdcuentaNavigation);
-
-            //double activoTotal = balance.Where(m => m.Idcuenta == c).FirstOrDefault().Valorcuenta;
-
-            int an = proyAnfContext.FirstOrDefault().Anio;
-            int an2 = an - 1;
-
-
-
-            var AH1 = proyAnfContext.Where(s => s.Anio == an);
-            foreach (var awa in AH1)
+            if (u.Count()>=0)
             {
-                Vanios1.Add(awa.Valorcuenta);
-            }
-            var AH2 = proyAnfContext.Where(s => s.Anio == an2);
-            foreach (var aw in AH2)
-            {
-                Vanios2.Add(aw.Valorcuenta);
-            }
-            ViewData["anio1"] = Vanios1;
-            //ViewBag.activo = activoTotal;
 
-            ViewData["anio2"] = Vanios2;
-            //años 
-            ViewData["ani1"] = an;
-            ViewData["ani1"] = an2;
-            return View(await proyAnfContext.ToListAsync());
+
+                var proyAnfContext = _context.Valoresdebalance.Where(x => x.Idempresa == u[0].Idempresa.Idempresa);
+                if (proyAnfContext.Any())
+                {
+                    var xs = proyAnfContext.GroupBy(x => x.Anio).Select(x => new { Anio = x.Key, Buildings = x.Count() });
+                    if (xs.Count() >= 2)
+                    {
+
+
+                        List<Catalogodecuenta> cuentas = _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation).Where(y => y.Idempresa == u[0].Idempresa.Idempresa).ToList();
+                        List<Cuenta> cuentasU = _context.Cuenta.ToList();
+                        if (ana1 == null || ana2 == null)
+                        {
+                            ana1 = proyAnfContext.FirstOrDefault().Anio;
+                            ana2 = ana1 - 1;
+                        }
+                        List<Valoresdebalance> AH1 = proyAnfContext.Include(x => x.Id.IdcuentaNavigation).Where(s => s.Anio == ana1).OrderBy(r => r.Id.IdcuentaNavigation.Nomcuenta).ToList();
+                        List<Valoresdebalance> AH2 = proyAnfContext.Include(x => x.Id.IdcuentaNavigation).Where(s => s.Anio == ana2).OrderBy(r => r.Id.IdcuentaNavigation.Nomcuenta).ToList();
+                        List<Valoresdebalance> vb = new List<Valoresdebalance>();
+                        List<Valoresdebalance> pasivo1 = new List<Valoresdebalance>();
+                        List<Valoresdebalance> pasivo2 = new List<Valoresdebalance>();
+                        List<Valoresdebalance> activo1 = new List<Valoresdebalance>();
+                        List<Valoresdebalance> activo2 = new List<Valoresdebalance>();
+                        Valoresdebalance chance = new Valoresdebalance();
+                        string mensajeVirtud = "";
+                        string mensajeNegativo = "";
+                        string mensajeSugerencia = "";
+                        double suma1 = 0;
+                        double suma2 = 0;
+                        Cuenta cuentaAct1Max = new Cuenta();
+                        double valorAct1Max = 0;
+                        Cuenta cuentaPas1Max = new Cuenta();
+                        double valorPas1Max = 0;
+                        Cuenta cuentaAct2Max = new Cuenta();
+                        double valorAct2Max = 0;
+                        Cuenta cuentaPas2Max = new Cuenta();
+                        double valorPas2Max = 0;
+                        Cuenta cuentaAct1Min = new Cuenta();
+                        double valorAct1Min = 0;
+                        Cuenta cuentaPas1Min = new Cuenta();
+                        double valorPas1Min = 0;
+                        Cuenta cuentaAct2Min = new Cuenta();
+                        double valorAct2Min = 0;
+                        Cuenta cuentaPas2Min = new Cuenta();
+                        double valorPas2Min = 0;
+                        Valoresdebalance lv = new Valoresdebalance();
+                        List<Valoresdebalance> vb1 = new List<Valoresdebalance>();
+                        Valoresdebalance lv1 = new Valoresdebalance();
+                        List<AnalisisHorizontalViewModel> anV = new List<AnalisisHorizontalViewModel>();
+                        foreach (Catalogodecuenta cs in cuentas)
+                        {
+                            lv = proyAnfContext.Where(l => l.Idcuenta == cs.Idcuenta && l.Anio == ana1).FirstOrDefault();
+                            if (lv != null)
+                            {
+                                vb.Add(lv);
+                            }
+
+                        }
+                        foreach (Catalogodecuenta cs in cuentas)
+                        {
+                            lv1 = proyAnfContext.Where(l => l.Idcuenta == cs.Idcuenta && l.Anio == ana2).FirstOrDefault();
+                            if (lv1 != null)
+                            {
+                                vb1.Add(lv);
+                            }
+
+                        }
+                        for (int i = 0; i < vb1.Count(); i++)
+                        {
+                            AnalisisHorizontalViewModel analiHorizon = new AnalisisHorizontalViewModel()
+                            {
+                                nombreCuenta = AH1[i].Id.IdcuentaNavigation.Nomcuenta,
+                                anio1 = (int)ana1,
+                                anio2 = (int)ana2,
+                                valorAnio1 = AH1[i].Valorcuenta,
+                                valorAnio2 = AH2[i].Valorcuenta,
+                                valorhorizontal = AH1[i].Valorcuenta - AH2[i].Valorcuenta
+                            };
+
+                            anV.Add(analiHorizon);
+
+
+                        }
+
+                        //calculo  para opinar
+                        foreach (var dato in AH1)
+                        {
+                            if (dato.Id.Codcuentacatalogo.StartsWith("1"))
+                            {
+                                activo1.Add(dato);
+                            }
+                            if (dato.Id.Codcuentacatalogo.StartsWith("2"))
+                            {
+                                pasivo1.Add(dato);
+                            }
+                        }
+                        foreach (var dato in AH2)
+                        {
+                            if (dato.Id.Codcuentacatalogo.StartsWith("1"))
+                            {
+                                activo2.Add(dato);
+                            }
+                            if (dato.Id.Codcuentacatalogo.StartsWith("2"))
+                            {
+                                pasivo2.Add(dato);
+                            }
+                        }
+                        activo1 = activo1.OrderBy(r => r.Id.IdcuentaNavigation.Nomcuenta).ToList();
+                        activo2 = activo2.OrderBy(r => r.Id.IdcuentaNavigation.Nomcuenta).ToList();
+                        List<AV> valor = new List<AV>();
+                        for (int i = 0; i < activo1.Count(); i++)
+                        {
+
+                            valor.Add(new AV
+                            {
+                                cuenta1 = activo1[i],
+                                cuenta2 = activo2[i],
+                                diferencia = activo1[i].Valorcuenta - activo2[i].Valorcuenta
+
+                            }); ;
+                        }
+                        valor = valor.OrderBy(x => x.diferencia).ToList();
+
+
+
+
+                        suma1 = activo1.Sum(r => r.Valorcuenta);
+                        suma2 = activo2.Sum(r => r.Valorcuenta);
+                        //activo maximo 1
+                        chance = activo1.OrderBy(r => r.Valorcuenta).LastOrDefault();
+                        cuentaAct1Max = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorAct1Max = chance.Valorcuenta;
+                        //activo maximo 2
+                        chance = activo2.OrderBy(r => r.Valorcuenta).LastOrDefault();
+                        cuentaAct2Max = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorAct2Max = chance.Valorcuenta;
+                        //activo minimo 1
+
+                        chance = activo1.OrderBy(r => r.Valorcuenta).FirstOrDefault();
+                        cuentaAct1Min = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorAct1Min = chance.Valorcuenta;
+                        //activo minimo 2
+                        chance = activo2.OrderBy(r => r.Valorcuenta).FirstOrDefault();
+                        cuentaAct2Min = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorAct2Min = chance.Valorcuenta;
+                        //pasivo maximo 1
+                        chance = pasivo1.OrderBy(r => r.Valorcuenta).LastOrDefault();
+                        cuentaPas1Max = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorPas1Max = chance.Valorcuenta;
+                        //pasivo maximo 2
+                        chance = pasivo2.OrderBy(r => r.Valorcuenta).LastOrDefault();
+
+                        cuentaPas2Max = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorPas2Max = chance.Valorcuenta;
+                        //pasivo minimo 1
+                        chance = pasivo1.OrderBy(r => r.Valorcuenta).FirstOrDefault();
+
+                        cuentaPas1Min = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorPas1Min = chance.Valorcuenta;
+                        //pasivo minimo 2
+                        chance = pasivo2.OrderBy(r => r.Valorcuenta).FirstOrDefault();
+                        cuentaPas2Min = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                        valorPas2Min = chance.Valorcuenta;
+                        //opinando como licenciado
+                        int cuen = proyAnfContext.Where(l => l.Id.IdcuentaNavigation.Nomcuenta == "TOTAL ACTIVO" && l.Anio == ana1).FirstOrDefault().Idcuenta;
+                        int cuen2 = proyAnfContext.Where(x => x.Id.IdcuentaNavigation.Nomcuenta == "TOTAL ACTIVO" && x.Anio == ana2).FirstOrDefault().Idcuenta;
+                        double cuentala = proyAnfContext.Where(x => x.Idcuenta == cuen).FirstOrDefault().Valorcuenta;
+                        double cuentala2 = proyAnfContext.Where(x => x.Idcuenta == cuen2).FirstOrDefault().Valorcuenta;
+                        double totalpor = Math.Abs(((cuentala - cuentala2) / cuentala) * 100);
+                        //Opinión a favor 
+                        if (cuentala > cuentala2)
+                        {
+
+                            if (totalpor > 10)
+                            {
+                                mensajeVirtud = mensajeVirtud + "Su Total de activo aumentó un " + totalpor + "% en comparación al año " + ana2;
+                            }
+                            else
+                            {
+                                mensajeVirtud = mensajeVirtud + "Su Total de activo tuvo un pequeño aumento del " + totalpor + "% en comparación al año " + ana2;
+                            }
+
+                        }
+                        else if (cuentala < cuentala2)
+                        {
+                            if (totalpor >= 20 || totalpor <= 40)
+                            {
+                                mensajeVirtud = mensajeVirtud + "Su Total activo disminuyó considerablemente un  " + totalpor + "% en comparación al año " + ana2;
+                            }
+                            else if (totalpor > 40)
+                            {
+                                mensajeVirtud = mensajeVirtud + "Su Total de activo disminuyó drasticamente un  " + totalpor + "% en comparación al año " + ana2;
+                            }
+                            else
+                            {
+                                mensajeVirtud = mensajeVirtud + "Su Total de activo disminuyó un " + totalpor + "% en comparación al año " + ana2;
+                            }
+
+                        }
+                        else
+                        {
+                            mensajeVirtud = mensajeVirtud + "Su Total de activo se mantuvo intacto " + totalpor + "% en comparación al año " + ana2;
+                        }
+
+                        mensajeVirtud = mensajeVirtud + " El mayor aumento de activos fue con la cuenta " + valor.LastOrDefault().cuenta1.Id.IdcuentaNavigation.Nomcuenta
+                            + " con un aumento de " + Math.Abs(Math.Round(valor.LastOrDefault().diferencia, 2)) + " mientras que la mayor disminución en los activos fue " +
+                            valor.FirstOrDefault().cuenta1.Id.IdcuentaNavigation.Nomcuenta + " reduciendo $" + Math.Abs(Math.Round(valor.FirstOrDefault().diferencia, 2)) +
+                            " del año " + ana2;
+
+
+
+
+
+                        ViewData["Anios"] = new SelectList(xs, "Anio", "Anio");
+                        ViewBag.mensajebueno = mensajeVirtud;
+                        ViewBag.mensajemalo = mensajeNegativo;
+                        ViewBag.mensajemeh = mensajeSugerencia;
+                        ViewData["todo"] = anV;
+                        ViewData["an1"] = ana1;
+                        ViewData["an2"] = ana2;
+                        ViewBag.existe = true;
+                    } else
+                    {
+                        ViewBag.existe = false;
+                    }
+                }
+                else
+                {
+                    ViewBag.existe = false;
+                }
+                ViewBag.nocuenta = false;
+                return View(await proyAnfContext.ToListAsync());
+            } else
+            {
+                ViewBag.nocuenta = true;
+                var proyAnfContext = _context.Valoresdebalance;
+                return View(await proyAnfContext.ToListAsync());
+              
+
+            }
+            
         }
-        public async Task<IActionResult> AnalsisVertical(string mensaje)
+        public async Task<IActionResult> AnalsisVertical(int? Anual)
         {
+          
+            
             var user = this.User;
             List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-            var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
-            var pmp = from x in _context.Cuenta select x;
-            List<Cuenta> cuentas = pmp.ToList();
+            if (u.Count() >= 0)
+            {
+
+                //recupero el catalogo de la empresa del usuario
+                var proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
+                if (proyAnfContext.Any())
+                {
 
 
-            var proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
+                    if (Anual == null)
+                    {
+                        Anual = proyAnfContext.FirstOrDefault().Anio;
+                    }
+                    List<Valoresdebalance> pasivo1 = new List<Valoresdebalance>();
 
-            int an = proyAnfContext.FirstOrDefault().Anio;
-            proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa && y.Anio == an);
-            catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
-            var cuenta = catCuent.Where(x => x.IdcuentaNavigation.Nomcuenta == "TOTAL ACTIVO").FirstOrDefault();
-            double activoTotal = proyAnfContext.Where(x => x.Idcuenta == cuenta.Idcuenta).FirstOrDefault().Valorcuenta;
+                    List<Valoresdebalance> activo1 = new List<Valoresdebalance>();
 
-            ViewBag.activo = activoTotal;
-            ViewBag.cuentas = cuentas;
+                    string mensajeVirtud = "";
+                    string mensajeNegativo = "";
+                    string mensajeSugerencia = "";
+                    double suma1 = 0;
+                    double suma2 = 0;
+                    Cuenta cuentaAct1Max = new Cuenta();
+                    double valorAct1Max = 0;
+                    Cuenta cuentaPas1Max = new Cuenta();
+                    double valorPas1Max = 0;
+                    Cuenta cuentaAct1Min = new Cuenta();
+                    double valorAct1Min = 0;
+                    Cuenta cuentaPas1Min = new Cuenta();
+                    double valorPas1Min = 0;
 
-            return View(await proyAnfContext.ToListAsync());
+
+                    List<Catalogodecuenta> cuentas = _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation).Where(y => y.Idempresa == u[0].Idempresa.Idempresa).ToList();
+                    int cuen = proyAnfContext.Where(x => x.Id.IdcuentaNavigation.Nomcuenta == "TOTAL ACTIVO" && x.Anio == Anual).FirstOrDefault().Idcuenta;
+
+                    List<int> Anos = new List<int>();
+                    List<Cuenta> cuentasU = _context.Cuenta.ToList();
+                    Valoresdebalance chance = new Valoresdebalance();
+                    var duplicado = cuentas.Where(l => l.Codcuentacatalogo != "0");
+                    Valoresdebalance lv = new Valoresdebalance();
+                    List<Valoresdebalance> vb = new List<Valoresdebalance>();
+                    foreach (Catalogodecuenta cs in cuentas)
+                    {
+                        lv = proyAnfContext.Where(l => l.Idcuenta == cs.Idcuenta && l.Anio == Anual).FirstOrDefault();
+                        if (lv != null)
+                        {
+                            vb.Add(lv);
+                        }
+
+                    }
+                    double cuentala = proyAnfContext.Where(x => x.Idcuenta == cuen).FirstOrDefault().Valorcuenta;
+                    List<Valoresdebalance> AH1 = proyAnfContext.Include(x => x.Id.IdcuentaNavigation).Where(s => s.Anio == Anual).OrderBy(r => r.Id.IdcuentaNavigation.Nomcuenta).ToList();
+
+                    /*
+                    //recupero usuario
+                    var user = this.User;
+                    List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
+                    //recupero el catalogo de la empresa del usuario
+                    List<Catalogodecuenta> cuentas = _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation).Where(y => y.Idempresa == u[0].Idempresa.Idempresa).ToList();
+                    //busco el catalogo  que no sean totales por su id  diferente de 0
+                    List<Catalogodecuenta> cuentis = cuentas.Where(z => z.Codcuentacatalogo != "0").ToList();
+                    //para guardar el nombre de las cuentas
+                    List<string> xc = new List<string>();
+                    //contexto de  cuenta
+                    var cuenta = from x in _context.Cuenta select x;
+                    // contexto de balance general de la empresa del usuario loggeado
+                    var proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
+                    //recupero el primer año de los balances
+                    int an = proyAnfContext.FirstOrDefault().Anio;
+                    //busco los balances con el primer año
+                    proyAnfContext = proyAnfContext.Where(y => y.Anio == an);
+                    //consigo la cuenta de nombre Total activo de  la empresa
+
+                    //Guardo el valor en balance de la cuenta total activo
+                    double activoTotal = proyAnfContext.Where(x => x.Idcuenta == cuentala.Idcuenta).FirstOrDefault().Valorcuenta;
+                    // filtro las nombres de la cuentas que peretenecen al balance de la empresa
+                    foreach (var aw in proyAnfContext)
+                    {
+
+                        xc.Add(cuenta.Where(x => x.Idcuenta == aw.Idcuenta).FirstOrDefault().Nomcuenta);
+                    }
+                    //envìo el total y el nombre a la vista
+                    ViewBag.activo = Math.Round( activoTotal);
+
+                    */
+                    //òpniones
+                    foreach (var dato in AH1)
+                    {
+                        if (dato.Id.Codcuentacatalogo.StartsWith("1"))
+                        {
+                            activo1.Add(dato);
+                        }
+                        if (dato.Id.Codcuentacatalogo.StartsWith("2"))
+                        {
+                            pasivo1.Add(dato);
+                        }
+                    }
+                    chance = activo1.OrderBy(r => r.Valorcuenta).LastOrDefault();
+                    cuentaAct1Max = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                    valorAct1Max = chance.Valorcuenta;
+                    chance = activo1.OrderBy(r => r.Valorcuenta).FirstOrDefault();
+                    cuentaAct1Min = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                    valorAct1Min = chance.Valorcuenta;
+                    //pasivo minimo 1
+                    chance = pasivo1.OrderBy(r => r.Valorcuenta).FirstOrDefault();
+                    cuentaPas1Min = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                    valorPas1Min = chance.Valorcuenta;
+                    //
+                    chance = pasivo1.OrderBy(r => r.Valorcuenta).LastOrDefault();
+                    cuentaPas1Max = cuentasU.Where(x => x.Idcuenta == chance.Idcuenta).FirstOrDefault();
+                    valorPas1Max = chance.Valorcuenta;
+
+                    mensajeVirtud = "Su activo de mayor provecho es la cuenta: " + cuentaAct1Max.Nomcuenta + " siendo la cuenta que produce mayor ganancia con un valor de $" + valorAct1Max +
+                        " por su contraparte, la empresa se ve afectada por gastos mayormente ocasiones por: " + cuentaPas1Max.Nomcuenta + ", cuenta que tiene un saldo de: " + valorPas1Max
+                       ;
+
+                    ViewBag.activo = cuentala;
+                    ViewBag.year = Anual;
+                    ViewBag.cuentas = vb;
+                    ViewBag.mensajebueno = mensajeVirtud;
+                    var xs = proyAnfContext.GroupBy(x => x.Anio).Select(x => new { Anio = x.Key, Buildings = x.Count() });
+
+
+
+                    ViewData["Anios"] = new SelectList(xs, "Anio", "Anio");
+                    ViewBag.existe = true;
+                }
+                else
+                {
+                    ViewBag.existe = false;
+                }
+                ViewBag.noexiste = false;
+                return View(await proyAnfContext.ToListAsync());
+            }
+            else
+            {
+                ViewBag.noexiste =true;
+                var proyAnfContext = _context.Valoresdebalance;
+                return View(await proyAnfContext.ToListAsync());
+            }
+            
         }
 
         // GET: ValoresBalance/Details/5
