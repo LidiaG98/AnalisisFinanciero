@@ -355,7 +355,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
 
         //Método general para las razones
         [HttpGet]
-        public async Task<IActionResult> AnalisisRazon(int idRazon)
+        public async Task<IActionResult> AnalisisRazon(int? idRazon)
         {
             var usuario = this.User;
             Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
