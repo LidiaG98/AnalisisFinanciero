@@ -4,10 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-center">@Model.nombreRazon - @Model.tipo</h1>
+<h1 class="text-center display-2">@Model.nombreRazon - @Model.tipo</h1>
 <br />
 <div class="row">
-    <div class="col-6">
+    <div class="col-12 col-sm-12 col-md-6">
         <form asp-action="AnalisisRazon" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="idRazon" type="hidden" value="@Model.idRazon" />
@@ -24,15 +24,32 @@
             </div>
         </form>
     </div>
-    <div class="col-6">
-        @ViewBag.Mensaje
+    <div class="col-12 col-sm-12 col-md-6">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>@ViewBag.Mensaje</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>@ViewBag.Mensaje1</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>@ViewBag.Mensaje2</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     </div>
 </div>
 <br />
 <div class="row">
-    <div class="col-4">
+    <div class="col-12 col-sm-12 col-md-4 mb-5">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-dark text-white">
                 Formula
             </div>
             <div class="card-body">
@@ -66,14 +83,14 @@
                     }
                 </h6>
             </div>
-            <div class="card-footer bg-primary text-white">
+            <div class="card-footer bg-dark text-white">
                 Total
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-12 col-sm-12 col-md-4 mb-5">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-dark text-white">
                 @Model.anio1
             </div>
             <div class="card-body">
@@ -149,14 +166,14 @@
                     }
                 </h6>
             </div>
-            <div class="card-footer bg-primary text-white">
+            <div class="card-footer bg-dark text-white">
                 Total = @Model.resA1
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-12 col-sm-12 col-md-4 mb-5">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-dark text-white">
                 @Model.anio2
             </div>
             <div class="card-body">
@@ -232,7 +249,7 @@
                     }
                 </h6>
             </div>
-            <div class="card-footer bg-primary text-white">
+            <div class="card-footer bg-dark text-white">
                 Total = @Model.resA2
             </div>
         </div>
@@ -242,28 +259,28 @@
 <h2 class="text-center">Análisis Basado en Sector</h2>
 <br />
 <div class="row">
-    <div class="col-6">
+    <div class="col-12 col-sm-12 col-md-6 mb-5">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-dark text-white">
                 Sector: @Model.valorSector
             </div>
             <div class="card-body">
                 @Model.mensajeBase1
             </div>
-            <div class="card-footer bg-primary text-white">
+            <div class="card-footer bg-dark text-white">
                 Empresa - @Model.anio1: @Model.resA1
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-12 col-sm-12 col-md-6 mb-5">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-dark text-white">
                 Sector: @Model.valorSector
             </div>
             <div class="card-body">
                 @Model.mensajeBase2
             </div>
-            <div class="card-footer bg-primary text-white">
+            <div class="card-footer bg-dark text-white">
                 Empresa - @Model.anio2: @Model.resA2
             </div>
         </div>
@@ -272,29 +289,29 @@
 <br />
 <h2 class="text-center">Análisis Basado en Empresas</h2>
 <br />
-<div class="row">
-    <div class="col-6">
+<div class="row mb-5">
+    <div class="col-12 col-sm-12 col-md-6 mb-5">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-dark text-white">
                 Promedio Empresas: @Model.valorEmpresa1
             </div>
             <div class="card-body">
                 @Model.mensajeEmp1
             </div>
-            <div class="card-footer bg-primary text-white">
+            <div class="card-footer bg-dark text-white">
                 Empresa - @Model.anio1: @Model.resA1
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-12 col-sm-12 col-md-6 mb-5">
         <div class="card text-center">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-dark text-white">
                 Promedio Empresas: @Model.valorEmpresa2
             </div>
             <div class="card-body">
                 @Model.mensajeEmp2
             </div>
-            <div class="card-footer bg-primary text-white">
+            <div class="card-footer bg-dark text-white">
                 Empresa - @Model.anio2: @Model.resA2
             </div>
         </div>

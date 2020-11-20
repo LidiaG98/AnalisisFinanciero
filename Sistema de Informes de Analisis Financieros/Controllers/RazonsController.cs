@@ -366,6 +366,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
         [HttpGet]
         public async Task<IActionResult> AnalisisRazon(int idRazon, int anio1, int anio2)
         {            
+            if(anio1 == anio2 && anio1 != 0)
+            {
+                ViewBag.Mensaje = "Los años no pueden ser los mismos";
+            }
             int anio1Analisis = anio1, anio2Analisis = anio2;            
             var usuario = this.User;
             Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
@@ -1569,13 +1573,21 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 if (!(Double.IsNaN(nuevo1.Valorratioempresa) || Double.IsPositiveInfinity(nuevo1.Valorratioempresa) || Double.IsNegativeInfinity(nuevo1.Valorratioempresa)))
                 {
                     _context.Add(nuevo1);
-                    _context.SaveChanges();
+                    _context.SaveChanges();                    
+                }
+                else
+                {
+                    ViewBag.Mensaje1 = "Hay problemas en las cuentas necesarias en el año 1, verifique que esas cuentas existen o que no valgan 0";
                 }
                 if (!(Double.IsNaN(nuevo2.Valorratioempresa) || Double.IsPositiveInfinity(nuevo2.Valorratioempresa) || Double.IsNegativeInfinity(nuevo2.Valorratioempresa)))
                 {
                     _context.Add(nuevo2);
                     _context.SaveChanges();
-                }                
+                }   
+                else
+                {
+                    ViewBag.Mensaje2 = "Hay problemas en las cuentas necesarias en el año 2, verifique que esas cuentas existen o que no valgan 0";
+                }
             }
             else
             {
@@ -1583,14 +1595,22 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                 {
                     valorEmpresa[0].Valorratioempresa = model.resA1;
                     _context.Update(valorEmpresa[0]);
-                    _context.SaveChanges();
+                    _context.SaveChanges();                    
+                }
+                else
+                {
+                    ViewBag.Mensaje1 = "Hay problemas en las cuentas necesarias en el año 1, verifique que esas cuentas existen o que no valgan 0";
                 }
                 if (!(Double.IsNaN(nuevo2.Valorratioempresa) || Double.IsPositiveInfinity(nuevo2.Valorratioempresa) || Double.IsNegativeInfinity(nuevo2.Valorratioempresa)))
                 {
                     valorEmpresa[1].Valorratioempresa = model.resA2;
                     _context.Update(valorEmpresa[1]);
-                    _context.SaveChanges();
-                }                                
+                    _context.SaveChanges();                    
+                }                          
+                else
+                {
+                    ViewBag.Mensaje2 = "Hay problemas en las cuentas necesarias en el año 2, verifique que esas cuentas existen o que no valgan 0";
+                }
             }                       
 
             //Pasando mensajes
