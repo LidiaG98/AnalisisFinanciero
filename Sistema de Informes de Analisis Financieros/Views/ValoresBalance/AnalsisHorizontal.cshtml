@@ -17,157 +17,167 @@
 
 }
 <h1>Analasis   Horizontal</h1>
-@if (ViewBag.existe)
+@if (ViewBag.nocuenta)
 {
+    <h1>Oh, Oh, Parece que no cuenta con una empresa</h1>
+    <h3>Para poder realizar un analisis debe agregar una empresa y valores de balance</h3>
+    <h6>Ingrese aquí para agregar un nuevo balance:</h6>
+    <h6>
+        <a asp-controller="Empresas" asp-action="Create"></a>
+    </h6>
 
-
-    <div class="row">
-        <div class="card border-info mb-3 ">
-            <div class="card-header"> @ViewData["an1"]</div>
-            <div class="card-body text-info">
-                <h5 class="card-title">Resumen</h5>
-                <p class="card-text">
-                    @ViewBag.mensajebueno
-
-                </p>
-            </div>
-        </div>
-
-    </div>
-
-
-
-
-    <form class="form-inline" asp-action="AnalsisHorizontal" method="get">
-
-        <div class="row justify-content-end">
-
-            <div class="input-group mb-3" style="margin:20px;">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Año:</span>
-                </div>
-                <select class="form-control chosen-s" id="ana1" name="ana1" asp-items="ViewBag.Anios"></select>
-            </div>
-            <div class="input-group mb-3"  style="margin:20px;">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Año a comparar:</span>
-                </div>
-                <select class="form-control chosen-s" id="ana1" name="ana2" asp-items="ViewBag.Anios"></select>
-            </div>
-
-
-            <div class="input-group mb-3" style="margin:20px;">
-                <input type="submit" class="btn btn-info" value="Analizar">
-            </div>
-        </div>
-
-    </form>
-
-
-
-    <table class="table table-striped">
-        <thead class="thead-dark ">
-            <tr>
-                <th>
-                    Cuenta
-                </th>
-                <th>
-                    @ViewData["an1"]
-                </th>
-                <th>
-                    @ViewData["an2"]
-                </th>
-                <th>
-                    Diferencia
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach (var item in a1.OrderBy(r => r.nombreCuenta))
-            {
-                if (item.valorAnio1 == 0 && item.valorAnio2 == 0)
-                {
-                    <tr>
-                        <td>
-                            <strong> @item.nombreCuenta</strong> 
-
-                        </td>
-                        <td>
-
-                           
-                        </td>
-
-                        <td>
-
-                        
-                        </td>
-
-
-
-                        <td>
-                            $ @Math.Round(item.valorhorizontal, 2)
-                        </td>
-
-
-                       
-
-
-
-
-                    </tr>
-
-                }
-                else
-                {
-                <tr>
-                    <td>
-                        @item.nombreCuenta
-
-                    </td>
-                    <td>
-
-                        $  @Math.Round(item.valorAnio1, 2)
-                    </td>
-
-                    <td>
-
-                        $  @Math.Round(item.valorAnio2, 2)
-                    </td>
-
-
-
-                    <td>
-                        $ @Math.Round(item.valorhorizontal, 2)
-                    </td>
-
-
-                  
-
-
-
-
-                </tr>
-                }
-
-            }
-        </tbody>
-    </table>
-
-
-    <!-- <h1>Oh, Oh, Parece que solo tiene un año agregado a su empresa</h1>
-        <h3>Para poder realizar un analisis de esta empresea debe agregar un historial mayor a 1 año de su balance</h3>
-        <h6>Ingrese aquí para agregar un nuevo balance:</h6>
-        <h6><a href="index"></a></h6>-->
 
 }
 else
 {
-    <h1>Oh, Oh, Parece que solo tiene un año agregado a su empresa</h1>
-    <h3>Para poder realizar un analisis de esta empresea debe agregar un historial mayor a 1 año de su balance</h3>
-    <h6>Ingrese aquí para agregar un nuevo balance:</h6>
-    <h6>
-        <a href="index"></a>
-    </h6>
+    @if (ViewBag.existe)
+    {
+
+
+        <div class="row">
+            <div class="card border-info mb-3 ">
+                <div class="card-header"> @ViewData["an1"]</div>
+                <div class="card-body text-info">
+                    <h5 class="card-title">Resumen</h5>
+                    <p class="card-text">
+                        @ViewBag.mensajebueno
+
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <form class="form-inline" asp-action="AnalsisHorizontal" method="get">
+
+            <div class="row justify-content-end">
+
+                <div class="input-group mb-3" style="margin:20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Año:</span>
+                    </div>
+                    <select class="form-control chosen-s" id="ana1" name="ana1" asp-items="ViewBag.Anios"></select>
+                </div>
+                <div class="input-group mb-3" style="margin:20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Año a comparar:</span>
+                    </div>
+                    <select class="form-control chosen-s" id="ana1" name="ana2" asp-items="ViewBag.Anios"></select>
+                </div>
+
+
+                <div class="input-group mb-3" style="margin:20px;">
+                    <input type="submit" class="btn btn-info" value="Analizar">
+                </div>
+            </div>
+
+        </form>
+
+
+
+        <table class="table table-striped">
+            <thead class="thead-dark ">
+                <tr>
+                    <th>
+                        Cuenta
+                    </th>
+                    <th>
+                        @ViewData["an1"]
+                    </th>
+                    <th>
+                        @ViewData["an2"]
+                    </th>
+                    <th>
+                        Diferencia
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in a1.OrderBy(r => r.nombreCuenta))
+                {
+                    if (item.valorAnio1 == 0 && item.valorAnio2 == 0)
+                    {
+                        <tr>
+                            <td>
+                                <strong> @item.nombreCuenta</strong>
+
+                            </td>
+                            <td>
+                            </td>
+
+                            <td>
+                            </td>
+
+
+
+                            <td>
+                                $ @Math.Round(item.valorhorizontal, 2)
+                            </td>
+
+
+
+
+
+
+
+                        </tr>
+
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+                                @item.nombreCuenta
+
+                            </td>
+                            <td>
+
+                                $  @Math.Round(item.valorAnio1, 2)
+                            </td>
+
+                            <td>
+
+                                $  @Math.Round(item.valorAnio2, 2)
+                            </td>
+
+
+
+                            <td>
+                                $ @Math.Round(item.valorhorizontal, 2)
+                            </td>
+
+
+
+
+
+
+
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+
+
+        <!-- <h1>Oh, Oh, Parece que solo tiene un año agregado a su empresa</h1>
+            <h3>Para poder realizar un analisis de esta empresea debe agregar un historial mayor a 1 año de su balance</h3>
+            <h6>Ingrese aquí para agregar un nuevo balance:</h6>
+            <h6><a href="index"></a></h6>-->
+
+    }
+    else
+    {
+        <h1>Oh, Oh, Parece que solo tiene un año agregado a su empresa</h1>
+        <h3>Para poder realizar un analisis de esta empresea debe agregar un historial mayor a 1 año de su balance</h3>
+        <h6>Ingrese aquí para agregar un nuevo balance:</h6>
+        <h6>
+            <a asp-controller="Empresas" asp-action="Create"></a>
+        </h6>
+    }
 }
