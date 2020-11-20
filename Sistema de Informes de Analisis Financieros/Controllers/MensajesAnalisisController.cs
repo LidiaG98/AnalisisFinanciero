@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
-{
+{    
+    [Authorize(Roles = "Administrator")]
     public class MensajesAnalisisController : Controller
     {
         private readonly ProyAnfContext _context;
@@ -45,7 +47,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         // GET: MensajesAnalisis/Create
         public IActionResult Create()
         {            
-            SelectList listRatios = new SelectList(_context.Ratio.ToList(), "Idratio", "Nombreratiob");
+            SelectList listRatios = new SelectList(_context.Ratio.ToList(), "Idratio", "Nomempresa");
             ViewBag.listRatios = listRatios;
             return View();
         }

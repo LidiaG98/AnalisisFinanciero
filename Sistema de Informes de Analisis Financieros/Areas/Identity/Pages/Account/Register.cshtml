@@ -27,6 +27,10 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            @*<div class="form-group">
+                <label asp-for="Input.idEmpresa1" class="control-label">Empresa</label>
+                @Html.DropDownListFor(model => model.Input.idEmpresa1, Model.listEmpresas, htmlAttributes: new { @class = "form-control" })
+            </div>*@
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>

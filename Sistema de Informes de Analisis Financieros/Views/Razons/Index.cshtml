@@ -15,9 +15,8 @@
 <link rel="stylesheet" href="~/css/Cards.css" />
 @if (ViewBag.existe)
 {
-<h1>Ratios</h1>
-<form class="form-inline active-purple-3 active-purple-4" asp-action="index">
-    <i class="fas fa-search" aria-hidden="true"></i>
+<h1>Razones</h1>
+<form class="form-inline active-purple-3 active-purple-4 col-12" asp-action="index">    
     <input class="form-control form-control-sm ml-3 w-75" name="Buscar" value="@ViewData["Filtro"]" id="Buscar" type="text" placeholder="Buscar"
            aria-label="Buscar" >
     <div class="input-group mb-3" style="margin:10px;">
@@ -29,38 +28,37 @@
 
 @foreach (var item in Model)
 {
-    <div class="courses-container">
-        <div class="course">
-            <div class="course-preview">
+<div class="row">
+    <div class="courses-container col-12">
+        <div class="course col-12">
+            <div class="course-preview col-6">
                 <h6>Ratio:</h6>
                 <h4> @Html.DisplayFor(modelItem => item.nombreRazon)</h4>
                 <h6>Tipo:</h6>
                 <h6 class="tac"> @Html.DisplayFor(modelItem => item.tipo)</h6>
+                @foreach(var razon in ViewBag.listaRazones)
+                {
+                    @if(razon.idRatio)
+                }
             </div>
-            <div class="course-info">
-                <div class="progress-container">
-                    <div class="progress"></div>
-                    <span class="progress-text">
-                       
-                    </span>
-                </div>
+            <div class="course-info col-6 text-center">                
                 <h6>Formula</h6>
 
-                <h5 > @Html.DisplayFor(modelItem => item.numerador)</h5>
-                <strong>______________________________________</strong>
-                <h5 > @Html.DisplayFor(modelItem => item.denominador)</h5>
-                
-                <a  href="Razons/AnalisisRazon/@item.idRazon" class="btnx">Detalles</a>
+                <h5> @Html.DisplayFor(modelItem => item.numerador)</h5>
+                <hr style="border: 1px solid black;"/>
+                <h5> @Html.DisplayFor(modelItem => item.denominador)</h5>
+                <br />
+                <a asp-action="AnalisisRazon" asp-route-idRazon="@item.idRazon" class="btnx btn-block">Detalles</a>
             </div>
         </div>
-    </div>
-    paco = paco + 1;
+    </div>    
+</div>    
 }
 }
 else
 {
     <h1>Parece que no tiene registrado su balance o estado financiero</h1>
     <h3>Para poder usar esta función es necesario que los tenga agregados a su cuenta</h3>
-    <h6><a asp-action="Empresas" asp-controller="details">Ingrese aquí para agregar unos cuantos</a></h6>
+    <h6><a asp-action="Empresas" asp-controller="Index  ">Ingrese aquí para agregar unos cuantos</a></h6>
 }
     <script src="~/js/Card.js" asp-append-version="true"></script>

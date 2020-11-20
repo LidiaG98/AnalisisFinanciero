@@ -48,17 +48,17 @@
 
 
 .courses-container {
+    width: 100%;
 }
 
 .course {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    max-width: 100%;
+    display: flex;    
     margin: 20px;
     overflow: hidden;
-    width: 700px;
+    
 }
 
     .course h6 {
@@ -78,13 +78,13 @@
         letter-spacing: 1px;
         margin: 10px 0;
     }
-   
+
 
 .course-preview {
     background-color: #2A265F;
     color: #fff;
     padding: 30px;
-    max-width: 250px;
+    width:40%;
 }
 
     .course-preview a {
@@ -99,7 +99,7 @@
 .course-info {
     padding: 30px;
     position: relative;
-    width: 100%;
+    width:100%;
 }
 
 .progress-container {
@@ -107,14 +107,14 @@
     top: 30px;
     right: 30px;
     text-align: right;
-    width: 150px;
+    
 }
 
 .progress {
     background-color: #ddd;
     border-radius: 3px;
     height: 5px;
-    width: 100%;
+    
 }
 
     .progress::after {
@@ -142,9 +142,9 @@
     color: #fff;
     font-size: 16px;
     padding: 12px 25px;
-    position: absolute;
+    /*position: absolute;
     bottom: 30px;
-    right: 30px;
+    right: 30px;*/
     letter-spacing: 1px;
 }
 

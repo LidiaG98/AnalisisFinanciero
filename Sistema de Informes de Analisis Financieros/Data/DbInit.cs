@@ -1,4 +1,5 @@
-﻿using Sistema_de_Informes_de_Analisis_Financieros.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Sistema_de_Informes_de_Analisis_Financieros.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Data
 {
     public class DbInit
     {
+        private readonly UserManager<Usuario> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         public static void Inicio(ProyAnfContext context)
         {
             context.Database.EnsureCreated();            
@@ -260,8 +263,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Data
                 {
                     context.Add(r);
                 }
-            }
-
+            }            
             context.SaveChanges();
         }
     }
