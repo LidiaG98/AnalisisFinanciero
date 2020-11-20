@@ -62,10 +62,15 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 return "El archivo subido es inválido, intentelo de nuevo.";
             }
 
-            if (!(Path.GetExtension(files.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase)) && !(Path.GetExtension(files.FileName).Equals(".xls", StringComparison.OrdinalIgnoreCase)))
+            if (!(Path.GetExtension(files.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase)))
             {
                 return "Solo se aceptan archivos de tipo Excel.";
             }
+            if(_context.Catalogodecuenta.Where(cC => cC.Idempresa == IdEmpresa).Any())
+            {
+                return "Ya existe un catálogo registrado para esta empresa.";
+            }
+
             var listCuentas = new List<CuentaViewModel>();
 
             using (var stream = new MemoryStream())
@@ -111,24 +116,226 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             List<Catalogodecuenta> catalogodecuentas = new List<Catalogodecuenta>();
             foreach (var cuentaV in lstCV)
             {
-                for (int i = 0; i < lstCB.Count; i++)
+                List<Cuenta> ctaBase = _context.Cuenta.Where(cB => cB.Nomcuenta.Equals(cuentaV.nombre)).Include(i =>i.IdtipocuentaNavigation).ToList();
+                if (ctaBase.Count > 1)
                 {
-                    if (lstCB[i].Nomcuenta.Equals(cuentaV.nombre))
+                    string val = "";
+                    string cod = cuentaV.codigo.Replace(".", "");
+                    int identificadorCuenta = 0;
+                   
+                    if (cod.Length > 1) { val = cod.Substring(0, 2); }
+                    else { val = cod.Substring(0, 1); }
+
+                    int catalogoBase = 0;
+                    Catalogodecuenta cc = new Catalogodecuenta();
+
+                    switch (val)
                     {
-                        Catalogodecuenta cc = new Catalogodecuenta
-                        {
-                            Idcuenta = lstCB[i].Idcuenta,
-                            Idempresa = idEmpresa,
-                            Codcuentacatalogo = cuentaV.codigo
-                        };
-                        var catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
-                        if (!(catalogoBase > 0))
-                        {
-                            catalogodecuentas.Add(cc);
-                        }
-                        break;
+                        case "1":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("ACTIVO")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "11":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("ACTIVO CORRIENTE")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "12":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("ACTIVO NO CORRIENTE")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "2":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("PASIVO")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "21":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("PASIVO CORRIENTE")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "22":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("PASIVO NO CORRIENTE")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "3":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("PATRIMONIO")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "4":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("GASTOS")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        case "5":
+                            identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("INGRESOS")).First().Idcuenta;
+                            cc = new Catalogodecuenta
+                            {
+                                Idcuenta = identificadorCuenta,
+                                Idempresa = idEmpresa,
+                                Codcuentacatalogo = cuentaV.codigo
+                            };
+                            catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                            if (!(catalogoBase > 0))
+                            {
+                                catalogodecuentas.Add(cc);
+                            }
+                            break;
+                        default:
+                            if (cod.StartsWith("3"))
+                            {
+                                identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("PATRIMONIO")).First().Idcuenta;
+                                cc = new Catalogodecuenta
+                                {
+                                    Idcuenta = identificadorCuenta,
+                                    Idempresa = idEmpresa,
+                                    Codcuentacatalogo = cuentaV.codigo
+                                };
+                                catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                                if (!(catalogoBase > 0))
+                                {
+                                    catalogodecuentas.Add(cc);
+                                }
+                            }
+                            else if (cod.StartsWith("4"))
+                            {
+                                identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("GASTOS")).First().Idcuenta;
+                                cc = new Catalogodecuenta
+                                {
+                                    Idcuenta = identificadorCuenta,
+                                    Idempresa = idEmpresa,
+                                    Codcuentacatalogo = cuentaV.codigo
+                                };
+                                catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                                if (!(catalogoBase > 0))
+                                {
+                                    catalogodecuentas.Add(cc);
+                                }
+                            }
+                            else if (cod.StartsWith("5"))
+                            {
+                                identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("INGRESOS")).First().Idcuenta;
+                                cc = new Catalogodecuenta
+                                {
+                                    Idcuenta = identificadorCuenta,
+                                    Idempresa = idEmpresa,
+                                    Codcuentacatalogo = cuentaV.codigo
+                                };
+                                catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                                if (!(catalogoBase > 0))
+                                {
+                                    catalogodecuentas.Add(cc);
+                                }
+                            }
+                            else
+                            {
+                                identificadorCuenta = ctaBase.Where(cta => cta.IdtipocuentaNavigation.Nomtipocuenta.Equals("OTROS")).First().Idcuenta;
+                                cc = new Catalogodecuenta
+                                {
+                                    Idcuenta = identificadorCuenta,
+                                    Idempresa = idEmpresa,
+                                    Codcuentacatalogo = cuentaV.codigo
+                                };
+                                catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                                if (!(catalogoBase > 0))
+                                {
+                                    catalogodecuentas.Add(cc);
+                                }
+                            }
+                            break;
                     }
                 }
+                else if (ctaBase.Count == 1)
+                {
+                    Catalogodecuenta cc = new Catalogodecuenta
+                    {
+                        Idcuenta = ctaBase.First().Idcuenta,
+                        Idempresa = idEmpresa,
+                        Codcuentacatalogo = cuentaV.codigo
+                    };
+                    var catalogoBase = _context.Catalogodecuenta.Count(a => a.Idcuenta == cc.Idcuenta && a.Idempresa == cc.Idempresa);
+                    if (!(catalogoBase > 0))
+                    {
+                        catalogodecuentas.Add(cc);
+                    }
+                }
+                
             }
             int idDefault = _context.Cuenta.Where(d => d.Nomcuenta.Equals("Default")).FirstOrDefault().Idcuenta;
             var cb = _context.Catalogodecuenta.Count(a => a.Idcuenta == idDefault && a.Idempresa == idEmpresa);

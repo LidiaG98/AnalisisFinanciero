@@ -20,6 +20,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
     public class ValoresBalanceController : Controller
     {
         private readonly ProyAnfContext _context;
+        //Declaracion de constantes
+        const int COD_FORMATO_INVALIDO = 1; //Cuando las ctas de total en el balance no tienen el nombre estandar
+        const int COD_BALANCE_DESCUADRADO = 2; //Cuando el balance está descuadrado
+        const int COD_VALORES_EXITO = 3; //Cuando todos los valores se subieron con éxito
 
         public ValoresBalanceController(ProyAnfContext context)
         {
@@ -28,10 +32,11 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
         public async Task<string> GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
         {
-           
+
             List<BalanceViewModel> listFilasBalance = new List<BalanceViewModel>();
             List<BalanceViewModel> listFilasBalance2 = new List<BalanceViewModel>();
-            string mensaje = "Archivo subido con éxito.";
+            string mensaje = "Archivo subido con éxito.";            
+
             if (files == null || files.Length <= 0)
             {
                 return "El archivo subido es inválido, intentelo de nuevo.";
@@ -45,39 +50,40 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var catalogo = _context.Catalogodecuenta.Count(a => a.Idempresa == IdEmpresa);
             if (catalogo > 0)
             {
-                if(_context.Valoresdebalance.Select(t => t.Anio).Distinct().Count() >= 2)
+                foreach (var anio in subirBalance.anios)
                 {
-                    return "Capacidad agotada: Ya se han registrado 2 años";
-                }
-                else
-                {
-                    //Verificando que no existan datos para ese año
-                    if (!(_context.Valoresdebalance.Any(a => a.Anio == subirBalance.anios[0].anio)))
+                    /*Llamar método para obtener la letra de columna y número de fila de las celdas*/
+                    IEnumerable<string> s = SplitAlpha(subirBalance.celdaCuenta);
+                    int numCeldaCuenta = int.Parse(s.Last()); //Obtengo # de fila de las cuentas
+
+                    string celValA1 = anio.celdaAnio;
+
+                    s = SplitAlpha(celValA1);
+                    int numCeldaAnio = int.Parse(s.Last()); //Obtengo # de fila de los valores
+                    if (!(numCeldaAnio == numCeldaCuenta))
                     {
-                        listFilasBalance = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, subirBalance.anios[0].celdaAnio, subirBalance.anios[0].anio);
-                        if (!(await VerificarBalance(IdEmpresa, listFilasBalance)))
+                        return "Los nombres de cuenta y los valores de las mismas deben estar en la misma fila";
+                    }
+
+                    //Verificando que no existan datos para ese año
+                    if (!(_context.Valoresdebalance.Any(a => a.Anio == anio.anio)))
+                    {
+                        listFilasBalance = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, anio.celdaAnio, anio.anio);
+
+                        if ((await VerificarBalance(IdEmpresa, listFilasBalance)) == COD_BALANCE_DESCUADRADO)
                         {
-                            return "Balance para el año " +subirBalance.anios[0].anio+ "descuadrado";
+                            return "Balance para el año " + subirBalance.anios[0].anio + "descuadrado";
+                        }
+                        if ((await VerificarBalance(IdEmpresa, listFilasBalance)) == COD_FORMATO_INVALIDO)
+                        {
+                            return "El archivo no presenta los nombres de Totales en formato estándar";
                         }
                     }
                     else
                     {
-                        mensaje = "Ya existen datos para el año " + subirBalance.anios[0].anio;
+                        mensaje = "Ya existen datos para el año " + anio.anio;
                     }
-                    //Verificando si existe año 2 y obteniendo sus datos
-                    if (subirBalance.anios.Count == 2)
-                    {
-                        if (!(_context.Valoresdebalance.Any(a => a.Anio == subirBalance.anios[1].anio)))
-                        {
-                            listFilasBalance2 = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, subirBalance.anios[1].celdaAnio, subirBalance.anios[1].anio);
-                            if (!(await VerificarBalance(IdEmpresa, listFilasBalance2)))
-                            {
-                                return "Balance para el año " + subirBalance.anios[1].anio + "descuadrado";
-                            }
-                        }
-                        else { mensaje = "Ya existen datos para el año " + subirBalance.anios[1].anio; }
-                    }
-                }         
+                }
             }
             else
             {
@@ -101,68 +107,54 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         /*VerificarBalance: verifica que el balance cuadre e inserta los valores en la base*/
-        public async Task<bool> VerificarBalance(int IdEmpresa, List<BalanceViewModel> balanceV)
+        public async Task<int> VerificarBalance(int IdEmpresa, List<BalanceViewModel> balanceV)
         {
-            double tActivo = 0, tPmasPat = 0, tAC = 0, tANC = 0, tPC = 0, tPNC = 0, tPat = 0;
-            string nomTipoCuenta = "";
             int a1 = 0;
-            double maxVal = balanceV.Max(x => x.valor);            
-            //var totales = balanceV.Where(x => x.valor == maxVal);
-            bool resultado = true;
+            int resultado = COD_BALANCE_DESCUADRADO; //Inicializo asumiendo que esta descuadrado
+
+            //Obtengo la lista de cuentas en catalogo, excluyendo las cuentas de total que se agregaron en la creación cod=0 y hago una lista personalizada
             var cuentasCatalogo = (from cuenta in _context.Catalogodecuenta
                                    where cuenta.Idempresa == IdEmpresa
+                                   && cuenta.Codcuentacatalogo != "D"
+                                   && cuenta.Codcuentacatalogo != "0"
                                    select new
                                    {
                                        nomCuenta = cuenta.IdcuentaNavigation.Nomcuenta,
                                        tipoCuenta = cuenta.IdcuentaNavigation.IdtipocuentaNavigation.Nomtipocuenta,
-                                       idCuenta = cuenta.IdcuentaNavigation.Idcuenta
+                                       idCuenta = cuenta.IdcuentaNavigation.Idcuenta,
+                                       cuentaEstandar = cuenta.nomCuentaE.nomCuentaE,
+                                       codCuentaCatalogo = cuenta.Codcuentacatalogo
                                    }).ToList();
-            foreach (var filaBV in balanceV)
+            //Recojo las listas del balance que correspondan a los 3 totales principales
+            var ctaTotalActivos = balanceV.Where(x => x.nomCuenta.Equals("TOTAL ACTIVOS", StringComparison.OrdinalIgnoreCase)
+            || x.nomCuenta.Equals("ACTIVO TOTAL", StringComparison.OrdinalIgnoreCase) || x.nomCuenta.Equals("TOTAL ACTIVO", StringComparison.OrdinalIgnoreCase)
+            || x.nomCuenta.Equals("ACTIVOS TOTALES", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            var ctaTotalPasivo = balanceV.Where(x => x.nomCuenta.Equals("TOTAL PASIVO", StringComparison.OrdinalIgnoreCase)
+            || x.nomCuenta.Equals("PASIVO TOTAL", StringComparison.OrdinalIgnoreCase) || x.nomCuenta.Equals("TOTAL PASIVOS", StringComparison.OrdinalIgnoreCase)
+            || x.nomCuenta.Equals("PASIVOS TOTALES", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            var ctaTotalPatrimonio = balanceV.Where(x => x.nomCuenta.Contains("TOTAL CAPITAL SOCIAL", StringComparison.OrdinalIgnoreCase)
+            || x.nomCuenta.Contains("TOTAL PATRIMONIO", StringComparison.OrdinalIgnoreCase) || x.nomCuenta.Contains("PATRIMONIO TOTAL", StringComparison.OrdinalIgnoreCase)
+            || x.nomCuenta.Contains("PASIVOS TOTALES", StringComparison.OrdinalIgnoreCase) || x.nomCuenta.Contains("TOTAL CAPITAL CONTABLE", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            if (ctaTotalActivos == null || ctaTotalPasivo == null || ctaTotalPatrimonio == null)
             {
-                for (int i = 0; i < cuentasCatalogo.Count(); i++)
-                {
-                    if (filaBV.nomCuenta.Equals(cuentasCatalogo[i].nomCuenta))
-                    {
-                        if (!(filaBV.nomCuenta.Contains("TOTAL")) && !(filaBV.nomCuenta.Contains("ACTIVO"))
-                            && !(filaBV.nomCuenta.Contains("PATRIMONIO")) && !(filaBV.nomCuenta.Contains("PASIVO CORRIENTE"))
-                            && !(filaBV.nomCuenta.Contains("PASIVO NO CORRIENTE")))
-                        {
-                            nomTipoCuenta = cuentasCatalogo[i].tipoCuenta;
-                            switch (nomTipoCuenta)
-                            {
-                                case "ACTIVO CORRIENTE":
-                                    tActivo += filaBV.valor;
-                                    tAC += filaBV.valor;
-                                    break;
-                                case "ACTIVO NO CORRIENTE":
-                                    tActivo += filaBV.valor;
-                                    tANC += filaBV.valor;
-                                    break;
-                                case "PASIVO CORRIENTE":
-                                    tPmasPat += filaBV.valor;
-                                    tPC += filaBV.valor;
-                                    break;
-                                case "PASIVO NO CORRIENTE":
-                                    tPmasPat += filaBV.valor;
-                                    tPNC += filaBV.valor;
-                                    break;
-                                case "PATRIMONIO":
-                                    tPmasPat += filaBV.valor;
-                                    tPat += filaBV.valor;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        break;
-                    }
-                }
+                resultado = COD_FORMATO_INVALIDO; //Si alguna lista esta vacia es porque no se encontró el nombre estándar
             }
-            //if (maxVal == tPmasPat && maxVal == tActivo)
-            //{
+
+            //Almaceno su valor
+            double valTotalActivos = ctaTotalActivos.valor;
+            double valTotalPasivo = ctaTotalPasivo.valor;
+            double valTotalPatrimonio = ctaTotalPatrimonio.valor;
+            double valTotalPatMasPasivo = valTotalPasivo + valTotalPatrimonio;
+
+            if (valTotalActivos == valTotalPatMasPasivo) //Comparo que cuadre
+            {
                 foreach (var filaBV in balanceV)
                 {
                     a1 = filaBV.anioFila;
+                    //Busco la cuenta en el catalogo para obtener su información
                     var infoCuenta = cuentasCatalogo.Find(z => z.nomCuenta.Equals(filaBV.nomCuenta));
                     if (!(infoCuenta == null))
                     {
@@ -173,17 +165,30 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                             Valorcuenta = filaBV.valor,
                             Anio = filaBV.anioFila
                         };
+                        //Verifico que no exista este registro en la base
                         var vc = _context.Valoresdebalance.Where(x => x.Idcuenta == vB.Idcuenta && x.Idempresa == vB.Idempresa
                              && x.Valorcuenta == vB.Valorcuenta && x.Anio == vB.Anio).ToList();
                         if (vc.Count == 0)
                         {
-                            _context.Add(vB);                            
+                            _context.Add(vB);
                         }
                     }
-                    
+
                 }
-                var totales = cuentasCatalogo.Where(z => z.nomCuenta.Contains("TOTAL")).ToList();
-                foreach (var total in totales)
+                //Busco las cuentas de total que yo agregué
+                var ctasTotales = (from cuenta in _context.Catalogodecuenta
+                                   where cuenta.Idempresa == IdEmpresa
+                                   && cuenta.Codcuentacatalogo.Equals("0")
+                                   select new
+                                   {
+                                       nomCuenta = cuenta.IdcuentaNavigation.Nomcuenta,
+                                       tipoCuenta = cuenta.IdcuentaNavigation.IdtipocuentaNavigation.Nomtipocuenta,
+                                       idCuenta = cuenta.IdcuentaNavigation.Idcuenta,
+                                       cuentaEstandar = cuenta.nomCuentaE.nomCuentaE,
+                                       codCuentaCatalogo = cuenta.Codcuentacatalogo
+                                   }).ToList();
+                //Lleno las 3 cuentas de total que se que tengo su valor
+                foreach (var total in ctasTotales)
                 {
                     var vt = _context.Valoresdebalance.Where(x => x.Idcuenta == total.idCuenta && x.Idempresa == IdEmpresa
                              && x.Anio == a1).ToList();
@@ -192,48 +197,12 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                         string tipo = total.tipoCuenta;
                         switch (tipo)
                         {
-                            case "ACTIVO CORRIENTE":
-                                _context.Add(new Valoresdebalance
-                                {
-                                    Idempresa = IdEmpresa,
-                                    Idcuenta = total.idCuenta,
-                                    Valorcuenta = tAC,
-                                    Anio = a1
-                                });
-                                break;
-                            case "ACTIVO NO CORRIENTE":
-                                _context.Add(new Valoresdebalance
-                                {
-                                    Idempresa = IdEmpresa,
-                                    Idcuenta = total.idCuenta,
-                                    Valorcuenta = tANC,
-                                    Anio = a1
-                                });
-                                break;
-                            case "PASIVO CORRIENTE":
-                                _context.Add(new Valoresdebalance
-                                {
-                                    Idempresa = IdEmpresa,
-                                    Idcuenta = total.idCuenta,
-                                    Valorcuenta = tPC,
-                                    Anio = a1
-                                });
-                                break;
-                            case "PASIVO NO CORRIENTE":
-                                _context.Add(new Valoresdebalance
-                                {
-                                    Idempresa = IdEmpresa,
-                                    Idcuenta = total.idCuenta,
-                                    Valorcuenta = tPNC,
-                                    Anio = a1
-                                });
-                                break;
                             case "PASIVO":
                                 _context.Add(new Valoresdebalance
                                 {
                                     Idempresa = IdEmpresa,
                                     Idcuenta = total.idCuenta,
-                                    Valorcuenta = tPmasPat,
+                                    Valorcuenta = valTotalPasivo,
                                     Anio = a1
                                 });
                                 break;
@@ -242,7 +211,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                                 {
                                     Idempresa = IdEmpresa,
                                     Idcuenta = total.idCuenta,
-                                    Valorcuenta = tPat,
+                                    Valorcuenta = valTotalPatrimonio,
                                     Anio = a1
                                 });
                                 break;
@@ -251,19 +220,19 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                                 {
                                     Idempresa = IdEmpresa,
                                     Idcuenta = total.idCuenta,
-                                    Valorcuenta = tActivo,
+                                    Valorcuenta = valTotalActivos,
                                     Anio = a1
                                 });
                                 break;
                             default:
                                 break;
-                        } 
+                        }
                     }
                 }
                 await _context.SaveChangesAsync();
-                resultado = true;
-            //}
-            return resultado;
+                resultado = COD_VALORES_EXITO; //Si todo se inserto, retorno el codigo de éxito
+            }
+            return resultado; //Si el if de verificar que el balance cuadre da falso, se retorna el valor inicial de resultado (cod descuadrado)
         }
 
         /*LeerExcel: lee el archivo de excel que sube el usuario y devuelve sus datos en una lista de Balance View Model*/
@@ -289,6 +258,11 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 {
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[hoja];
                     var rowCount = worksheet.Dimension.Rows;
+                    //Verificar que la hoja no esté vacia
+                    if (worksheet.Dimension == null)
+                    {
+                        return lstDatos;
+                    }
                     //Obteniendo datos del año 1
                     for (int row = 1; row <= rowCount; row++)
                     {
@@ -327,9 +301,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public async Task<IActionResult> Index(string mensaje)
         {
             var proyAnfContext = _context.Valoresdebalance.Include(v => v.Id);
-           
+
             ViewBag.Mensaje = mensaje;
-            
+
             return View(await proyAnfContext.ToListAsync());
         }
         public async Task<IActionResult> AnalsisHorizontal()
@@ -338,13 +312,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
             List<double> Vanios1 = new List<double>();
             List<double> Vanios2 = new List<double>();
-            
+
 
             var proyAnfContext = _context.Valoresdebalance.Where(x => x.Idempresa == u[0].Idempresa.Idempresa);
             var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
             var balance = from x in _context.Valoresdebalance select x;
             catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa).Include(r => r.IdcuentaNavigation);
-            
+
             //double activoTotal = balance.Where(m => m.Idcuenta == c).FirstOrDefault().Valorcuenta;
 
             int an = proyAnfContext.FirstOrDefault().Anio;
@@ -353,7 +327,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
 
             var AH1 = proyAnfContext.Where(s => s.Anio == an);
-            foreach( var awa in AH1)
+            foreach (var awa in AH1)
             {
                 Vanios1.Add(awa.Valorcuenta);
             }
@@ -381,11 +355,11 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
 
             var proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
-            
+
             int an = proyAnfContext.FirstOrDefault().Anio;
             proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa && y.Anio == an);
             catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
-             var cuenta = catCuent.Where(x => x.IdcuentaNavigation.Nomcuenta == "TOTAL ACTIVO").FirstOrDefault();
+            var cuenta = catCuent.Where(x => x.IdcuentaNavigation.Nomcuenta == "TOTAL ACTIVO").FirstOrDefault();
             double activoTotal = proyAnfContext.Where(x => x.Idcuenta == cuenta.Idcuenta).FirstOrDefault().Valorcuenta;
 
             ViewBag.activo = activoTotal;
@@ -515,7 +489,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var valoresdebalance = await _context.Valoresdebalance.FindAsync(id);
-            
+
             _context.Valoresdebalance.Remove(valoresdebalance);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -523,9 +497,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
         private bool ValoresdebalanceExists(int id)
         {
-            
+
             return _context.Valoresdebalance.Any(e => e.Idbalance == id);
         }
-     
+
     }
 }
