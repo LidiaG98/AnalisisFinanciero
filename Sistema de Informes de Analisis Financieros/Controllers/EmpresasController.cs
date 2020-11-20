@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -18,13 +19,15 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         private CatalogoCuentasController catalogo;
         private ValoresBalanceController valoresController;
         private EstadoRController estadoController;
+        private readonly UserManager<Usuario> userManager;
 
-        public EmpresasController(ProyAnfContext context)
+        public EmpresasController(ProyAnfContext context,UserManager<Usuario> user)
         {
             _context = context;
-            catalogo = new CatalogoCuentasController(context);
+            catalogo = new CatalogoCuentasController(context,user);
             valoresController = new ValoresBalanceController(context);
             estadoController = new EstadoRController(context);
+            this.userManager = user;
         }
 
         // GET: Empresas

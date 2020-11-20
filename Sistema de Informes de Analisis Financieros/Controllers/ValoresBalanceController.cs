@@ -70,6 +70,11 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     {
                         listFilasBalance = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, anio.celdaAnio, anio.anio);
 
+                        if (listFilasBalance.Count == 0)
+                        {
+                            return "El archivo de excel está vacio";
+                        }
+
                         if ((await VerificarBalance(IdEmpresa, listFilasBalance)) == COD_BALANCE_DESCUADRADO)
                         {
                             return "Balance para el año " + subirBalance.anios[0].anio + "descuadrado";

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,18 +18,29 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
     {
         private readonly ProyAnfContext _context;
         private CuentasController cuentasController;
+        private readonly UserManager<Usuario> userManager;
 
-        public CatalogoCuentasController(ProyAnfContext context)
+        public CatalogoCuentasController(ProyAnfContext context, UserManager<Usuario> user)
         {
             _context = context;
             cuentasController = new CuentasController(context);
+            this.userManager = user;
         }
 
         // GET: CatalogoCuentas
         public async Task<IActionResult> Index()
         {
-            var proyAnfContext = _context.Catalogodecuenta.Include(c => c.IdcuentaNavigation).Include(c => c.IdempresaNavigation);
-            return View(await proyAnfContext.ToListAsync());
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            List<Catalogodecuenta> proyAnfContext;
+            if (await userManager.IsInRoleAsync(u,"Administrator"))
+            {
+                proyAnfContext = _context.Catalogodecuenta.Include(c => c.IdcuentaNavigation).Include(c => c.IdempresaNavigation).ToList();
+                return View(proyAnfContext);
+            }
+            proyAnfContext = _context.Catalogodecuenta.Include(c => c.IdcuentaNavigation).Include(c => c.IdempresaNavigation)
+                .Where(p => p.Idempresa == u.Idempresa.Idempresa).ToList();
+            return View(proyAnfContext);
         }
 
         // GET: CatalogoCuentas/Details/5
