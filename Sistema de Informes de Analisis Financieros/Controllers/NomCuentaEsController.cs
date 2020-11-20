@@ -29,7 +29,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var user = this.User;
             List<Usuario> u = _context.Users.Include(e=>e.Idempresa).Where(e=>e.UserName == user.Identity.Name).ToList();
             List<Catalogodecuenta> cc = new List<Catalogodecuenta>();
-            cc = _context.Catalogodecuenta.Include(e=>e.IdcuentaNavigation).Where(e=>e.Codcuentacatalogo!="0" && e.Idempresa==u[0].Idempresa.Idempresa).ToList();
+            cc = _context.Catalogodecuenta.Include(e=>e.IdcuentaNavigation).Where(e=>e.Codcuentacatalogo!="0" && e.Idempresa==u[0].Idempresa.Idempresa && e.Codcuentacatalogo != "D").ToList();
             List<SelectListItem> items = cc.ConvertAll(d =>
             {
                 return new SelectListItem()
@@ -55,9 +55,12 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             {
                 for(int x=0; x < listCs[i].codCuenta.Count; x++)
                 {
-                    listCs[i].codCuenta[x] = listCs[i].codCuenta[x].Replace(".", "");
+                    if(listCs[i].codCuenta[x] != null)
+                    {
+                        listCs[i].codCuenta[x] = listCs[i].codCuenta[x].Replace(".", "");
+                    }
                 }
-                cc = _context.Catalogodecuenta.Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa).ToList();
+                cc = _context.Catalogodecuenta.Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa && e.Codcuentacatalogo != "D").ToList();
                 nom = _context.NomCuentaE.Where(e => e.nomCuentaE == listCs[i].nombre).ToList();
 
                 for (int j = 0; j < cc.Count; j++)
@@ -276,7 +279,22 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                                     await _context.SaveChangesAsync();
                                 }
                             }
-                          break;
+                            break;
+                        case "NUMERO DE ACCIONES":
+                            foreach (string cod in listCs[i].codCuenta)
+                            {
+                                if(cod != null)
+                                {
+                                    if (cc[j].Codcuentacatalogo.StartsWith(cod))
+                                    {
+                                        cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
+                                        cc[j].nomCuentaEID = nom[0].nomCuentaEID;
+                                        _context.Update(cc[j]);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+                            }
+                            break;
                     }
 
                 }
@@ -407,7 +425,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         {
             var user = this.User;
             List<Usuario> u =  _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-            var jsonData = _context.Catalogodecuenta.Include(e => e.IdcuentaNavigation).Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa).ToList();
+            var jsonData = _context.Catalogodecuenta.Include(e => e.IdcuentaNavigation).Where(e => e.Codcuentacatalogo != "0" && e.Idempresa == u[0].Idempresa.Idempresa && e.Codcuentacatalogo != "D").ToList();
             return Json(jsonData);
         }
 
