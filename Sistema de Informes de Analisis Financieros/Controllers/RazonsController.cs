@@ -36,7 +36,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             }
             var valoresbalance = from s in _context.Valoresdebalance select s;
             var valoresestados = from s in _context.Valoresestado select s;
-            if (valoresbalance.Any() || valoresestados.Any())
+            if (valoresbalance.Any() && valoresestados.Any())
             {
 
 
@@ -234,6 +234,18 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
 
                   }
                   ViewData["Resultados"] = Resultado; */
+                var usuario = this.User;
+                Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+                var listaRazones = _context.Ratioempresa
+                    .Join(_context.Ratio,
+                    l => l.Idratio,
+                    p => p.Idratio,
+                    (l,p) => new
+                    {
+                        NombreRazon = p,
+                        ValorRazon = l.Valorratioempresa
+                    });
+                ViewBag.listaRazones = listaRazones;
                 ViewBag.existe = true;
             }
             else
