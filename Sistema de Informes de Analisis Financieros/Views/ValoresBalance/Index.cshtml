@@ -1,49 +1,69 @@
 ﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Valoresdebalance>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Balance General";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string mensaje = ViewBag.Mensaje;
+    List<int> anios = Model.Select(x => x.Anio).Distinct().ToList();
 }
-
-<h1>Index</h1>
-<h3 class="text-danger">@mensaje</h3>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Valorcuenta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Anio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Valorcuenta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Anio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id.Codcuentacatalogo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Idbalance">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Idbalance">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Idbalance">Delete</a>
-            </td>
-        </tr>
+@if (mensaje != null)
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
 }
-    </tbody>
-</table>
+<div class="container col-12 col-md-9 mb-5">
+    <div class="card border-dark mb-1">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                No tiene registrado un balance general para su empresa, puede subir su archivo en este link:
+                <a class="ml-1" asp-controller="Empresas" asp-action="Edit" asp-route-id="@ViewBag.idEmpresa">Ir a edición de empresa</a>
+            </div>
+        }
+        @foreach (var anio in anios)
+        {
+            <div class="card-body text-dark text-center">
+                <h5 class="card-title font-italic">"@ViewBag.nomEmpresa"</h5>
+                <p class="card-text font-weight-bold">Balance General. Periodo: @anio.</p>
+            </div>
+            <table class="table">
+                @*<thead class="table-active">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Valorcuenta)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Anio)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id.IdcuentaNavigation.Nomcuenta)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>*@
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        if (item.Anio == anio)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Id.IdcuentaNavigation.Nomcuenta)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Valorcuenta)
+                                </td>
+                                @*<td>
+                                    <a asp-action="Edit" asp-route-id="@item.Idbalance">Edit</a> |
+                                    <a asp-action="Details" asp-route-id="@item.Idbalance">Details</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.Idbalance">Delete</a>
+                                </td>*@
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

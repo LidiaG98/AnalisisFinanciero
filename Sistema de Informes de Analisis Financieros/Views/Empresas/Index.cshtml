@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 @if (User.IsInRole("Administrator"))
 {
     <h1>Empresas Registradas</h1>
@@ -14,34 +13,28 @@
             <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbspCrear Nueva Empresa
         </a>
     </div>
-}
-else
-{
-    <h1>Tu Empresa</h1>
-}
-<table class="table table-responsive">
-    <thead class="thead-dark text-center">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nomempresa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descempresa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Razonsocial)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdsectorNavigation)
-            </th>
-            <th>
-                Acciones
-            </th>
-        </tr>
-    </thead>
-    <tbody class="text-center">
-        @foreach (var item in Model)
-        {
+    <table class="table table-responsive">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nomempresa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descempresa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Razonsocial)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdsectorNavigation)
+                </th>
+                <th>
+                    Acciones
+                </th>
+        </thead>
+        <tbody class="text-center">
+            @foreach (var item in Model)
+            {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Nomempresa)
@@ -62,14 +55,35 @@ else
                     <a class="btn btn-info px-2 py-1 rounded-circle text-dark" asp-action="Details" asp-route-id="@item.Idempresa">
                         <i class="fa fa-eye" aria-hidden="true"></i>
                     </a>
-                    @if (User.IsInRole("Administrator"))
-                    {
-                        <a class="btn btn-danger px-2 py-1 rounded-circle rounded text-dark" asp-action="Delete" asp-route-id="@item.Idempresa">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
-                    }
+                    <a class="btn btn-danger px-2 py-1 rounded-circle rounded text-dark" asp-action="Delete" asp-route-id="@item.Idempresa">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </a>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="card">
+        <div class="card-header text-center">
+            <h1>@Model.First().Nomempresa</h1>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Administración de empresa</h5>
+            <p class="lead">Organiza y encuentra la información de tu empresa desde este diagrama de navegación.</p>
+            <p class="card-text">1. Para editar la información básica y subir catálogo de cuentas.</p>
+            <a class="btn btn-dark ml-4 mb-3" asp-action="Edit" asp-route-id="@Model.First().Idempresa">
+                <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Ir a edición de empresa
+            </a>
+            <p class="card-text">2. Para visualizar la información básica y subir balance general y estado de resultados.</p>
+            <a class="btn btn-dark ml-4 mb-3" asp-action="Details" asp-route-id="@Model.First().Idempresa">
+                <i class="fa fa-eye" aria-hidden="true"></i> Ir a Detalles de empresa
+            </a>
+        </div>
+        <div class="card-footer text-muted">
+            &nbsp;
+        </div>
+    </div>
+}

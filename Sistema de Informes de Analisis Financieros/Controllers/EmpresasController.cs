@@ -26,9 +26,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public EmpresasController(ProyAnfContext context, UserManager<Usuario> userManager)
         {
             _context = context;
-            catalogo = new CatalogoCuentasController(context);
-            valoresController = new ValoresBalanceController(context);
-            estadoController = new EstadoRController(context);
+            catalogo = new CatalogoCuentasController(context,userManager);
+            valoresController = new ValoresBalanceController(context,userManager);
+            estadoController = new EstadoRController(context,userManager);
             _userManager = userManager;
         }
 
@@ -49,11 +49,11 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             }
         }
 
-        public async Task<IActionResult> GuardarCuentas(int IdEmpresa, string celdaCod, string celdaNom, IFormFile files)
+        public async Task<IActionResult> GuardarCuentas(int IdEmpresa,string celdaCod, string celdaNom ,string hoja, IFormFile files)
         {
             celdaCod = celdaCod.ToUpper();
             celdaNom = celdaNom.ToUpper();
-            ViewData["Mensaje"] = await catalogo.GuardarCuentas(IdEmpresa, celdaCod, celdaNom, files);
+            ViewData["Mensaje"] = await catalogo.GuardarCuentas(IdEmpresa,celdaCod,celdaNom,hoja,files);
             return RedirectToAction("ActualizarCatalogoCuenta", "NomCuentaEs");
         }
 

@@ -308,3 +308,22 @@ input[type="file"] {
     width: fit-content;
     text-align: center;
 }
+
+.popover-header {
+    font-size: 15px;
+    background-color: #343a40;
+    color:white;
+}
+
+.popover-body {
+    font-size: 13px;
+    text-align: justify;
+    background-color: #282b2e;
+    color: white;
+}
+
+.info {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 20px;
+}

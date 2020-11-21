@@ -57,10 +57,11 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             foreach (var cuenta in lstCuentasV)
             {
                 string val = "";                
-                cuenta.codigo=cuenta.codigo.Replace(".", "");
+                //cuenta.codigo=cuenta.codigo.Replace(".", "");
+                string cod = cuenta.codigo.Replace(".", "");
 
-                if (cuenta.codigo.Length > 1) { val = cuenta.codigo.Substring(0, 2); }
-                else { val = cuenta.codigo.Substring(0, 1); }
+                if (cod.Length > 1) { val = cod.Substring(0, 2); }
+                else { val = cod.Substring(0, 1); }
 
                 switch (val)
                 {
@@ -128,14 +129,14 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                         });
                         break;
                     default:
-                        if (cuenta.codigo.StartsWith("3")) {
+                        if (cod.StartsWith("3")) {
                             lstCTipo.Add(new Cuenta
                             {
                                 Nomcuenta = cuenta.nombre,
                                 Idtipocuenta = Pat,
                             });
                         }
-                        else if (cuenta.codigo.StartsWith("4"))
+                        else if (cod.StartsWith("4"))
                         {
                             lstCTipo.Add(new Cuenta
                             {
@@ -143,7 +144,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                                 Idtipocuenta = G,
                             });
                         }
-                        else if (cuenta.codigo.StartsWith("5"))
+                        else if (cod.StartsWith("5"))
                         {
                             lstCTipo.Add(new Cuenta
                             {
