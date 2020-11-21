@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
-@if (ViewBag.noexiste)
+@*@if (ViewBag.noexiste)
 {
     <h1>Oh, Oh, Parece que no cuenta con una empresa</h1>
     <h3>Para poder realizar un analisis debe agregar una empresa y valores de balance</h3>
@@ -15,7 +15,7 @@
     </h6>
 }
 else
-{
+{*@
 
     @if (ViewBag.existe)
     {
@@ -134,11 +134,11 @@ else
         <h3>Para poder realizar un analisis de esta empresea debe agregar un historial su balance</h3>
         <h6>Ingrese aquí para agregar un nuevo balance:</h6>
         <h6>
-            <a href="index"></a>
+            <a asp-action="Index" asp-controller="Empresas"></a>
         </h6>
     }
 
-}
+@*}
 
-}
+}*@
 

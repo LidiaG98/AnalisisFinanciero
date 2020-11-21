@@ -40,9 +40,9 @@
                     @Html.DisplayFor(modelItem => item.IdsectorNavigation.Nomsector)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    <a asp-action="Edit" asp-route-idRatio="@item.Idratio" asp-route-idSector="@item.Idsector">Editar</a>
+                    <a asp-action="Delete" asp-route-idRatio="@item.Idratio" asp-route-idSector="@item.Idsector">Eliminar</a>
+                    <a asp-action="Details" asp-route-idRatio="@item.Idratio" asp-route-idSector="@item.Idsector">Detalles</a>
                 </td>
             </tr>
         }

@@ -686,8 +686,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)                                
                                 .ToList();
                             }
@@ -702,8 +702,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                 .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
                                 .ToList();
@@ -882,8 +882,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                 .ToList();
                             }
@@ -898,8 +898,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.numerador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                 .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
                                 .ToList();
@@ -1085,8 +1085,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.denominador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                 .ToList();
                             }
@@ -1101,8 +1101,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.denominador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                 .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
                                 .ToList();
@@ -1280,8 +1280,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.denominador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                 .ToList();
                             }
@@ -1296,8 +1296,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
                             if (model.denominador[i].Equals("UTILIDAD OPERATIVA") && valoresEstado.Count == 0)
                             {
                                 valoresEstado = _context.Valoresestado
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA", StringComparison.OrdinalIgnoreCase))
-                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD", StringComparison.OrdinalIgnoreCase))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("OPERA"))
+                                .Where(l => l.Nombrevalore.ToUpper().Contains("UTILIDAD"))
                                 .Where(l => l.Idempresa == u.Idempresa.Idempresa)
                                 .Where(l => l.Anio == anio1Analisis || l.Anio == anio2Analisis)
                                 .ToList();

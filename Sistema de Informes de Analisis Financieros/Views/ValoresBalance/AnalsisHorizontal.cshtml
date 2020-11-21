@@ -17,7 +17,7 @@
 
 }
 <h1>Analasis   Horizontal</h1>
-@if (ViewBag.nocuenta)
+@*@if (ViewBag.nocuenta)
 {
     <h1>Oh, Oh, Parece que no cuenta con una empresa</h1>
     <h3>Para poder realizar un analisis debe agregar una empresa y valores de balance</h3>
@@ -29,7 +29,7 @@
 
 }
 else
-{
+{*@
     @if (ViewBag.existe)
     {
 
@@ -177,7 +177,7 @@ else
         <h3>Para poder realizar un analisis de esta empresea debe agregar un historial mayor a 1 año de su balance</h3>
         <h6>Ingrese aquí para agregar un nuevo balance:</h6>
         <h6>
-            <a asp-controller="Empresas" asp-action="Create"></a>
+            <a asp-controller="Empresas" asp-action="Index"></a>
         </h6>
     }
-}
+@*}*@

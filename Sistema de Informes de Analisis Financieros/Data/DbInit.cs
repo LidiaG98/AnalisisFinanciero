@@ -110,7 +110,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Data
                     },
                     new Razon{
                         nombreRazon = "GRADO DE PROPIEDAD",
-                        numerador = "PASIVO TOTAL",
+                        numerador = "PATRIMONIO",
                         denominador = "ACTIVO TOTAL",
                         tipo = "APALANCAMIENTO"
                     },

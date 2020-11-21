@@ -335,10 +335,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Migrations
             modelBuilder.Entity("Sistema_de_Informes_de_Analisis_Financieros.Models.Ratiobasesector", b =>
                 {
                     b.Property<int>("Idratio")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("IDRATIO")
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("Idsector")
                         .HasColumnName("IDSECTOR")
