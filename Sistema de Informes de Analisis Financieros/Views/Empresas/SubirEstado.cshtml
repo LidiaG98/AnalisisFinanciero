@@ -61,3 +61,14 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var el = document.getElementById("fileupload")
+        if (el) {
+            el.addEventListener("change", function (e) {
+                document.querySelector("[for=" + e.target.id + "]")
+                    .innerHTML = e.target.files[0].name;
+            })
+        }
+    });
+</script>

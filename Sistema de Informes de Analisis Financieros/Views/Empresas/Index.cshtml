@@ -70,7 +70,7 @@ else
         <div class="card-header text-center">
             <h1>@Model.First().Nomempresa</h1>
         </div>
-        <div class="card-body">
+        <div class="card-body pl-5 pr-5">
             <h5 class="card-title">Administración de empresa</h5>
             <p class="lead">Organiza y encuentra la información de tu empresa desde este diagrama de navegación.</p>
             <p class="card-text">1. Para editar la información básica y subir catálogo de cuentas.</p>
@@ -80,6 +80,14 @@ else
             <p class="card-text">2. Para visualizar la información básica y subir balance general y estado de resultados.</p>
             <a class="btn btn-dark ml-4 mb-3" asp-action="Details" asp-route-id="@Model.First().Idempresa">
                 <i class="fa fa-eye" aria-hidden="true"></i> Ir a Detalles de empresa
+            </a>
+            <p class="card-text">3. Para introducir directamente los valores del Balance General.</p>
+            <a class="btn btn-dark ml-4 mb-3" asp-controller="ValoresBalance" asp-action="Create" asp-route-id="@Model.First().Idempresa">
+                <i class="fa fa-pencil-square" aria-hidden="true"></i> Construir Balance General
+            </a>
+            <p class="card-text">4. Para introducir directamente los valores del Estado de resultados.</p>
+            <a class="btn btn-dark ml-4 mb-3" asp-controller="EstadoR" asp-action="Create" asp-route-id="@Model.First().Idempresa">
+                <i class="fa fa-pencil-square" aria-hidden="true"></i> Construir Estado de Resultados
             </a>
         </div>
         <div class="card-footer text-muted">

@@ -96,7 +96,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
         $(document).on('click', '#btnupload', function () {
-            var fileExtension = ['xls', 'xlsx'];
+            var fileExtension = ['xlsx'];
             var filename = $('#fileupload').val();
             if (filename.length == 0) {
                 alert("Porfavor seleccione un archivo.");
@@ -128,7 +128,7 @@
             html += '<label for="celdaAnio" class="input-group-text">Celda de valores:</label></div>';
             html += '<input asp-for="anios" name="anios[' + count + '].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1" required>';
             html += '<div class="input-group-append">';
-            html += '<button id="removeRow" type="button" class="btn btn-danger">Eliminar</button></div></div>';
+            html += '<button id="removeRow" type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button></div></div>';
             html += '</div>';
             html += '</div>';
             $('#newRow').append(html);
