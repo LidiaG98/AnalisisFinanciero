@@ -1,7 +1,7 @@
 ﻿@model Sistema_de_Informes_de_Analisis_Financieros.Models.Valoresdebalance
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Construir Balance";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
 
 <div class="card bg-dark text-light mt-5">
     <div class="card-header">
-        Valores de Balance
+        <h4>Valores de Balance</h4>
     </div>
     <div class="card-body">
         <form asp-action="Create">
@@ -27,10 +27,10 @@
                     <input type="number" asp-for="Valorcuenta" class="form-control" />
                     <span asp-validation-for="Valorcuenta" class="alert-danger"></span>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label asp-for="Anio" class="control-label"></label>
                     <input type="number" asp-for="Anio" class="form-control" />
-                    <span asp-validation-for="Anio" class="text-danger"></span>
+                    <span asp-validation-for="Anio" class="alert-danger"></span>
                 </div>
             </div>
             <div class="form-row">
@@ -38,10 +38,32 @@
                     <input type="submit" value="Ingresar Valor" class="btn btn-primary btn-block" />
                 </div>
                 <div class="form-group col-4">
-                    <a asp-action="Index" class="btn btn-danger btn-block">Finalizar</a>
+                    <a id="finalizar" class="btn btn-danger btn-block">Finalizar</a>
                 </div>
             </div>
         </form>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="modalConfirmacion">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">¿Seguro que desea finalizar?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="mensajeCtas">
+                @if (ViewBag.ctasNoFinalizadas)
+                {
+                    <p>Aún no ha terminado de llenar todas las cuentas para el balance, si finaliza ahora los calculos y analisis serán incorrectos</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <a asp-action="Index" class="btn btn-danger btn-block">Finalizar de todos modos</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -52,5 +74,17 @@
         $(document).ready(function () {
             $('.search').select2({ width: '100%' });
         });
+
+        var p = document.getElementById("finalizar");
+        p.onclick = function (event) {
+            var contenido = document.getElementById("mensajeCtas").value;
+            if (contenido != null) {
+                $("#modalConfirmacion").modal();
+            }
+            else {
+                document.getElementById("mensajeCtas").innerHTML = "¿Seguro que desea finalizar?"
+                $("#modalConfirmacion").modal();
+            }
+        };
     </script>
 }

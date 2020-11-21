@@ -246,9 +246,16 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: EstadoR/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["Idempresa"] = new SelectList(_context.Catalogodecuenta, "Idempresa", "Codcuentacatalogo");
+            ViewData["idEmpresa"] = id;
+            ViewData["ctasNoFinalizadas"] = false;
+            ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == id).Select
+                (x => new SelectListItem()
+                {
+                    Text = x.IdcuentaNavigation.Nomcuenta,
+                    Value = x.Idcuenta.ToString()
+                });
             return View();
         }
 
@@ -259,13 +266,37 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Idvalore,Idempresa,Idcuenta,Nombrevalore,Valorestado,Anio")] Valoresestado valoresestado)
         {
+            int numCtasCatalogo = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresestado.Idempresa).Count();
+            int numCtasIngresadas = _context.Valoresestado.Where(p => p.Idempresa == valoresestado.Idempresa && p.Anio == valoresestado.Anio).Count();
             if (ModelState.IsValid)
             {
-                _context.Add(valoresestado);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!(_context.Valoresestado.Where(p => p.Idempresa == valoresestado.Idempresa
+                     && p.Idcuenta == valoresestado.Idcuenta && p.Anio == valoresestado.Anio && p.Nombrevalore.Equals(valoresestado.Nombrevalore)).Any()))
+                {
+                    _context.Add(valoresestado);
+                    await _context.SaveChangesAsync();
+                    if (numCtasCatalogo > numCtasIngresadas)
+                    {
+                        ViewData["ctasNoFinalizadas"] = true;
+                    }
+                    return RedirectToAction(nameof(Create));
+                }
+                else
+                {
+                    ModelState.AddModelError("Valorcuenta", "Ya se ha ingresado un valor para esta combinación de cuenta y año");
+                }
             }
-            ViewData["Idempresa"] = new SelectList(_context.Catalogodecuenta, "Idempresa", "Codcuentacatalogo", valoresestado.Idempresa);
+            ViewData["idEmpresa"] = valoresestado.Idempresa;
+            ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresestado.Idempresa).Select
+                (x => new SelectListItem()
+                {
+                    Text = x.IdcuentaNavigation.Nomcuenta,
+                    Value = x.Idcuenta.ToString()
+                });
+            if (numCtasCatalogo > numCtasIngresadas)
+            {
+                ViewData["ctasNoFinalizadas"] = true;
+            }
             return View(valoresestado);
         }
 
