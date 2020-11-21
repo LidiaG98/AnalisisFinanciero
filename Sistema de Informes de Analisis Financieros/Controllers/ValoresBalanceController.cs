@@ -746,9 +746,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: ValoresBalance/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["Idempresa"] = new SelectList(_context.Catalogodecuenta, "Idempresa", "Codcuentacatalogo");
+            ViewData["idEmpresa"] = id;
+            ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa==id).Select
+                (x => new SelectListItem()
+                    {   Text = x.IdcuentaNavigation.Nomcuenta,
+                        Value = x.Idcuenta.ToString()});
             return View();
         }
 
@@ -761,11 +765,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(valoresdebalance);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("Valorcuenta", "Ya se ha ingresado un valor para esta combinación de cuenta y año");
+                if(!(_context.Valoresdebalance.Where(p => p.Idempresa == valoresdebalance.Idempresa
+                    && p.Idcuenta == valoresdebalance.Idcuenta && p.Anio == valoresdebalance.Anio).Any()))
+                {
+                    
+                    _context.Add(valoresdebalance);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Create));
+                }                
             }
-            ViewData["Idempresa"] = new SelectList(_context.Catalogodecuenta, "Idempresa", "Codcuentacatalogo", valoresdebalance.Idempresa);
+            ViewData["idEmpresa"] = valoresdebalance.Idempresa;
+            ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresdebalance.Idempresa).Select
+                (x => new SelectListItem()
+                {
+                    Text = x.IdcuentaNavigation.Nomcuenta,
+                    Value = x.Idcuenta.ToString()
+                });
             return View(valoresdebalance);
         }
 

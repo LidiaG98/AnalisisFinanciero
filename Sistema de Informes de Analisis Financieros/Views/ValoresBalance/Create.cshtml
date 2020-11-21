@@ -5,40 +5,52 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h1>Construir Balance</h1>
 
-<h4>Valoresdebalance</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="card bg-dark text-light mt-5">
+    <div class="card-header">
+        Valores de Balance
+    </div>
+    <div class="card-body">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Idempresa" class="control-label"></label>
-                <select asp-for="Idempresa" class ="form-control" asp-items="ViewBag.Idempresa"></select>
+            <div class="form-row">
+                <input asp-for="Idempresa" class="control-label" hidden value="@ViewBag.idEmpresa"/>
+                <div class="form-group col-md-6">
+                    <label asp-for="Idcuenta" class="control-label"></label>
+                    <select asp-for="Idcuenta" class="search form-control" asp-items="ViewBag.ctasCatalogo"></select>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Idcuenta" class="control-label"></label>
-                <select asp-for="Idcuenta" class ="form-control" asp-items="ViewBag.Idcuenta"></select>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Valorcuenta" class="control-label"></label>
+                    <input type="number" asp-for="Valorcuenta" class="form-control" />
+                    <span asp-validation-for="Valorcuenta" class="alert-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="Anio" class="control-label"></label>
+                    <input type="number" asp-for="Anio" class="form-control" />
+                    <span asp-validation-for="Anio" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Valorcuenta" class="control-label"></label>
-                <input asp-for="Valorcuenta" class="form-control" />
-                <span asp-validation-for="Valorcuenta" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Anio" class="control-label"></label>
-                <input asp-for="Anio" class="form-control" />
-                <span asp-validation-for="Anio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-row">
+                <div class="form-group col-4">
+                    <input type="submit" value="Ingresar Valor" class="btn btn-primary btn-block" />
+                </div>
+                <div class="form-group col-4">
+                    <a asp-action="Index" class="btn btn-danger btn-block">Finalizar</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.search').select2({ width: '100%' });
+        });
+    </script>
+}
