@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Sistema_de_Informes_de_Analisis_Financieros.Models.Razon>
-
+@using Sistema_de_Informes_de_Analisis_Financieros.ViewModels
 @{
     ViewData["Title"] = "Index";
 
@@ -36,9 +36,29 @@
                 <h4> @Html.DisplayFor(modelItem => item.nombreRazon)</h4>
                 <h6>Tipo:</h6>
                 <h6 class="tac"> @Html.DisplayFor(modelItem => item.tipo)</h6>
-                @foreach(var razon in ViewBag.listaRazones)
+                @foreach (var razon in (IEnumerable<ResultadosIndexRatio>)ViewBag.listaRazones)
                 {
-                    @if(razon.idRatio)
+                    @if (razon.Nombre == item.nombreRazon)
+                    {
+                        @if (razon.ValorRazon == null || razon.ValorRazon == 0)
+                        {
+                            <h6 class="text-white">Valor: NO CALCULADO</h6>
+                        }
+                        else
+                        {
+                            <h6 class="text-white">Valor: @razon.ValorRazon</h6>
+                            //foreach(var ratio in ViewBag.Ratios)
+                            //{
+                            //    foreach(var sector in ViewBag.RazonSector)
+                            //    {
+                            //        if(ratio.IdRatio == sector.IdRatio)
+                            //        {
+
+                            //        }
+                            //    }
+                            //}
+                        }
+                    }
                 }
             </div>
             <div class="course-info col-6 text-center">                
