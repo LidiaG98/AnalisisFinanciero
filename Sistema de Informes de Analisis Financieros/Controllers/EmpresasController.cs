@@ -26,9 +26,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         public EmpresasController(ProyAnfContext context, UserManager<Usuario> userManager)
         {
             _context = context;
-            catalogo = new CatalogoCuentasController(context,user);
-            valoresController = new ValoresBalanceController(context);
-            estadoController = new EstadoRController(context);
+            catalogo = new CatalogoCuentasController(context,userManager);
+            valoresController = new ValoresBalanceController(context,userManager);
+            estadoController = new EstadoRController(context,userManager);
             _userManager = userManager;
         }
 

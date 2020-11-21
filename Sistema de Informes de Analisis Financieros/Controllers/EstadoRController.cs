@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +19,12 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
     public class EstadoRController : Controller
     {
         private readonly ProyAnfContext _context;
+        private readonly UserManager<Usuario> userManager;
 
-        public EstadoRController(ProyAnfContext context)
+        public EstadoRController(ProyAnfContext context, UserManager<Usuario> user)
         {
             _context = context;
+            this.userManager = user;
         }
 
         public async Task<string> GuardarEstado(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
@@ -203,11 +206,24 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: EstadoR
-        public async Task<IActionResult> Index(string mensaje)
+        public async Task<IActionResult> Index(string mensaje,int? id)
         {
-            var proyAnfContext = _context.Valoresestado.Include(v => v.Id);
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            List<Valoresestado> proyAnfContext;            
+            if (await userManager.IsInRoleAsync(u, "Administrator"))
+            {
+                ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+                ViewBag.idEmpresa = u.Idempresa.Idempresa;
+                proyAnfContext = _context.Valoresestado.Include(v => v.Id).Include(v => v.Id.IdcuentaNavigation).
+                    Where(p => p.Idempresa==id).ToList();
+                return View(proyAnfContext);
+            }
+            proyAnfContext = _context.Valoresestado.Include(v => v.Id).Include(v => v.Id.IdcuentaNavigation).Where(p => p.Idempresa == u.Idempresa.Idempresa).ToList();
             ViewBag.Mensaje = mensaje;
-            return View(await proyAnfContext.ToListAsync());
+            ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+            ViewBag.idEmpresa = u.Idempresa.Idempresa;
+            return View(proyAnfContext);
         }
 
         // GET: EstadoR/Details/5

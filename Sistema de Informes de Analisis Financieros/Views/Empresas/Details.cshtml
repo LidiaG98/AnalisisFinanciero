@@ -12,7 +12,7 @@
     <div class="container text-light" style="background:#212529;">
         <div class="row">
             <div class="p-0 col-md-6 col-sm-12">
-                <img class="img-fluid w-100 img-fluid" src="~/img/empresa.jpg" />
+                <img class="img-fluid w-100 h-100 img-fluid" src="~/img/empresa.jpg" />
             </div>
             <div class="col-md-6 col-sm-12 p-5" style="font-size:large">
                 <label class="font-weight-bolder">
@@ -33,6 +33,16 @@
                 <p class="mb-4">
                     @Html.DisplayFor(model => model.IdsectorNavigation.Nomsector)
                 </p>
+                <div class="dropdown show">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Recursos
+                    </button>
+                    <div class="dropdown-menu bg-dark" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-white" asp-area="" asp-controller="CatalogoCuentas"  asp-route-id="@Model.Idempresa" asp-action="Index">Catálogo</a>
+                        <a class="dropdown-item text-white" asp-area="" asp-controller="ValoresBalance" asp-route-id="@Model.Idempresa" asp-action="Index">Balances</a>
+                        <a class="dropdown-item text-white" asp-area="" asp-controller="EstadoR" asp-route-id="@Model.Idempresa" asp-action="Index">Estados</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

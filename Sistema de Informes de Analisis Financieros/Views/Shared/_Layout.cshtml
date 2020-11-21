@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
-<body>    
+<body>
     <div class="wrapper">
         <!-- Sidebar  -->
         @if (SignInManager.IsSignedIn(User))
@@ -29,15 +29,32 @@
                         <a asp-area="" asp-controller="Home" asp-action="Index">
                             <i class="fa fa-home" aria-hidden="true"></i> Inicio
                         </a>
+                    </li>
 
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Empresas" asp-action="Index">
-                            <i class="fa fa-briefcase" aria-hidden="true"></i> Empresa
-                        </a>
-                    </li>
+                    @if (!(User.IsInRole("Administrator")))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Empresas" asp-action="Index"
+                               class="dropdown-toggle" role="button" id="dropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-briefcase" aria-hidden="true"></i> Empresa
+                            </a>
+                            <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuLink">
+                                <a asp-area="" asp-controller="Empresas" asp-action="Index">Empresa</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="CatalogoCuentas" asp-action="Index">Catálogo</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="ValoresBalance" asp-action="Index">Balances</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="EstadoR" asp-action="Index">Estados</a>
+                            </div>
+                        </li>
+                    }
+
                     @if (User.IsInRole("Administrator"))
                     {
+                        <li>
+                            <a asp-area="" asp-controller="Empresas" asp-action="Index">
+                                <i class="fa fa-briefcase" aria-hidden="true"></i> Empresas
+                            </a>
+                        </li>
                         <li>
                             <a asp-area="" asp-controller="Empresas" asp-action="CrearUsuario">
                                 <i class="fa fa-arrow-right" aria-hidden="true"></i> Registrar Usuario

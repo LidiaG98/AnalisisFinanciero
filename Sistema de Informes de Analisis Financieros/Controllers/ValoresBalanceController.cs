@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,14 +23,16 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
     public class ValoresBalanceController : Controller
     {
         private readonly ProyAnfContext _context;
+        private readonly UserManager<Usuario> userManager;
         //Declaracion de constantes
         const int COD_FORMATO_INVALIDO = 1; //Cuando las ctas de total en el balance no tienen el nombre estandar
         const int COD_BALANCE_DESCUADRADO = 2; //Cuando el balance está descuadrado
         const int COD_VALORES_EXITO = 3; //Cuando todos los valores se subieron con éxito
 
-        public ValoresBalanceController(ProyAnfContext context)
+        public ValoresBalanceController(ProyAnfContext context, UserManager<Usuario> user)
         {
             _context = context;
+            this.userManager = user;
         }
 
         public async Task<string> GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
@@ -305,13 +308,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: ValoresBalance
-        public async Task<IActionResult> Index(string mensaje)
+        public async Task<IActionResult> Index(string mensaje,int? id)
         {
-            var proyAnfContext = _context.Valoresdebalance.Include(v => v.Id);
-
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            List<Valoresdebalance> proyAnfContext;
+            if (await userManager.IsInRoleAsync(u, "Administrator"))
+            {
+                ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+                ViewBag.idEmpresa = u.Idempresa.Idempresa;
+                proyAnfContext = _context.Valoresdebalance.Include(v => v.Id).Where(p => p.Idempresa == id).Include(v => v.Id.IdcuentaNavigation).ToList();
+                return View(proyAnfContext);
+            }
+            proyAnfContext = _context.Valoresdebalance.Include(v => v.Id).Include(v => v.Id.IdcuentaNavigation).Where(p => p.Idempresa == u.Idempresa.Idempresa).ToList();
+            ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+            ViewBag.idEmpresa = u.Idempresa.Idempresa;
             ViewBag.Mensaje = mensaje;
-
-            return View(await proyAnfContext.ToListAsync());
+            return View(proyAnfContext);
         }
         public async Task<IActionResult> AnalsisHorizontal(int? ana1,int? ana2)
             

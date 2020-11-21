@@ -5,46 +5,48 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container col-12 col-md-9 mb-5">
+    <div class="card border-dark mb-1">
+        <div class="card-body text-dark text-center">
+            <h5 class="card-title font-italic">"@ViewBag.nomEmpresa"</h5>
+            <p class="card-text font-weight-bold">CATÁLOGO DE CUENTAS.</p>
+        </div>
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                No tiene registrado un catálogo de cuentas para su empresa, puede subir su archivo en este link: 
+                <a class="ml-1" asp-controller="Empresas" asp-action="Edit" asp-route-id="@ViewBag.idEmpresa">Ir a edición de empresa</a>
+            </div>
+        }
+        <table class="table text-justify">
+            <thead class="table-active">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Codcuentacatalogo)
+                    </th>
+                    <th class="pr-2 pl-5">
+                        @Html.DisplayNameFor(model => model.IdcuentaNavigation)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @if (!(item.Codcuentacatalogo.Equals("0")) && !(item.Codcuentacatalogo.Equals("E")) && !(item.Codcuentacatalogo.Equals("D")))
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Codcuentacatalogo)
+                            </td>
+                            <td class="pr-2 pl-5">
+                                @Html.DisplayFor(modelItem => item.IdcuentaNavigation.Nomcuenta)
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Codcuentacatalogo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdcuentaNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdempresaNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            @if (!(item.Codcuentacatalogo.Equals("0")) && !(item.Codcuentacatalogo.Equals("E")))
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.Codcuentacatalogo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdcuentaNavigation.Nomcuenta)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdempresaNavigation.Nomempresa)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            }
-        </tr>}
-    </tbody>
-</table>
+

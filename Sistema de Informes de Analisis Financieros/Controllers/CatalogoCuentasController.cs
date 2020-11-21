@@ -30,18 +30,23 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: CatalogoCuentas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
             var usuario = this.User;
             Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
             List<Catalogodecuenta> proyAnfContext;
-            if (await userManager.IsInRoleAsync(u,"Administrator"))
+            if (await userManager.IsInRoleAsync(u, "Administrator"))
             {
-                proyAnfContext = _context.Catalogodecuenta.Include(c => c.IdcuentaNavigation).Include(c => c.IdempresaNavigation).ToList();
+                ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+                ViewBag.idEmpresa = u.Idempresa.Idempresa;
+                proyAnfContext = _context.Catalogodecuenta.Include(c => c.IdcuentaNavigation).Include(c => c.IdempresaNavigation).
+                    Where(c => c.Idempresa == id).ToList();
                 return View(proyAnfContext);
             }
             proyAnfContext = _context.Catalogodecuenta.Include(c => c.IdcuentaNavigation).Include(c => c.IdempresaNavigation)
                 .Where(p => p.Idempresa == u.Idempresa.Idempresa).ToList();
+            ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+            ViewBag.idEmpresa = u.Idempresa.Idempresa;
             return View(proyAnfContext);
         }
 
