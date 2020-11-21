@@ -5,28 +5,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
 
-<h4>Sector</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="row justify-content-center">
+    <div class="col-8">
+        <h1 class="text-center">Crear Sector</h1>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Nomsector" class="control-label"></label>
+                <label asp-for="Nomsector" class="control-label">Nombre Sector:</label>
                 <input asp-for="Nomsector" class="form-control" />
                 <span asp-validation-for="Nomsector" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Crear" class="btn btn-block btn-primary" />
+                <a asp-action="Index" class="btn btn-block btn-danger">Volver a la lista</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

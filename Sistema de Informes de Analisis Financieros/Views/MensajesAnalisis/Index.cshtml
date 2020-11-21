@@ -5,40 +5,55 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<h1>Mensajes Personalizables para el Análisis</h1>
+<div class="mb-4 mt-4">
+    <a class="btn rounded-0 text-light" style="background-color: #409bd8;" asp-action="Create">
+        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbspCrear Nuevo Mensaje
+    </a>
+</div>
+<table class="table table-responsive">
+    <thead class="thead-dark text-center">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.mensajeMayorBase)
+                IdRatio
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.mensajeMenorBase)
+                Mensaje Mayor que Sector
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.mensajeMayorEmp)
+                Mensaje Menor que Sector
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.mensajeMenorEmp)
+                Mensaje Igual que Sector
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.idRatio)
+                Mensaje Mayor que Promedio de Empresas
             </th>
-            <th></th>
+            <th>
+                Mensaje Menor que Promedio de Empresas
+            </th>
+            <th>
+                Mensaje Igual que Promedio de Empresas
+            </th>
+            <th>
+                Acciones
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.idRatio)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.mensajeMayorBase)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.mensajeMenorBase)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mensajeIgualBase)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.mensajeMayorEmp)
@@ -47,12 +62,18 @@
                 @Html.DisplayFor(modelItem => item.mensajeMenorEmp)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.idRatio)
+                @Html.DisplayFor(modelItem => item.mensajeIgualEmp)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.idMensaje">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.idMensaje">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.idMensaje">Delete</a>
+                <a class="btn btn-warning px-2 py-1 rounded-circle" asp-action="Edit" asp-route-id="@item.idMensaje">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                @*<a class="btn btn-info px-2 py-1 rounded-circle text-dark" asp-action="Details" asp-route-id="@item.idMensaje">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>*@
+                <a class="btn btn-danger px-2 py-1 rounded-circle rounded text-dark" asp-action="Delete" asp-route-id="@item.idMensaje">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
 }
