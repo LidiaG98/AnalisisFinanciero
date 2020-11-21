@@ -259,7 +259,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 };                                
                 string pass = usuario.Password;
                 var result = await _userManager.CreateAsync(u, pass);                
-                return View();
+                return RedirectToAction("Index");
             }            
             return View(usuario);
         }

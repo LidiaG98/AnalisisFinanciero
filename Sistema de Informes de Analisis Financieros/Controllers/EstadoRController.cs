@@ -60,7 +60,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                         return "Los nombres de cuenta y los valores de las mismas deben estar en la misma fila";
                     }
                     //Verificando que no existan datos para ese año
-                    if (!(_context.Valoresestado.Any(a => a.Anio == anio.anio)))
+                    if (!(_context.Valoresestado.Any(a => a.Anio == anio.anio && a.Idempresa == IdEmpresa)))
                     {
                         lstFilasEstado = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, anio.celdaAnio, anio.anio);
                         if (lstFilasEstado.Count == 0)

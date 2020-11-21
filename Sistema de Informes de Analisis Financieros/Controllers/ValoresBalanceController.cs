@@ -71,7 +71,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     }
 
                     //Verificando que no existan datos para ese año
-                    if (!(_context.Valoresdebalance.Any(a => a.Anio == anio.anio)))
+                    if (!(_context.Valoresdebalance.Any(a => a.Anio == anio.anio && a.Idempresa == IdEmpresa)))
                     {
                         listFilasBalance = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, anio.celdaAnio, anio.anio);
 
@@ -332,8 +332,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
           
             var user = this.User;
             List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-            if (u.Count()>=0)
-            {
+            //if (u.Count()>=0)
+            //{
 
 
                 var proyAnfContext = _context.Valoresdebalance.Where(x => x.Idempresa == u[0].Idempresa.Idempresa);
@@ -567,14 +567,14 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 }
                 ViewBag.nocuenta = false;
                 return View(await proyAnfContext.ToListAsync());
-            } else
-            {
-                ViewBag.nocuenta = true;
-                var proyAnfContext = _context.Valoresdebalance;
-                return View(await proyAnfContext.ToListAsync());
+            //} else
+            //{
+            //    ViewBag.nocuenta = true;
+            //    var proyAnfContext = _context.Valoresdebalance;
+            //    return View(await proyAnfContext.ToListAsync());
               
 
-            }
+            //}
             
         }
         public async Task<IActionResult> AnalsisVertical(int? Anual)
@@ -583,8 +583,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             
             var user = this.User;
             List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-            if (u.Count() >= 0)
-            {
+            //if (u.Count() >= 0)
+            //{
 
                 //recupero el catalogo de la empresa del usuario
                 var proyAnfContext = _context.Valoresdebalance.Where(y => y.Idempresa == u[0].Idempresa.Idempresa);
@@ -716,13 +716,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 }
                 ViewBag.noexiste = false;
                 return View(await proyAnfContext.ToListAsync());
-            }
-            else
-            {
-                ViewBag.noexiste =true;
-                var proyAnfContext = _context.Valoresdebalance;
-                return View(await proyAnfContext.ToListAsync());
-            }
+            //}
+            //else
+            //{
+            //    ViewBag.noexiste =true;
+            //    var proyAnfContext = _context.Valoresdebalance;
+            //    return View(await proyAnfContext.ToListAsync());
+            //}
             
         }
 

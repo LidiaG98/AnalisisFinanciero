@@ -28,9 +28,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: RatioBaseSector/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? idRatio, int? idSector)
         {
-            if (id == null)
+            if (idRatio == null || idSector == null)
             {
                 return NotFound();
             }
@@ -38,7 +38,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var ratiobasesector = await _context.Ratiobasesector
                 .Include(r => r.IdratioNavigation)
                 .Include(r => r.IdsectorNavigation)
-                .FirstOrDefaultAsync(m => m.Idratio == id);
+                .FirstOrDefaultAsync(m => m.Idratio == idRatio && m.Idsector == idSector);
             if (ratiobasesector == null)
             {
                 return NotFound();
@@ -64,14 +64,14 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[RATIOBASESECTOR] ON");
+                //_context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[RATIOBASESECTOR] ON");
                 //_context.Database.ExecuteSqlCommand("INSERT INTO RATIOBASESECTOR (Idratio, Idsector, Valorratiob) VALUES (" 
                 //    + ratiobasesector.Idratio + ", "
                 //    + ratiobasesector.Idsector + ", "
                 //    + ratiobasesector.Valorratiob + ");");
                 _context.Add(ratiobasesector);
                 await _context.SaveChangesAsync();
-                _context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[RATIOBASESECTOR] OFF");
+                //_context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[RATIOBASESECTOR] OFF");
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Idratio"] = new SelectList(_context.Ratio, "Idratio", "Nombreratiob", ratiobasesector.Idratio);
@@ -80,14 +80,14 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: RatioBaseSector/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? idRatio, int? idSector)
         {
-            if (id == null)
+            if (idRatio == null || idSector == null)
             {
                 return NotFound();
             }
 
-            var ratiobasesector = await _context.Ratiobasesector.FindAsync(id);
+            var ratiobasesector =  _context.Ratiobasesector.Where(l => l.Idratio == idRatio || l.Idsector == idSector).FirstOrDefault();
             if (ratiobasesector == null)
             {
                 return NotFound();
@@ -102,9 +102,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Idratio,Idsector,Valorratiob")] Ratiobasesector ratiobasesector)
+        public async Task<IActionResult> Edit(int Idratio, int Idsector, [Bind("Idratio,Idsector,Valorratiob")] Ratiobasesector ratiobasesector)
         {
-            if (id != ratiobasesector.Idratio)
+            if (Idratio != ratiobasesector.Idratio || Idsector != ratiobasesector.Idsector)
             {
                 return NotFound();
             }
@@ -135,9 +135,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: RatioBaseSector/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? idRatio, int? idSector)
         {
-            if (id == null)
+            if (idRatio == null || idSector == null)
             {
                 return NotFound();
             }
@@ -145,7 +145,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var ratiobasesector = await _context.Ratiobasesector
                 .Include(r => r.IdratioNavigation)
                 .Include(r => r.IdsectorNavigation)
-                .FirstOrDefaultAsync(m => m.Idratio == id);
+                .FirstOrDefaultAsync(m => m.Idratio == idRatio && m.Idsector == idSector);
             if (ratiobasesector == null)
             {
                 return NotFound();
@@ -157,9 +157,9 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         // POST: RatioBaseSector/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int idRatio, int idSector)
         {
-            var ratiobasesector = await _context.Ratiobasesector.FindAsync(id);
+            var ratiobasesector = _context.Ratiobasesector.Where(l => l.Idratio == idRatio || l.Idsector == idSector).FirstOrDefault();
             _context.Ratiobasesector.Remove(ratiobasesector);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
