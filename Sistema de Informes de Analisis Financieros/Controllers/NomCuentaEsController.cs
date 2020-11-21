@@ -110,10 +110,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                             {
                                 if (cc[j].Codcuentacatalogo.StartsWith(cod))
                                 {
-                                    cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
-                                    cc[j].nomCuentaEID = nom[0].nomCuentaEID;
-                                    _context.Update(cc[j]);
-                                    await _context.SaveChangesAsync();
+                                    if (cc[j].nomCuentaEID == null)
+                                    {
+                                        cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
+                                        cc[j].nomCuentaEID = nom[0].nomCuentaEID;
+                                        _context.Update(cc[j]);
+                                        await _context.SaveChangesAsync();
+                                    }
                                 }
                             }
                         break;
@@ -158,10 +161,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                             {
                                 if (cc[j].Codcuentacatalogo.StartsWith(cod))
                                 {
-                                    cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
-                                    cc[j].nomCuentaEID = nom[0].nomCuentaEID;
-                                    _context.Update(cc[j]);
-                                    await _context.SaveChangesAsync();
+                                    if (cc[j].nomCuentaEID == null)
+                                    {
+                                        cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
+                                        cc[j].nomCuentaEID = nom[0].nomCuentaEID;
+                                        _context.Update(cc[j]);
+                                        await _context.SaveChangesAsync();
+                                    }
                                 }
                             }
                           break;
