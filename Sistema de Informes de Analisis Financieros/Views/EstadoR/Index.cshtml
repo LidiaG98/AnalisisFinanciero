@@ -3,53 +3,69 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string mensaje = ViewBag.Mensaje;
+    List<int> anios = Model.Select(x => x.Anio).Distinct().ToList();
 }
 
-<h1>Index</h1>
-<h2 class="text-danger">@ViewBag.Mensaje</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombrevalore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Valorestado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Anio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombrevalore)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Valorestado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Anio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id.Codcuentacatalogo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Idvalore">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Idvalore">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Idvalore">Delete</a>
-            </td>
-        </tr>
+@if (mensaje != null)
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
 }
-    </tbody>
-</table>
+<div class="container col-12 col-md-9 mb-5">
+    <div class="card border-dark mb-1">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                No tiene registrado un estado de resultados para su empresa, puede subir su archivo en este link:
+                <a class="ml-1" asp-controller="Empresas" asp-action="Edit" asp-route-id="@ViewBag.idEmpresa">Ir a edición de empresa</a>
+            </div>
+        }
+        @foreach (var anio in anios)
+        {
+            <div class="card-body text-dark text-center">
+                <h5 class="card-title font-italic">"@ViewBag.nomEmpresa"</h5>
+                <p class="card-text font-weight-bold">Estado de Resultados. Periodo: @anio.</p>
+            </div>
+            <table class="table">
+                @*<thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nombrevalore)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Valorestado)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Anio)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>*@
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombrevalore)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Valorestado)
+                            </td>
+                            @*<td>
+                                <a asp-action="Edit" asp-route-id="@item.Idvalore">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Idvalore">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Idvalore">Delete</a>
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+    

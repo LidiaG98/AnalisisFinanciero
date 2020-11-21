@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +19,12 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
     public class EstadoRController : Controller
     {
         private readonly ProyAnfContext _context;
+        private readonly UserManager<Usuario> userManager;
 
-        public EstadoRController(ProyAnfContext context)
+        public EstadoRController(ProyAnfContext context, UserManager<Usuario> user)
         {
             _context = context;
+            this.userManager = user;
         }
 
         public async Task<string> GuardarEstado(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
@@ -42,34 +45,36 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var catalogo = _context.Catalogodecuenta.Count(a => a.Idempresa == IdEmpresa);
             if (catalogo > 0)
             {
-                if (_context.Valoresestado.Select(t => t.Anio).Distinct().Count() >= 2)
+                foreach (var anio in subirBalance.anios)
                 {
-                    return "Capacidad agotada: Ya se han registrado 2 años";
-                }
-                else
-                {
-                    //Verificando que no existan datos para ese año
-                    if (!(_context.Valoresestado.Any(a => a.Anio == subirBalance.anios[0].anio)))
+                    /*Llamar método para obtener la letra de columna y número de fila de las celdas*/
+                    IEnumerable<string> s = SplitAlpha(subirBalance.celdaCuenta);
+                    int numCeldaCuenta = int.Parse(s.Last()); //Obtengo # de fila de las cuentas
+
+                    string celValA1 = anio.celdaAnio;
+
+                    s = SplitAlpha(celValA1);
+                    int numCeldaAnio = int.Parse(s.Last()); //Obtengo # de fila de los valores
+                    if (!(numCeldaAnio == numCeldaCuenta))
                     {
-                        lstFilasEstado = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, subirBalance.anios[0].celdaAnio, subirBalance.anios[0].anio);
+                        return "Los nombres de cuenta y los valores de las mismas deben estar en la misma fila";
+                    }
+                    //Verificando que no existan datos para ese año
+                    if (!(_context.Valoresestado.Any(a => a.Anio == anio.anio)))
+                    {
+                        lstFilasEstado = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, anio.celdaAnio, anio.anio);
+                        if (lstFilasEstado.Count == 0)
+                        {
+                            return "El archivo de excel está vacio";
+                        }
                         await VerificarYSubirEstado(IdEmpresa, lstFilasEstado);
-                        
+
                     }
                     else
                     {
-                        mensaje = "Ya existen datos para el año " + subirBalance.anios[0].anio;
+                        mensaje = "Ya existen datos para el año " + anio.anio;
                     }
-                    //Verificando si existe año 2 y obteniendo sus datos
-                    if (subirBalance.anios.Count == 2)
-                    {
-                        if (!(_context.Valoresestado.Any(a => a.Anio == subirBalance.anios[1].anio)))
-                        {
-                            lstFilasEstado2 = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, subirBalance.anios[1].celdaAnio, subirBalance.anios[1].anio);
-                            await VerificarYSubirEstado(IdEmpresa, lstFilasEstado2);
-                        }
-                        else { mensaje = "Ya existen datos para el año " + subirBalance.anios[1].anio; }
-                    }
-                }
+                } 
             }
             else
             {
@@ -201,11 +206,24 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: EstadoR
-        public async Task<IActionResult> Index(string mensaje)
+        public async Task<IActionResult> Index(string mensaje,int? id)
         {
-            var proyAnfContext = _context.Valoresestado.Include(v => v.Id);
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            List<Valoresestado> proyAnfContext;            
+            if (await userManager.IsInRoleAsync(u, "Administrator"))
+            {
+                ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+                ViewBag.idEmpresa = u.Idempresa.Idempresa;
+                proyAnfContext = _context.Valoresestado.Include(v => v.Id).Include(v => v.Id.IdcuentaNavigation).
+                    Where(p => p.Idempresa==id).ToList();
+                return View(proyAnfContext);
+            }
+            proyAnfContext = _context.Valoresestado.Include(v => v.Id).Include(v => v.Id.IdcuentaNavigation).Where(p => p.Idempresa == u.Idempresa.Idempresa).ToList();
             ViewBag.Mensaje = mensaje;
-            return View(await proyAnfContext.ToListAsync());
+            ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+            ViewBag.idEmpresa = u.Idempresa.Idempresa;
+            return View(proyAnfContext);
         }
 
         // GET: EstadoR/Details/5

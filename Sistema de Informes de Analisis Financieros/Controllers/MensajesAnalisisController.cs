@@ -47,7 +47,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         // GET: MensajesAnalisis/Create
         public IActionResult Create()
         {            
-            SelectList listRatios = new SelectList(_context.Ratio.ToList(), "Idratio", "Nomempresa");
+            SelectList listRatios = new SelectList(_context.Ratio.ToList(), "Idratio", "Nombreratiob");
             ViewBag.listRatios = listRatios;
             return View();
         }
