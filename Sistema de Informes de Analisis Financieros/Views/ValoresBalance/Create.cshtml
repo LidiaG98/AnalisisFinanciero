@@ -53,10 +53,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="mensajeCtas">
+            <div class="modal-body">
                 @if (ViewBag.ctasNoFinalizadas)
                 {
-                    <p>Aún no ha terminado de llenar todas las cuentas para el balance, si finaliza ahora los calculos y analisis serán incorrectos</p>
+                    <p id="mensajeCtas">Aún no ha terminado de llenar todas las cuentas para el balance, si finaliza ahora los calculos y analisis serán incorrectos</p>
                 }
             </div>
             <div class="modal-footer">
@@ -77,8 +77,7 @@
 
         var p = document.getElementById("finalizar");
         p.onclick = function (event) {
-            var contenido = document.getElementById("mensajeCtas").value;
-            if (contenido != null) {
+            if ($('#mensajeCtas').length) {
                 $("#modalConfirmacion").modal();
             }
             else {

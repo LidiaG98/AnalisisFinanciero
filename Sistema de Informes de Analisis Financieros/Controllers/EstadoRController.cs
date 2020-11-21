@@ -248,7 +248,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         // GET: EstadoR/Create
         public IActionResult Create(int? id)
         {
-            ViewData["idEmpresa"] = id;
+            ViewData["idEmpresa"] = id;            
             ViewData["ctasNoFinalizadas"] = false;
             ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == id).Select
                 (x => new SelectListItem()
@@ -257,7 +257,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     Value = x.Idcuenta.ToString()
                 });
             return View();
-        }
+        }   
 
         // POST: EstadoR/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -287,6 +287,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                 }
             }
             ViewData["idEmpresa"] = valoresestado.Idempresa;
+            ViewData["catalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresestado.Idempresa).ToList();
             ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresestado.Idempresa).Select
                 (x => new SelectListItem()
                 {

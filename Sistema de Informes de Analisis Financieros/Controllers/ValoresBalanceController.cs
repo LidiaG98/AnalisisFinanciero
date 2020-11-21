@@ -33,7 +33,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         {
             _context = context;
             this.userManager = user;
-        }
+        }        
 
         public async Task<string> GuardarBalance(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
         {
@@ -746,10 +746,12 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: ValoresBalance/Create
-        public IActionResult Create(int? id)
+        public IActionResult Create(int? id, bool? valR)
         {
             ViewData["idEmpresa"] = id;
-            ViewData["ctasNoFinalizadas"] = false;
+            if (valR != null) { ViewData["ctasNoFinalizadas"] = valR; }
+            else { ViewData["ctasNoFinalizadas"] = false; }
+            ViewData["catalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == id).Include(p => p.IdcuentaNavigation).ToList();
             ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa==id).Select
                 (x => new SelectListItem()
                     {   Text = x.IdcuentaNavigation.Nomcuenta,
@@ -766,6 +768,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         {
             int numCtasCatalogo = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresdebalance.Idempresa).Count();
             int numCtasIngresadas = _context.Valoresdebalance.Where(p => p.Idempresa == valoresdebalance.Idempresa && p.Anio == valoresdebalance.Anio).Count();
+            bool val = false;
             if (ModelState.IsValid)
             {                
                 if(!(_context.Valoresdebalance.Where(p => p.Idempresa == valoresdebalance.Idempresa
@@ -775,9 +778,10 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                     await _context.SaveChangesAsync();
                     if (numCtasCatalogo > numCtasIngresadas)
                     {
-                        ViewData["ctasNoFinalizadas"] = true;
+                        val = true;
+                        ViewData["ctasNoFinalizadas"] = val;
                     }
-                    return RedirectToAction(nameof(Create));
+                    return RedirectToAction(nameof(Create), new { id = valoresdebalance.Idempresa, valR = val });
                 }
                 else
                 {
