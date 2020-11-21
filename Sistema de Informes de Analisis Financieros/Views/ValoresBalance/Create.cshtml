@@ -7,7 +7,7 @@
 
 <h1>Construir Balance</h1>
 
-<div class="card bg-dark text-light mt-5">
+<div class="card bg-dark text-light mt-5 col-12 col-md-10 mb-5">
     <div class="card-header">
         <h4>Valores de Balance</h4>
     </div>
@@ -27,17 +27,17 @@
                     <input type="number" asp-for="Valorcuenta" class="form-control" />
                     <span asp-validation-for="Valorcuenta" class="alert-danger"></span>
                 </div>
-                <div class="form-group col-md-2">
+                <div class="form-group col-12 col-md-2">
                     <label asp-for="Anio" class="control-label"></label>
                     <input type="number" asp-for="Anio" class="form-control" />
                     <span asp-validation-for="Anio" class="alert-danger"></span>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-4">
+                <div class="form-group col-12 col-md-4">
                     <input type="submit" value="Ingresar Valor" class="btn btn-primary btn-block" />
                 </div>
-                <div class="form-group col-4">
+                <div class="form-group col-12 col-md-4">
                     <a id="finalizar" class="btn btn-danger btn-block">Finalizar</a>
                 </div>
             </div>
