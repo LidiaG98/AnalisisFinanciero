@@ -36,261 +36,273 @@ namespace Sistema_de_Informes_de_Analisis_Financieros
             }
             var valoresbalance = from s in _context.Valoresdebalance select s;
             var valoresestados = from s in _context.Valoresestado select s;
-            if (valoresbalance.Any() && valoresestados.Any())
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            if (u.Idempresa != null)
             {
 
+                if (!(valoresbalance.Where(r => r.Idempresa.Equals(u.Idempresa)).Any()) || !(valoresestados.Where(r => r.Idempresa.Equals(u.Idempresa)).Any()))
+                {
 
 
 
-                // Convierte texto en funciones y puede mostrar el resultado
-                Mathos.Parser.MathParser parse = new Mathos.Parser.MathParser();
-                /*
-                //contextos que creí necesarios para seguir v,:
-                var cliente = from s in _context.Empresa select s;
-                var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
-                var cuenta = from x in _context.Cuenta select x;
-                var empresa = from y in _context.Empresa select y;
 
-                var razon = from m in _context.Razon select m;
-                var tipocuenta = from l in _context.NomCuentaE select l;
-                var balance = from n in _context.Valoresdebalance select n;
-                int an = balance.FirstOrDefault().Anio;
-                //Lista que guarda los resultados de los ratios
-                List<double> Resultado = new List<double>();
-                //delimitador generalizado para recuperar el nombre de las cuentas
-                // string delimitador = "";
+                    // Convierte texto en funciones y puede mostrar el resultado
+                    Mathos.Parser.MathParser parse = new Mathos.Parser.MathParser();
+                    /*
+                    //contextos que creí necesarios para seguir v,:
+                    var cliente = from s in _context.Empresa select s;
+                    var catCuent = from e in _context.Catalogodecuenta.Include(r => r.IdcuentaNavigation) select e;
+                    var cuenta = from x in _context.Cuenta select x;
+                    var empresa = from y in _context.Empresa select y;
 
-               //recupero el usuario que está logeado, asumo explota si no hay nadie logeado
-                var user = this.User;
-                List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
+                    var razon = from m in _context.Razon select m;
+                    var tipocuenta = from l in _context.NomCuentaE select l;
+                    var balance = from n in _context.Valoresdebalance select n;
+                    int an = balance.FirstOrDefault().Anio;
+                    //Lista que guarda los resultados de los ratios
+                    List<double> Resultado = new List<double>();
+                    //delimitador generalizado para recuperar el nombre de las cuentas
+                    // string delimitador = "";
 
-                List<Cuenta> cuex = new List<Cuenta>();
-               //recupero el catalogo de la empresa del usuario logeado
-                catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa );
-               // List<Cuenta> cuenx = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-                /* foreach(Catalogodecuenta cato in catCuent)
-                 {
-                     cuex.Add(cuenta.FirstOrDefault(x => x.Idcuenta == cato.Idcuenta));
+                   //recupero el usuario que está logeado, asumo explota si no hay nadie logeado
+                    var user = this.User;
+                    List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
 
-                 }*/
-                //necesitaba tener las cuentas del catalogo que filtré arriba, y no sa{bia como xd tons hice un join 
-                //entre la tabla
-                /*  var cuentaCat = _context.Cuenta.Join(_context.Catalogodecuenta,
-                      cuentax => cuentax.Idcuenta,
-                      catcuentx => catcuentx.Idcuenta,
-                      (cuentax, catcuentx) => new
-                      {
-                          cuentaID = cuentax.Idcuenta,
-                          Idtipocuenta = cuentax.Idtipocuenta
+                    List<Cuenta> cuex = new List<Cuenta>();
+                   //recupero el catalogo de la empresa del usuario logeado
+                    catCuent = catCuent.Where(y => y.Idempresa == u[0].Idempresa.Idempresa );
+                   // List<Cuenta> cuenx = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
+                    /* foreach(Catalogodecuenta cato in catCuent)
+                     {
+                         cuex.Add(cuenta.FirstOrDefault(x => x.Idcuenta == cato.Idcuenta));
 
-
-                      }) ;
-                  foreach (Razon rakata in razon)
-                  {
-                     string[] razoncitanum= rakata.numerador.Split('+','-','*','/');
-                     string[] razoncitaden = rakata.denominador.Split('+', '-', '*','/');
-                      List<Tipocuenta> tipoC = new List<Tipocuenta>();
-                      List<int> cuentax = new List<int>();
-                      double suma=0;
-                      double suma2 = 0;
-                      //pasar a numero el numerador de los ratios
-                      for (int i=0;i< razoncitanum.Length;i++)
-                      {
-                          suma = 0;
-                          suma2 = 0;
-                          var tipoCC= tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(razoncitanum[i]));
-                          if (tipoCC != null)
+                     }*/
+                    //necesitaba tener las cuentas del catalogo que filtré arriba, y no sa{bia como xd tons hice un join 
+                    //entre la tabla
+                    /*  var cuentaCat = _context.Cuenta.Join(_context.Catalogodecuenta,
+                          cuentax => cuentax.Idcuenta,
+                          catcuentx => catcuentx.Idcuenta,
+                          (cuentax, catcuentx) => new
                           {
-                              var cuentaX = catCuent.Where(x => x.nomCuentaEID == tipoCC.nomCuentaEID);
-                              foreach (var c in cuentaX)
+                              cuentaID = cuentax.Idcuenta,
+                              Idtipocuenta = cuentax.Idtipocuenta
+
+
+                          }) ;
+                      foreach (Razon rakata in razon)
+                      {
+                         string[] razoncitanum= rakata.numerador.Split('+','-','*','/');
+                         string[] razoncitaden = rakata.denominador.Split('+', '-', '*','/');
+                          List<Tipocuenta> tipoC = new List<Tipocuenta>();
+                          List<int> cuentax = new List<int>();
+                          double suma=0;
+                          double suma2 = 0;
+                          //pasar a numero el numerador de los ratios
+                          for (int i=0;i< razoncitanum.Length;i++)
+                          {
+                              suma = 0;
+                              suma2 = 0;
+                              var tipoCC= tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(razoncitanum[i]));
+                              if (tipoCC != null)
                               {
-                                  var banlancin = balance.FirstOrDefault(n => n.Idcuenta == c.Idcuenta && n.Anio == an);
-                                  //sumo el total de las cuentas del mismo tipo
-                                  if (banlancin != null)
-                                  { suma = suma + banlancin.Valorcuenta; }
-                                  else { suma = suma + 0; }
-
-                              }
-                              rakata.numerador = rakata.numerador.Replace(razoncitanum[i], suma.ToString());
-                          }
-                          else if (razoncitanum[i].Contains("PROMEDIO"))
-                          {
-
-                              string divo = razoncitanum[i].Replace("PROMEDIO", "");
-                              var tipoP = tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(divo));
-
-                              if(tipoP !=null)
+                                  var cuentaX = catCuent.Where(x => x.nomCuentaEID == tipoCC.nomCuentaEID);
+                                  foreach (var c in cuentaX)
                                   {
-                                  var cuentaZ = catCuent.Where(x => x.nomCuentaEID == tipoP.nomCuentaEID);
-                                  int banAnio = balance.OrderBy(n => n.Anio).FirstOrDefault().Anio;
-                              int banAnio2 = balance.Where(n =>n.Anio == banAnio+1).FirstOrDefault().Anio;
-
-                                  foreach (var c in cuentaZ)
-                                  {
-                                      var banlancin = balance.Where(n => n.Anio == banAnio).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
-                                      var banlancin2 = balance.Where(n => n.Anio == banAnio2).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
+                                      var banlancin = balance.FirstOrDefault(n => n.Idcuenta == c.Idcuenta && n.Anio == an);
                                       //sumo el total de las cuentas del mismo tipo
                                       if (banlancin != null)
                                       { suma = suma + banlancin.Valorcuenta; }
                                       else { suma = suma + 0; }
-                                      if (banlancin2 != null)
-                                      { suma = suma + banlancin2.Valorcuenta; }
-                                      else { suma = suma + 0; }
-                                      suma = (suma2 + suma) / 2;
 
-                                      rakata.numerador = rakata.numerador.Replace(razoncitanum[i], suma.ToString());
                                   }
-
+                                  rakata.numerador = rakata.numerador.Replace(razoncitanum[i], suma.ToString());
                               }
-                              else
+                              else if (razoncitanum[i].Contains("PROMEDIO"))
                               {
-                                  rakata.numerador = rakata.numerador.Replace(razoncitanum[i], "1+1");
-                              }
 
+                                  string divo = razoncitanum[i].Replace("PROMEDIO", "");
+                                  var tipoP = tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(divo));
 
-                          }
-                      else if(!razoncitanum[i].Equals("365"))
-                      {
-                          rakata.numerador = rakata.numerador.Replace(razoncitanum[i], "1+1");
-                      }
+                                  if(tipoP !=null)
+                                      {
+                                      var cuentaZ = catCuent.Where(x => x.nomCuentaEID == tipoP.nomCuentaEID);
+                                      int banAnio = balance.OrderBy(n => n.Anio).FirstOrDefault().Anio;
+                                  int banAnio2 = balance.Where(n =>n.Anio == banAnio+1).FirstOrDefault().Anio;
 
+                                      foreach (var c in cuentaZ)
+                                      {
+                                          var banlancin = balance.Where(n => n.Anio == banAnio).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
+                                          var banlancin2 = balance.Where(n => n.Anio == banAnio2).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
+                                          //sumo el total de las cuentas del mismo tipo
+                                          if (banlancin != null)
+                                          { suma = suma + banlancin.Valorcuenta; }
+                                          else { suma = suma + 0; }
+                                          if (banlancin2 != null)
+                                          { suma = suma + banlancin2.Valorcuenta; }
+                                          else { suma = suma + 0; }
+                                          suma = (suma2 + suma) / 2;
 
-                      }
+                                          rakata.numerador = rakata.numerador.Replace(razoncitanum[i], suma.ToString());
+                                      }
 
-                      //------------------------------------------------ Denominador
-
-                      for (int i = 0; i < razoncitaden.Length; i++)
-                      {
-                          var tipoCC = tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(razoncitaden[i]));
-                          if (tipoCC != null)
-                          {
-                              var cuentaX = catCuent.Where(x => x.nomCuentaEID == tipoCC.nomCuentaEID);
-                              Console.WriteLine(cuentaX);
-                              foreach (var c in cuentaX)
-                              {  
-                                  var banlancin = balance.FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
-                                //  suma = suma + banlancin.Valorcuenta;
-
-                              }
-
-                              // rakata.denominador = rakata.denominador.Replace(razoncitanum[i], suma.ToString());
-                              rakata.denominador = rakata.denominador.Replace(razoncitaden[i], "1+1");
-
-                          }
-                          else if (razoncitaden[i].Contains("PROMEDIO"))
-                          {
-
-                              string divo = razoncitaden[i].Replace("PROMEDIO", "");
-                              var tipoP = tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(divo));
-
-                              if (tipoP != null)
-                              {
-                                  var cuentaZ = catCuent.Where(x => x.nomCuentaEID == tipoP.nomCuentaEID);
-                                  int banAnio = balance.OrderBy(n => n.Anio).FirstOrDefault().Anio;
-                                  int banAnio2 = balance.Where(n => n.Anio == banAnio + 1).FirstOrDefault().Anio;
-
-                                  foreach (var c in cuentaZ)
+                                  }
+                                  else
                                   {
+                                      rakata.numerador = rakata.numerador.Replace(razoncitanum[i], "1+1");
+                                  }
 
 
-
-                                      var banlancin = balance.Where(n => n.Anio == banAnio).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
-                                      var banlancin2 = balance.Where(n => n.Anio == banAnio2).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
-                                      //sumo el total de las cuentas del mismo tipo
-                                      if (banlancin != null)
-                                      { suma = suma + banlancin.Valorcuenta; }
-                                      else { suma = suma + 0; }
-                                      if (banlancin2 != null)
-                                      { suma = suma + banlancin2.Valorcuenta; }
-                                      else { suma = suma + 0; }
-                                      suma = (suma2 + suma) / 2;
-
-                                      rakata.denominador = rakata.denominador.Replace(razoncitaden[i], suma.ToString());
+                              }
+                          else if(!razoncitanum[i].Equals("365"))
+                          {
+                              rakata.numerador = rakata.numerador.Replace(razoncitanum[i], "1+1");
+                          }
 
 
+                          }
+
+                          //------------------------------------------------ Denominador
+
+                          for (int i = 0; i < razoncitaden.Length; i++)
+                          {
+                              var tipoCC = tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(razoncitaden[i]));
+                              if (tipoCC != null)
+                              {
+                                  var cuentaX = catCuent.Where(x => x.nomCuentaEID == tipoCC.nomCuentaEID);
+                                  Console.WriteLine(cuentaX);
+                                  foreach (var c in cuentaX)
+                                  {  
+                                      var banlancin = balance.FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
+                                    //  suma = suma + banlancin.Valorcuenta;
 
                                   }
 
+                                  // rakata.denominador = rakata.denominador.Replace(razoncitanum[i], suma.ToString());
+                                  rakata.denominador = rakata.denominador.Replace(razoncitaden[i], "1+1");
+
                               }
-                              else
+                              else if (razoncitaden[i].Contains("PROMEDIO"))
+                              {
+
+                                  string divo = razoncitaden[i].Replace("PROMEDIO", "");
+                                  var tipoP = tipocuenta.FirstOrDefault(l => l.nomCuentaE.Equals(divo));
+
+                                  if (tipoP != null)
+                                  {
+                                      var cuentaZ = catCuent.Where(x => x.nomCuentaEID == tipoP.nomCuentaEID);
+                                      int banAnio = balance.OrderBy(n => n.Anio).FirstOrDefault().Anio;
+                                      int banAnio2 = balance.Where(n => n.Anio == banAnio + 1).FirstOrDefault().Anio;
+
+                                      foreach (var c in cuentaZ)
+                                      {
+
+
+
+                                          var banlancin = balance.Where(n => n.Anio == banAnio).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
+                                          var banlancin2 = balance.Where(n => n.Anio == banAnio2).FirstOrDefault(n => n.Idcuenta == c.Idcuenta);
+                                          //sumo el total de las cuentas del mismo tipo
+                                          if (banlancin != null)
+                                          { suma = suma + banlancin.Valorcuenta; }
+                                          else { suma = suma + 0; }
+                                          if (banlancin2 != null)
+                                          { suma = suma + banlancin2.Valorcuenta; }
+                                          else { suma = suma + 0; }
+                                          suma = (suma2 + suma) / 2;
+
+                                          rakata.denominador = rakata.denominador.Replace(razoncitaden[i], suma.ToString());
+
+
+
+                                      }
+
+                                  }
+                                  else
+                                  {
+                                      rakata.denominador = rakata.denominador.Replace(razoncitaden[i], "1+1");
+                                  }
+
+
+                              }
+                              else if (!razoncitaden[i].Equals("365"))
                               {
                                   rakata.denominador = rakata.denominador.Replace(razoncitaden[i], "1+1");
                               }
 
 
                           }
-                          else if (!razoncitaden[i].Equals("365"))
-                          {
-                              rakata.denominador = rakata.denominador.Replace(razoncitaden[i], "1+1");
-                          }
 
+
+                          double pas = parse.Parse("(" + rakata.numerador + ")" + "/" + "(" + rakata.denominador + ")");
+
+                          Resultado.Add(pas);
 
                       }
+                      ViewData["Resultados"] = Resultado; */
 
 
-                      double pas = parse.Parse("(" + rakata.numerador + ")" + "/" + "(" + rakata.denominador + ")");
-
-                      Resultado.Add(pas);
-
-                  }
-                  ViewData["Resultados"] = Resultado; */
 
 
-                var usuario = this.User;
-                Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
-
-                //Obteniendo año más reciente
-                int anioReciente = 0;
-                //obteniendo lista de años en la base
-                List<int> selectListItems = _context.Valoresdebalance.Where(l => l.Idempresa == u.Idempresa.Idempresa)
-                .Select(l => l.Anio)
-                .Distinct()
-                .ToList();
-                //sacando el año mayor
-                foreach(int anio in selectListItems)
-                {
-                    if(anio > anioReciente)
-                    {
-                        anioReciente = anio;
-                    }
-                }
-                
-                var listaRazones = _context.Ratioempresa
-                    .Join(_context.Ratio,
-                    re => re.Idratio,
-                    r => r.Idratio,
-                    (re,r) => new ResultadosIndexRatio
-                    {
-                        idEmpresa = re.Idempresa,
-                        Nombre = r.Nombreratiob,
-                        ValorRazon = re.Valorratioempresa,
-                        anio = re.anio
-                    }).Where(l => l.idEmpresa == u.Idempresa.Idempresa)
-                    .Where(l => l.anio == anioReciente)
+                    //Obteniendo año más reciente
+                    int anioReciente = 0;
+                    //obteniendo lista de años en la base
+                    List<int> selectListItems = _context.Valoresdebalance.Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                    .Select(l => l.Anio)
+                    .Distinct()
                     .ToList();
-                ViewBag.listaRazones = listaRazones;
+                    //sacando el año mayor
+                    foreach (int anio in selectListItems)
+                    {
+                        if (anio > anioReciente)
+                        {
+                            anioReciente = anio;
+                        }
+                    }
 
-                //Valor Sector
-                var empresa = _context.Empresa
-                            .Where(l => l.Idempresa == u.Idempresa.Idempresa)
-                            .FirstOrDefault();
-                List<Ratiobasesector> razonSector = _context.Ratiobasesector                
-                .Where(l => l.Idsector == empresa.Idsector)
-                .ToList();
-                List<Ratio> ratios = _context.Ratio.ToList();
+                    var listaRazones = _context.Ratioempresa
+                        .Join(_context.Ratio,
+                        re => re.Idratio,
+                        r => r.Idratio,
+                        (re, r) => new ResultadosIndexRatio
+                        {
+                            idEmpresa = re.Idempresa,
+                            Nombre = r.Nombreratiob,
+                            ValorRazon = re.Valorratioempresa,
+                            anio = re.anio
+                        }).Where(l => l.idEmpresa == u.Idempresa.Idempresa)
+                        .Where(l => l.anio == anioReciente)
+                        .ToList();
+                    ViewBag.listaRazones = listaRazones;
 
-                List<MensajesAnalisis> mensajes = _context.MensajesAnalisis.ToList();                    
+                    //Valor Sector
+                    var empresa = _context.Empresa
+                                .Where(l => l.Idempresa == u.Idempresa.Idempresa)
+                                .FirstOrDefault();
+                    List<Ratiobasesector> razonSector = _context.Ratiobasesector
+                    .Where(l => l.Idsector == empresa.Idsector)
+                    .ToList();
+                    List<Ratio> ratios = _context.Ratio.ToList();
 
-                ViewBag.existe = true;
-                ViewBag.listaRatio = ratios;
-                ViewBag.listaRatioBase = razonSector;
+                    List<MensajesAnalisis> mensajes = _context.MensajesAnalisis.ToList();
+
+                    ViewBag.existe = true;
+                    ViewBag.noexiste = false;
+                    ViewBag.listaRatio = ratios;
+                    ViewBag.listaRatioBase = razonSector;
+                }
+                else
+                {
+                    ViewBag.existe = false;
+                    ViewBag.noexiste = false;
+                }
+
+                return View(await razonI.ToListAsync());
             }
-            else
-            {
-                ViewBag.existe = false;
+            else {
+                ViewBag.noexiste = true;
+                return View(await razonI.ToListAsync());
             }
            
-            return View(await razonI.ToListAsync());
         }
 
         // GET: Razons/Details/5

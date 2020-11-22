@@ -17,19 +17,24 @@
 
 }
 <h1>Analasis   Horizontal</h1>
-@*@if (ViewBag.nocuenta)
+@if (ViewBag.nocuenta)
 {
-    <h1>Oh, Oh, Parece que no cuenta con una empresa</h1>
-    <h3>Para poder realizar un analisis debe agregar una empresa y valores de balance</h3>
-    <h6>Ingrese aquí para agregar un nuevo balance:</h6>
-    <h6>
-        <a asp-controller="Empresas" asp-action="Create"></a>
-    </h6>
 
+    <div class="card border-primary mb-3">
+        <div class="card-header"><i class="fa fa-info-circle" aria-hidden="true"></i><p>Informe</p></div>
+        <div class="card-body ">
+            <h2 class="card-title">Oh, Oh, Parece que no cuenta con una empresa</h2>
+            <p class="card-text">
+                <h3>Para poder realizar un analisis debe agregar una empresa y valores de balance</h3>
+                <h6>Ingrese aquí para agregar un nuevo balance:</h6>
+                <a asp-controller="Empresas" asp-action="Create">Ir</a>
+            </p>
+        </div>
+    </div>
 
 }
 else
-{*@
+{
     @if (ViewBag.existe)
     {
 
@@ -59,13 +64,13 @@ else
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Año:</span>
                     </div>
-                    <select class="form-control chosen-s" id="ana1" name="ana1" asp-items="ViewBag.Anios"></select>
+                    <select class="form-control chosen-s" id="ana1" asp-for=" @ViewData["an1"]" name="ana1" asp-items="ViewBag.Anios"></select>
                 </div>
                 <div class="input-group mb-3" style="margin:20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Año a comparar:</span>
                     </div>
-                    <select class="form-control chosen-s" id="ana1" name="ana2" asp-items="ViewBag.Anios"></select>
+                    <select class="form-control chosen-s" id="ana2" asp-for=" @ViewData["an2"]" name="ana2" asp-items="ViewBag.Anios"></select>
                 </div>
 
 
@@ -73,6 +78,8 @@ else
                     <input type="submit" class="btn btn-info" value="Analizar">
                 </div>
             </div>
+           
+
 
         </form>
 
@@ -93,7 +100,7 @@ else
                     <th>
                         Diferencia
                     </th>
-                    <th></th>
+
                 </tr>
             </thead>
             <tbody>
@@ -173,11 +180,22 @@ else
     }
     else
     {
-        <h1>Oh, Oh, Parece que solo tiene un año agregado a su empresa</h1>
-        <h3>Para poder realizar un analisis de esta empresea debe agregar un historial mayor a 1 año de su balance</h3>
-        <h6>Ingrese aquí para agregar un nuevo balance:</h6>
-        <h6>
-            <a asp-controller="Empresas" asp-action="Index"></a>
-        </h6>
+
+
+        <div class="card border-primary mb-3">
+            <div class="card-header"><i class="fa fa-info-circle" aria-hidden="true"></i><p>Informe</p></div>
+            <div class="card-body ">
+                <h2 class="card-title">Oh, Oh, Parece que solo tiene un año agregado a su empresa</h2>
+                <p class="card-text">
+                    <h3>Para poder realizar un analisis de esta empresea debe agregar un historial mayor a 1 año de su balance</h3>
+                    <h6>Ingrese aquí para agregar un nuevo balance:</h6>
+                    <a asp-controller="Empresas" asp-action="Create">Ir</a>
+                </p>
+            </div>
+        </div>
+       
+       
+
+
     }
-@*}*@
+}
