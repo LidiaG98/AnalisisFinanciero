@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Sistema_de_Informes_de_Analisis_Financieros.Models;
@@ -24,17 +25,20 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Areas.Identity.Pages.Accou
         private readonly UserManager<Usuario> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        private readonly ProyAnfContext _context;
         public RegisterModel(
             UserManager<Usuario> userManager,
             SignInManager<Usuario> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ProyAnfContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
+            listEmpresas = new SelectList(_context.Empresa.ToList(), "Idempresa", "Nombre");
         }
 
         [BindProperty]
@@ -43,6 +47,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Areas.Identity.Pages.Accou
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public SelectList listEmpresas { get; set; }
 
         public class InputModel
         {
@@ -61,12 +66,16 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Areas.Identity.Pages.Accou
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Display(Name = "Empresa")]
+            public Empresa idEmpresa1 { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
-        {
+        {            
+                        
             ReturnUrl = returnUrl;
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();            
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -75,7 +84,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Areas.Identity.Pages.Accou
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new Usuario { UserName = Input.Email, Email = Input.Email };
+                var user = new Usuario { UserName = Input.Email, Email = Input.Email, Idempresa = Input.idEmpresa1, EmailConfirmed = true };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

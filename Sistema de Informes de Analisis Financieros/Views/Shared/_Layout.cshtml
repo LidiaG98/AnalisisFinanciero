@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<Usuario> SignInManager
+@inject UserManager<Usuario> UserManager
+<!DOCTYPE html>
 <html lang="es-sv">
 <head>
     <meta charset="utf-8" />
@@ -12,54 +14,88 @@
 <body>
     <div class="wrapper">
         <!-- Sidebar  -->
-        <nav id="sidebar">
-            <div class="sidebar-logo">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/favicon.ico" style="height:20%;width:20%" />
-                </a>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Análisis Financieros</a>
-            </div>
-            <ul class="sidebar-navigation">
-                <li class="header">Navegación</li>
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">
-                        <i class="fa fa-home" aria-hidden="true"></i> Inicio
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <nav id="sidebar">
+                <div class="sidebar-logo">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/favicon.ico" style="height:20%;width:20%" />
                     </a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Análisis Financieros</a>
+                </div>
+                <ul class="sidebar-navigation">
+                    <li class="header">Navegación</li>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="Index">
+                            <i class="fa fa-home" aria-hidden="true"></i> Inicio
+                        </a>
+                    </li>
 
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Empresas" asp-action="Index">
-                        <i class="fa fa-briefcase" aria-hidden="true"></i> Empresa
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Sector" asp-action="Index">
-                        <i class="fa fa-industry" aria-hidden="true"></i> Sectores
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
-                    </a>
-                </li>
-                <li class="header">Herramientas</li>
-                <li>
-                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
-                        <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisVertical">
-                        <i class="fa fa-arrow-down" aria-hidden="true"></i> Analizis vertical
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Razons" asp-action="Index">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios
-                    </a>
-                </li>
-            </ul>
-        </nav>
+                    @if (!(User.IsInRole("Administrator")))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Empresas" asp-action="Index"
+                               class="dropdown-toggle" role="button" id="dropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-briefcase" aria-hidden="true"></i> Empresa
+                            </a>
+                            <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuLink">
+                                <a asp-area="" asp-controller="Empresas" asp-action="Index">Empresa</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="CatalogoCuentas" asp-action="Index">Catálogo</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="ValoresBalance" asp-action="Index">Balances</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="EstadoR" asp-action="Index">Estados</a>
+                            </div>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Empresas" asp-action="Index">
+                                <i class="fa fa-briefcase" aria-hidden="true"></i> Empresas
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Empresas" asp-action="CrearUsuario">
+                                <i class="fa fa-arrow-right" aria-hidden="true"></i> Registrar Usuario
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Sector" asp-action="Index">
+                                <i class="fa fa-industry" aria-hidden="true"></i> Sectores
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="RatioBaseSector" asp-action="Index">
+                                <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios Base por Sector
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="MensajesAnalisis" asp-action="Index">
+                                <i class="fa fa-bars" aria-hidden="true"></i> Mensajes Razones
+                            </a>
+                        </li>
+                    }
+                    <li class="header">Herramientas</li>
+                    <li>
+                        <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisHorizontal">
+                            <i class="fa fa-arrow-right fa-columns" aria-hidden="true"></i> Análisis Horizontal
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="ValoresBalance" asp-action="AnalsisVertical">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i> Analizis vertical
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Razons" asp-action="Index">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i> Ratios
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+
 
         <!-- Page Content  -->
         <div id="content">
@@ -97,7 +133,8 @@
     <!--jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--Poppins CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.3/umd/popper.min.js" integrity="sha512-53CQcu9ciJDlqhK7UD8dZZ+TF2PFGZrOngEYM/8qucuQba+a+BXOIRsp9PoMNJI3ZeLMVNIxIfZLbG/CdHI5PA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <!--Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 

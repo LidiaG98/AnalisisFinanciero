@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -12,33 +14,46 @@ using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 {
+    [Authorize]
     public class EmpresasController : Controller
     {
         private readonly ProyAnfContext _context;
         private CatalogoCuentasController catalogo;
         private ValoresBalanceController valoresController;
         private EstadoRController estadoController;
+        private readonly UserManager<Usuario> _userManager;
 
-        public EmpresasController(ProyAnfContext context)
+        public EmpresasController(ProyAnfContext context, UserManager<Usuario> userManager)
         {
             _context = context;
-            catalogo = new CatalogoCuentasController(context);
-            valoresController = new ValoresBalanceController(context);
-            estadoController = new EstadoRController(context);
+            catalogo = new CatalogoCuentasController(context,userManager);
+            valoresController = new ValoresBalanceController(context,userManager);
+            estadoController = new EstadoRController(context,userManager);
+            _userManager = userManager;
         }
 
         // GET: Empresas
         public async Task<IActionResult> Index()
         {
-            var proyAnfContext = _context.Empresa.Include(e => e.IdsectorNavigation);
-            return View(await proyAnfContext.ToListAsync());
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            if (usuario.IsInRole("Administrator"))
+            {
+                var proyAnfContext = _context.Empresa.Include(e => e.IdsectorNavigation);
+                return View(await proyAnfContext.ToListAsync());
+            }
+            else
+            {
+                var proyAnfContext = _context.Empresa.Include(e => e.IdsectorNavigation).Where(l => l.Idempresa == u.Idempresa.Idempresa);
+                return View(await proyAnfContext.ToListAsync());
+            }
         }
 
-        public async Task<IActionResult> GuardarCuentas(int IdEmpresa,string celdaCod, string celdaNom, IFormFile files)
+        public async Task<IActionResult> GuardarCuentas(int IdEmpresa,string celdaCod, string celdaNom ,string hoja, IFormFile files)
         {
             celdaCod = celdaCod.ToUpper();
             celdaNom = celdaNom.ToUpper();
-            ViewData["Mensaje"] = await catalogo.GuardarCuentas(IdEmpresa,celdaCod,celdaNom,files);
+            ViewData["Mensaje"] = await catalogo.GuardarCuentas(IdEmpresa,celdaCod,celdaNom,hoja,files);
             return RedirectToAction("ActualizarCatalogoCuenta", "NomCuentaEs");
         }
 
@@ -100,7 +115,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return View(empresa);
         }
 
-        // GET: Empresas/Create
+        // GET: Empresas/Create        
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["Idsector"] = new SelectList(_context.Sector, "Idsector", "Nomsector");
@@ -109,7 +125,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 
         // POST: Empresas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.        
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Idempresa,Idsector,Nomempresa,Descempresa,Razonsocial")] Empresa empresa)
@@ -177,7 +194,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return View(empresa);
         }
 
-        // GET: Empresas/Delete/5
+        // GET: Empresas/Delete/5        
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -196,7 +214,8 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             return View(empresa);
         }
 
-        // POST: Empresas/Delete/5
+        // POST: Empresas/Delete/5        
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -210,6 +229,39 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         private bool EmpresaExists(int id)
         {
             return _context.Empresa.Any(e => e.Idempresa == id);
+        }
+
+
+        [Authorize(Roles = "Administrator")]
+        [HttpGet]
+        public async Task<IActionResult> CrearUsuario()
+        {
+            SelectList listRatios = new SelectList(_context.Empresa.ToList(), "Idempresa", "Nomempresa");
+            ViewBag.listRatios = listRatios;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CrearUsuario([Bind("email,Password,ConfirmPassword,idEmpresa")] CrearUsuarioModel usuario)
+        {
+            SelectList listRatios = new SelectList(_context.Empresa.ToList(), "Idempresa", "Nomempresa");
+            ViewBag.listRatios = listRatios;
+            if (ModelState.IsValid)
+            {
+                Empresa empresa = _context.Empresa.Where(l => l.Idempresa == usuario.idEmpresa).FirstOrDefault();
+                Usuario u = new Usuario()
+                {
+                    UserName = usuario.email,
+                    Email = usuario.email,
+                    EmailConfirmed = true,
+                    Idempresa = empresa
+                };                                
+                string pass = usuario.Password;
+                var result = await _userManager.CreateAsync(u, pass);                
+                return RedirectToAction("Index");
+            }            
+            return View(usuario);
         }
     }
 }

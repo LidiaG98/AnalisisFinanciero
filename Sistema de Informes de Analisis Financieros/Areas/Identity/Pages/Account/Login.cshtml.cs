@@ -21,14 +21,20 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Areas.Identity.Pages.Accou
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ProyAnfContext _context;
 
         public LoginModel(SignInManager<Usuario> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<Usuario> userManager)
+            UserManager<Usuario> userManager,
+            RoleManager<IdentityRole> roleManager,
+            ProyAnfContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _roleManager = roleManager;
+            _context = context;
         }
 
         [BindProperty]
@@ -57,6 +63,26 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Areas.Identity.Pages.Accou
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if(!_context.Roles.Any())
+            {
+                IdentityRole role = new IdentityRole()
+                {
+                    Name = "Administrator",
+                    NormalizedName = "Administrator"
+                };
+                var result = await _roleManager.CreateAsync(role);
+                var usuario = new Usuario
+                {
+                    UserName = "admin@mail.com",
+                    Email = "admin@mail.com",  
+                    EmailConfirmed = true
+                };
+                string pass = "Admin@123";
+                result = await _userManager.CreateAsync(usuario, pass);
+                usuario = await _userManager.FindByNameAsync("admin@mail.com");
+                await _userManager.AddToRoleAsync(usuario, "Administrator");
+            }
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);

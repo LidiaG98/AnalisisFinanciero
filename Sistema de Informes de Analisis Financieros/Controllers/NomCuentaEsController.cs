@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,7 +12,8 @@ using Sistema_de_Informes_de_Analisis_Financieros.Models;
 using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
-{
+{    
+    [Authorize]
     public class NomCuentaEsController : Controller
     {
         private readonly UserManager<Usuario> _userManager;
@@ -108,10 +110,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                             {
                                 if (cc[j].Codcuentacatalogo.StartsWith(cod))
                                 {
-                                    cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
-                                    cc[j].nomCuentaEID = nom[0].nomCuentaEID;
-                                    _context.Update(cc[j]);
-                                    await _context.SaveChangesAsync();
+                                    if (cc[j].nomCuentaEID == null)
+                                    {
+                                        cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
+                                        cc[j].nomCuentaEID = nom[0].nomCuentaEID;
+                                        _context.Update(cc[j]);
+                                        await _context.SaveChangesAsync();
+                                    }
                                 }
                             }
                         break;
@@ -156,10 +161,13 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
                             {
                                 if (cc[j].Codcuentacatalogo.StartsWith(cod))
                                 {
-                                    cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
-                                    cc[j].nomCuentaEID = nom[0].nomCuentaEID;
-                                    _context.Update(cc[j]);
-                                    await _context.SaveChangesAsync();
+                                    if (cc[j].nomCuentaEID == null)
+                                    {
+                                        cc[j].Codcuentacatalogo = cc[j].Codcuentacatalogo.Replace(".", "");
+                                        cc[j].nomCuentaEID = nom[0].nomCuentaEID;
+                                        _context.Update(cc[j]);
+                                        await _context.SaveChangesAsync();
+                                    }
                                 }
                             }
                           break;

@@ -15,36 +15,53 @@
         <div class="modal-body" id="cuerpo">
             <div class="form-group row">
                 <label asp-for="celdaCuenta" class="col-sm-3 col-form-label">Celda de Cuentas:</label>
-                <div class="col-sm-9">
-                    <input asp-for="celdaCuenta" class="form-control" name="celdaCuenta" placeholder="Número de celda, ej.: B1">
+                <div class="col-11 col-md-8">
+                    <input asp-for="celdaCuenta" class="form-control" name="celdaCuenta" placeholder="Número de celda, ej.: B1" required>
                 </div>
+                <div class="col-sm-1">
+                    <span class="info">
+                        <i data-toggle="popover" data-placement="top"
+                           data-content="El número de celda donde empieza la columna que tiene descritos los nombres de las cuentas"
+                           data-container="body" data-trigger="click" title="Número de celda"
+                           class="fa fa-question-circle" aria-hidden="true"></i>
+                    </span>
+                </div>                
                 <span asp-validation-for="celdaCuenta" class="text-danger"></span>
             </div>
             <div class="form-group row">
                 <label asp-for="hoja" class="col-sm-3 col-form-label">Hoja:</label>
-                <div class="col-sm-9">
-                    <input asp-for="hoja" class="form-control" name="hoja" placeholder="Nombre exacto en excel, ej.: Balance">
+                <div class="col-11 col-md-8">
+                    <input asp-for="hoja" class="form-control" name="hoja" placeholder="Nombre exacto en excel, ej.: Balance" required>
+                </div>
+                <div class="col-sm-1">
+                    <span class="info">
+                        <i data-toggle="popover" data-placement="top"
+                           data-content="El nombre exacto de la hoja en la que se encuentra el balance general"
+                           data-container="body" data-trigger="click" title="Nombre de hoja"
+                           class="fa fa-question-circle" aria-hidden="true"></i>
+                    </span>
                 </div>
                 <span asp-validation-for="hoja" class="text-danger"></span>
             </div>
             <div class="row mb-3">
-                <div class="col">
+                <input type="hidden" name="anios.Index" value="p0" />
+                <div class="col-12 col-md-6">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <label for="anio" class="input-group-text">Año 1:</label>
                         </div>
-                        <input asp-for="anios" name="anios[0].anio" class="form-control m-input" placeholder="Año a evaluar ej.: 2019">
+                        <input asp-for="anios" name="anios[p0].anio" class="form-control m-input" placeholder="Año a evaluar ej.: 2019" required>
                     </div>
-                    <span asp-validation-for="anios[0].anio" class="text-danger"></span>
+                    @*<span asp-validation-for="anios[p0].anio" class="text-danger"></span>*@
                 </div>
-                <div class="col">
+                <div class="col-12 col-md-6 mt-2 mt-md-0">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <label for="celdaAnio" class="input-group-text">Celda de valores:</label>
                         </div>
-                        <input asp-for="anios" name="anios[0].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1">
+                        <input asp-for="anios" name="anios[p0].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1" required>
                     </div>
-                    <span asp-validation-for="anios[0].celdaAnio" class="text-danger"></span>
+                    @*<span asp-validation-for="anios[0].celdaAnio" class="text-danger"></span>*@
                 </div>
             </div>
             <div id="newRow"></div>
@@ -75,27 +92,9 @@
         }
     });
 
-    //$(document).ready(function () {
-    //    $('#btnupload').click(function () {
-    //        var url = $('#ModalBalance').data('url');
-
-    //        $.ajax({
-    //            type: 'POST',
-    //            url: url,
-    //            cache: false,
-    //            data: $("#frmBalance").serialize(),
-    //            success: function (e) {
-    //                if (e.Valid) {
-    //                    //window.location = "/Controller/Action";
-    //                }
-    //                else {
-    //                    return false;
-    //                }
-    //            },
-    //            error: function (e) { e.preventDefault(); $("#ModalBalance").load(e) }
-    //        });
-    //    });
-    //});
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover()
+    });
 </script>
 
 

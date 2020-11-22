@@ -45,37 +45,65 @@
     </div>
 </section>
 
-<section class="mt-4 rounded-0">
+<section class="mt-4 mb-5 rounded-0">
     <div class="card border-secondary">
         <div class="card-header text-center">
             <h5>Subir Catalogo de cuentas</h5>
         </div>
         <div class="card-body">
             <p>
-                Suba su catálogo de cuentas para poder utilizar la herrmienta. El catálogo debe de ser un <b>archivo de excel (.xlsx) sin encabezado, además
-                debe de estar en la primera hoja del archivo.</b><b>Los códigos de las cuentas deben estar en fila con su respectiva cuenta y en una misma columna,</b> de la misma manera
-                con los nombres de las cuentas. <b class="text-danger">Si algún nombre esta fuera de la columna establecida en el siguiente formulario, puede llevar
+                Suba su catálogo de cuentas para poder utilizar la herrmienta. El catálogo debe de ser un <b>
+                archivo de excel (.xlsx) sin encabezado. Los códigos de las cuentas deben estar en fila con su respectiva cuenta
+                y en una misma columna, de la misma manera con los nombres de las cuentas.</b> <b class="text-danger">
+                Si algún nombre esta fuera de la columna establecida en el siguiente formulario, puede llevar
                 a futuros problemas con el análisis.</b>
             </p>
             <p>Proporcione la siguiente información:</p>
-            <form enctype="multipart/form-data" asp-action="GuardarCuentas">
+            <form enctype="multipart/form-data" asp-action="GuardarCuentas" >
                 <input hidden class="form-control" id="IdEmpresa" name="IdEmpresa" value="@Model.Idempresa">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-6 col-sm-12">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label for="celdaCod" class="input-group-text">Celda de código</label>
                             </div>
-                            <input data-toggle="tooltip" data-placement="bottom" title="El número de celda donde comienza su lista de códigos"
-                                   class="form-control" id="celdaCod" name="celdaCod" placeholder="Número de celda, ej.: A1">
+                            <input class="form-control" id="celdaCod" name="celdaCod" placeholder="Número de celda, ej.: A1" required>
+                            <span class="ml-2 info">
+                                <i data-toggle="popover" data-placement="top"
+                                   data-content="Por ejemplo: si sus códigos abarcan el rango desde A2 hasta A68 solo coloque A2 en la caja de texto"
+                                   data-container="body" data-trigger="click" title="El número de celda donde comienza su lista de códigos"
+                                   class="fa fa-question-circle" aria-hidden="true"></i>
+                            </span>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-md-6 col-sm-12">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label for="celdaNom" class="input-group-text">Celda de Nombre</label>
                             </div>
-                            <input class="form-control" id="celdaNom" name="celdaNom" placeholder="Número de celda, ej.: B1">
+                            <input class="form-control" id="celdaNom" name="celdaNom" placeholder="Número de celda, ej.: B1" required>
+                            <span class="ml-2 info">
+                                <i data-toggle="popover" data-placement="top"
+                                   data-content="Por ejemplo: si sus códigos abarcan el rango desde B2 hasta B68 solo coloque B2 en la caja de texto"
+                                   data-container="body" data-trigger="click" title="El número de celda donde comienza su lista con los nombres de las cuentas"
+                                   class="fa fa-question-circle" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label for="hoja" class="input-group-text">Hoja</label>
+                            </div>
+                            <input class="form-control" id="hoja" name="hoja" placeholder="Nombre de hoja, ej.: CATALOGO" required>
+                            <span class="ml-2 info">
+                                <i data-toggle="popover" data-placement="top"
+                                   data-content="Escriba el nombre exacto de la hoja donde esta su catálogo, respetando mayúsculas y minúsculas"
+                                   data-container="body" data-trigger="click" title="Nombre de la hoja del catálogo"
+                                   class="fa fa-question-circle" aria-hidden="true"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -83,11 +111,11 @@
                     Elegir Archivo
                 </label>
                 <input type="file" id="fileupload" name="files" class="btn btn-success form-control" value="Subir Catálogo de Cuentas" />
+                <div class="card-footer text-muted">
+                    <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary rounded-0" />
+                </div>
             </form>
-        </div>
-        <div class="card-footer text-muted">
-            <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary rounded-0" />
-        </div>
+        </div>        
     </div>
 </section>
 
@@ -97,7 +125,7 @@
     <script type="text/javascript">
         $(function () {
             $('#btnupload').on('click', function () {
-                var fileExtension = ['xls', 'xlsx'];
+                var fileExtension = ['xlsx'];
                 var filename = $('#fileupload').val();
                 if (filename.length == 0) {
                     alert("Porfavor seleccione un archivo.");
@@ -114,7 +142,7 @@
         });
 
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="popover"]').popover()
         })
 
         $(document).ready(function () {

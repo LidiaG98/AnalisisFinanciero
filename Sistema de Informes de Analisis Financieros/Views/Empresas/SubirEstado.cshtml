@@ -16,22 +16,23 @@
             <div class="form-group row">
                 <label for="celdaNom" class="col-sm-3 col-form-label">Celda de Cuentas:</label>
                 <div class="col-sm-9">
-                    <input asp-for="celdaCuenta" class="form-control" id="celdaNom" name="celdaCuenta" placeholder="Número de celda, ej.: B1">
+                    <input asp-for="celdaCuenta" class="form-control" id="celdaNom" name="celdaCuenta" placeholder="Número de celda, ej.: B1" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="nomHoja" class="col-sm-3 col-form-label">Hoja:</label>
                 <div class="col-sm-9">
-                    <input asp-for="hoja" class="form-control" id="nomHoja" name="hoja" placeholder="Número de celda, ej.: A1">
+                    <input asp-for="hoja" class="form-control" id="nomHoja" name="hoja" placeholder="Nombre exacto en excel, ej.: Balance" required>
                 </div>
             </div>
             <div class="row mb-3">
+                <input type="hidden" name="anios.Index" value="e0" />
                 <div class="col">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <label for="anio" class="input-group-text">Año 1:</label>
                         </div>
-                        <input asp-for="anios" name="anios[0].anio" class="form-control m-input" placeholder="Año de los valores del balance ej.: 2019">
+                        <input type="number" asp-for="anios" name="anios[e0].anio" class="form-control m-input" placeholder="Año a evaluar ej.: 2019" required>
                     </div>
                 </div>
                 <div class="col">
@@ -39,24 +40,35 @@
                         <div class="input-group-prepend">
                             <label for="celdaAnio" class="input-group-text">Celda de valores:</label>
                         </div>
-                        <input asp-for="anios" name="anios[0].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1">
+                        <input asp-for="anios" name="anios[e0].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1" required>
                     </div>
                 </div>
             </div>
             <div id="newRow"></div>
-            <button id="addRow" type="button" class="btn btn-info form-group row">Añadir Año</button>
-            <div class="form-group row">
-                <div class="col-md-4">
-                    <input type="file" id="fileupload" name="files"/>
-                </div>
-                <div class="col-md-8">
-                    <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary" />
-                </div>
+            <div class="form-group">
+                <button id="addRow" type="button" class="btn btn-info">Añadir Año</button>
+            </div>
+            <div class="form-group">
+                <input type="file" id="fileupload" name="files" />
+                <label class="custom-file-upload" for="fileupload">
+                    Elegir Archivo
+                </label>
             </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <input type="submit" name="Upload" value="Subir Archivo" id="btnupload" class="btn btn-primary" />
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var el = document.getElementById("fileupload")
+        if (el) {
+            el.addEventListener("change", function (e) {
+                document.querySelector("[for=" + e.target.id + "]")
+                    .innerHTML = e.target.files[0].name;
+            })
+        }
+    });
+</script>

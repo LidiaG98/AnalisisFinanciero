@@ -12,7 +12,7 @@
     <div class="container text-light" style="background:#212529;">
         <div class="row">
             <div class="p-0 col-md-6 col-sm-12">
-                <img class="img-fluid w-100 img-fluid" src="~/img/empresa.jpg" />
+                <img class="img-fluid w-100 h-100 img-fluid" src="~/img/empresa.jpg" />
             </div>
             <div class="col-md-6 col-sm-12 p-5" style="font-size:large">
                 <label class="font-weight-bolder">
@@ -33,6 +33,16 @@
                 <p class="mb-4">
                     @Html.DisplayFor(model => model.IdsectorNavigation.Nomsector)
                 </p>
+                <div class="dropdown show">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Recursos
+                    </button>
+                    <div class="dropdown-menu bg-dark" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-white" asp-area="" asp-controller="CatalogoCuentas"  asp-route-id="@Model.Idempresa" asp-action="Index">Catálogo</a>
+                        <a class="dropdown-item text-white" asp-area="" asp-controller="ValoresBalance" asp-route-id="@Model.Idempresa" asp-action="Index">Balances</a>
+                        <a class="dropdown-item text-white" asp-area="" asp-controller="EstadoR" asp-route-id="@Model.Idempresa" asp-action="Index">Estados</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -41,9 +51,11 @@
     <h3>Archivos</h3>
     <div class="container">
         <div class="row lead"></div>
-        <p class="text-justify">Para poder realizar los análisis es necesario subir los archivos de excel de el balance general de la empresa,
-        el estado de resultados y su catálogo de cuenta. El tipo de archivo solo se admite excel (.xlsx) y los valores deben 
-        estar contenidos en una sola columna o <strong>de lo contrario no serán detectados</strong></p>
+        <p class="text-justify">
+            Para poder realizar los análisis es necesario subir los archivos de excel de el balance general de la empresa,
+            el estado de resultados y su catálogo de cuenta. El tipo de archivo solo se admite excel (.xlsx) y los valores deben
+            estar contenidos en una sola columna o <strong>de lo contrario no serán detectados</strong>
+        </p>
         <div id='ModalBalance' class='modal hide fade in' data-url='@Url.Action("SubirBalance")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <form id="frmBalance" enctype="multipart/form-data" asp-action="SubirBalance" data-ajax="true" data-ajax-method="POST"
                   data-ajax-mode="replace" data-ajax-update="cambio">
@@ -53,20 +65,20 @@
             </form>
         </div>
         <div class="row mb-3">
-            <div class="col-6">
+            <div class="col-12 col-md-6">
                 <button class="btn btn-primary btn-block rounded-0" id='showModalBalance' data-url="@Url.Action("SubirBalance")">Subir Archivo de Balance General</button>
             </div>
-            <div class="col-6">
+            <div class="col-12 col-md-6 mt-2 mt-md-0">
                 <button id='showModalEstado' class="btn btn-block btn-primary rounded-0">Subir Archivo de Estado de Resultados</button>
-            </div>            
+            </div>
         </div>
-        <div class="row">
+        <div class="row mb-5">
             <div class="col-12">
-                <p>
+                <p class="text-justify">
                     <strong class="text-danger">Es requisito tener un catálogo de cuenta regristrado antes de subir cualquiera de estos archivos.</strong>
                     <br />Si no ha subido aún su catálogo de cuentas puede hacerlo desde de aquí:<a class="btn-outline-primary rounded-0 ml-2" asp-action="Edit" asp-route-id="@Model.Idempresa">Ir a edición de empresa</a>
                 </p>
-            </div>            
+            </div>
         </div>
 
         <div id='ModalEstado' class='modal hide fade in' data-url='@Url.Action("SubirEstado")' tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -84,7 +96,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
         $(document).on('click', '#btnupload', function () {
-            var fileExtension = ['xls', 'xlsx'];
+            var fileExtension = ['xlsx'];
             var filename = $('#fileupload').val();
             if (filename.length == 0) {
                 alert("Porfavor seleccione un archivo.");
@@ -100,25 +112,27 @@
         });
     </script>
     <script type="text/javascript">
+        var Gcount = 0;
         // add row
         $(document).on('click', '#addRow', function () {
-            var count = $("div[class*='inputFormRow']").length;
-            if (count == 1) { alert("No se pueden ingresar más de dos años"); }
-            else {
-                var html = '';
-                html += '<div class="inputFormRow"><div class="row">';
-                html += '<div class="col"><div class="input-group mb-3"><div class="input-group-prepend">';
-                html += '<label for="anio" class="input-group-text">Año ' + (count + 2) + ':</label></div>';
-                html += '<input asp-for="anios" name="anios[1].anio" class="form-control m-input" placeholder="Año a evaluar ej.: 2019"></div>';
-                html += '</div><div class="col"><div class="input-group mb-3"><div class="input-group-prepend">'
-                html += '<label for="celdaAnio" class="input-group-text">Celda de valores:</label></div>';
-                html += '<input asp-for="anios" name="anios[1].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1">';
-                html += '<div class="input-group-append">';
-                html += '<button id="removeRow" type="button" class="btn btn-danger">Eliminar</button></div></div>';
-                html += '</div>';
-                html += '</div>';
-                $('#newRow').append(html);
-            }
+            Gcount++;
+            var count = $("div[class*='inputFormRow']").length + Gcount;
+            var num = $("div[class*='inputFormRow']").length;
+            var html = '';
+            html += '<div class="inputFormRow"><div class="row">';
+            html += '<input type="hidden" name="anios.Index" value="'+count+'" />'
+            html += '<div class="col"><div class="input-group mb-3"><div class="input-group-prepend">';
+            html += '<label for="anio" class="input-group-text">Año ' + (num + 2) + ':</label></div>';
+            html += '<input asp-for="anios" name="anios[' + count + '].anio" class="form-control m-input" placeholder="Año a evaluar ej.: 2019" required></div>';
+            html += '</div><div class="col"><div class="input-group mb-3"><div class="input-group-prepend">'
+            html += '<label for="celdaAnio" class="input-group-text">Celda de valores:</label></div>';
+            html += '<input asp-for="anios" name="anios[' + count + '].celdaAnio" class="form-control m-input" placeholder="Número de celda, ej.: B1" required>';
+            html += '<div class="input-group-append">';
+            html += '<button id="removeRow" type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button></div></div>';
+            html += '</div>';
+            html += '</div>';
+            $('#newRow').append(html);
+
         });
         // remove row
         $(document).on('click', '#removeRow', function () {

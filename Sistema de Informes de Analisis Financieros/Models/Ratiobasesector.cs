@@ -6,9 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Sistema_de_Informes_de_Analisis_Financieros.Models
 {
     public partial class Ratiobasesector
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    {        
         public int Idratio { get; set; }
         public int Idsector { get; set; }
         public double Valorratiob { get; set; }

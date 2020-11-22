@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +15,16 @@ using Sistema_de_Informes_de_Analisis_Financieros.ViewModels;
 
 namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
 {
+    [Authorize]    
     public class EstadoRController : Controller
     {
         private readonly ProyAnfContext _context;
+        private readonly UserManager<Usuario> userManager;
 
-        public EstadoRController(ProyAnfContext context)
+        public EstadoRController(ProyAnfContext context, UserManager<Usuario> user)
         {
             _context = context;
+            this.userManager = user;
         }
 
         public async Task<string> GuardarEstado(int IdEmpresa, SubirBalance subirBalance, IFormFile files)
@@ -40,34 +45,36 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             var catalogo = _context.Catalogodecuenta.Count(a => a.Idempresa == IdEmpresa);
             if (catalogo > 0)
             {
-                if (_context.Valoresestado.Select(t => t.Anio).Distinct().Count() >= 2)
+                foreach (var anio in subirBalance.anios)
                 {
-                    return "Capacidad agotada: Ya se han registrado 2 años";
-                }
-                else
-                {
-                    //Verificando que no existan datos para ese año
-                    if (!(_context.Valoresestado.Any(a => a.Anio == subirBalance.anios[0].anio)))
+                    /*Llamar método para obtener la letra de columna y número de fila de las celdas*/
+                    IEnumerable<string> s = SplitAlpha(subirBalance.celdaCuenta);
+                    int numCeldaCuenta = int.Parse(s.Last()); //Obtengo # de fila de las cuentas
+
+                    string celValA1 = anio.celdaAnio;
+
+                    s = SplitAlpha(celValA1);
+                    int numCeldaAnio = int.Parse(s.Last()); //Obtengo # de fila de los valores
+                    if (!(numCeldaAnio == numCeldaCuenta))
                     {
-                        lstFilasEstado = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, subirBalance.anios[0].celdaAnio, subirBalance.anios[0].anio);
+                        return "Los nombres de cuenta y los valores de las mismas deben estar en la misma fila";
+                    }
+                    //Verificando que no existan datos para ese año
+                    if (!(_context.Valoresestado.Any(a => a.Anio == anio.anio && a.Idempresa == IdEmpresa)))
+                    {
+                        lstFilasEstado = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, anio.celdaAnio, anio.anio);
+                        if (lstFilasEstado.Count == 0)
+                        {
+                            return "El archivo de excel está vacio";
+                        }
                         await VerificarYSubirEstado(IdEmpresa, lstFilasEstado);
-                        
+
                     }
                     else
                     {
-                        mensaje = "Ya existen datos para el año " + subirBalance.anios[0].anio;
+                        mensaje = "Ya existen datos para el año " + anio.anio;
                     }
-                    //Verificando si existe año 2 y obteniendo sus datos
-                    if (subirBalance.anios.Count == 2)
-                    {
-                        if (!(_context.Valoresestado.Any(a => a.Anio == subirBalance.anios[1].anio)))
-                        {
-                            lstFilasEstado2 = await LeerExcel(files, subirBalance.hoja, subirBalance.celdaCuenta, subirBalance.anios[1].celdaAnio, subirBalance.anios[1].anio);
-                            await VerificarYSubirEstado(IdEmpresa, lstFilasEstado2);
-                        }
-                        else { mensaje = "Ya existen datos para el año " + subirBalance.anios[1].anio; }
-                    }
-                }
+                } 
             }
             else
             {
@@ -199,11 +206,24 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: EstadoR
-        public async Task<IActionResult> Index(string mensaje)
+        public async Task<IActionResult> Index(string mensaje,int? id)
         {
-            var proyAnfContext = _context.Valoresestado.Include(v => v.Id);
+            var usuario = this.User;
+            Usuario u = _context.Users.Include(l => l.Idempresa).Where(l => l.UserName == usuario.Identity.Name).FirstOrDefault();
+            List<Valoresestado> proyAnfContext;            
+            if (await userManager.IsInRoleAsync(u, "Administrator"))
+            {
+                ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+                ViewBag.idEmpresa = u.Idempresa.Idempresa;
+                proyAnfContext = _context.Valoresestado.Include(v => v.Id).Include(v => v.Id.IdcuentaNavigation).
+                    Where(p => p.Idempresa==id).ToList();
+                return View(proyAnfContext);
+            }
+            proyAnfContext = _context.Valoresestado.Include(v => v.Id).Include(v => v.Id.IdcuentaNavigation).Where(p => p.Idempresa == u.Idempresa.Idempresa).ToList();
             ViewBag.Mensaje = mensaje;
-            return View(await proyAnfContext.ToListAsync());
+            ViewBag.nomEmpresa = u.Idempresa.Nomempresa;
+            ViewBag.idEmpresa = u.Idempresa.Idempresa;
+            return View(proyAnfContext);
         }
 
         // GET: EstadoR/Details/5
@@ -226,11 +246,18 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         }
 
         // GET: EstadoR/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["Idempresa"] = new SelectList(_context.Catalogodecuenta, "Idempresa", "Codcuentacatalogo");
+            ViewData["idEmpresa"] = id;            
+            ViewData["ctasNoFinalizadas"] = false;
+            ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == id).Select
+                (x => new SelectListItem()
+                {
+                    Text = x.IdcuentaNavigation.Nomcuenta,
+                    Value = x.Idcuenta.ToString()
+                });
             return View();
-        }
+        }   
 
         // POST: EstadoR/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -239,13 +266,38 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Idvalore,Idempresa,Idcuenta,Nombrevalore,Valorestado,Anio")] Valoresestado valoresestado)
         {
+            int numCtasCatalogo = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresestado.Idempresa).Count();
+            int numCtasIngresadas = _context.Valoresestado.Where(p => p.Idempresa == valoresestado.Idempresa && p.Anio == valoresestado.Anio).Count();
             if (ModelState.IsValid)
             {
-                _context.Add(valoresestado);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!(_context.Valoresestado.Where(p => p.Idempresa == valoresestado.Idempresa
+                     && p.Idcuenta == valoresestado.Idcuenta && p.Anio == valoresestado.Anio && p.Nombrevalore.Equals(valoresestado.Nombrevalore)).Any()))
+                {
+                    _context.Add(valoresestado);
+                    await _context.SaveChangesAsync();
+                    if (numCtasCatalogo > numCtasIngresadas)
+                    {
+                        ViewData["ctasNoFinalizadas"] = true;
+                    }
+                    return RedirectToAction(nameof(Create));
+                }
+                else
+                {
+                    ModelState.AddModelError("Valorcuenta", "Ya se ha ingresado un valor para esta combinación de cuenta y año");
+                }
             }
-            ViewData["Idempresa"] = new SelectList(_context.Catalogodecuenta, "Idempresa", "Codcuentacatalogo", valoresestado.Idempresa);
+            ViewData["idEmpresa"] = valoresestado.Idempresa;
+            ViewData["catalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresestado.Idempresa).ToList();
+            ViewData["ctasCatalogo"] = _context.Catalogodecuenta.Where(p => p.Idempresa == valoresestado.Idempresa).Select
+                (x => new SelectListItem()
+                {
+                    Text = x.IdcuentaNavigation.Nomcuenta,
+                    Value = x.Idcuenta.ToString()
+                });
+            if (numCtasCatalogo > numCtasIngresadas)
+            {
+                ViewData["ctasNoFinalizadas"] = true;
+            }
             return View(valoresestado);
         }
 
