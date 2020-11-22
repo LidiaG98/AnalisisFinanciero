@@ -338,7 +338,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
           
             var user = this.User;
             List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-            if (u.Count()>=0)
+            if (u[0].Idempresa != null)
             {
 
 
@@ -589,7 +589,7 @@ namespace Sistema_de_Informes_de_Analisis_Financieros.Controllers
             
             var user = this.User;
             List<Usuario> u = _context.Users.Include(e => e.Idempresa).Where(e => e.UserName == user.Identity.Name).ToList();
-            if (u.Count() >= 0)
+            if (u[0].Idempresa != null)
             {
 
                 //recupero el catalogo de la empresa del usuario
